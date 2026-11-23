@@ -185,6 +185,70 @@ showDashboard();
 
 </script>
 
+let users = JSON.parse(localStorage.getItem("members")) || [];
+
+
+function loadUsers(){
+
+let table=document.getElementById("usersTable");
+
+table.innerHTML=
+`
+<tr>
+<th>الاسم</th>
+<th>العمر</th>
+<th>الحالة</th>
+<th>إجراء</th>
+</tr>
+`;
+
+
+users.forEach((user,index)=>{
+
+table.innerHTML +=
+
+`
+<tr>
+<td>${user.name}</td>
+<td>${user.age}</td>
+<td>${user.status}</td>
+
+<td>
+<button onclick="deleteUser(${index})">
+حذف
+</button>
+</td>
+
+</tr>
+`;
+
+});
+
+document.getElementById("users").innerHTML=users.length;
+
+}
+
+
+
+function deleteUser(index){
+
+if(confirm("هل تريد حذف هذا المستخدم؟")){
+
+users.splice(index,1);
+
+localStorage.setItem(
+"members",
+JSON.stringify(users)
+);
+
+loadUsers();
+
+}
+
+}
+
+
+loadUsers();
 
 </body>
 </html>
