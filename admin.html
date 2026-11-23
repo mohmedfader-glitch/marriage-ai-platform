@@ -2,30 +2,38 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>إدارة منصة اختيار</title>
 
 <style>
-body{
-font-family:Tahoma;
-background:#f2f2f2;
-margin:0;
+
+*{
+box-sizing:border-box;
+font-family:Tahoma, Arial;
 }
 
-.login, .dashboard{
+body{
+margin:0;
+background:#eef2f3;
+}
+
+.login{
+width:90%;
 max-width:400px;
 margin:80px auto;
 background:white;
 padding:25px;
-border-radius:15px;
-box-shadow:0 3px 10px #ccc;
+border-radius:20px;
+box-shadow:0 5px 20px #ccc;
 text-align:center;
 }
 
-input{
-width:90%;
+input,select{
+width:100%;
 padding:12px;
-margin:8px;
-border-radius:8px;
+margin:8px 0;
+border-radius:10px;
 border:1px solid #ccc;
 }
 
@@ -33,9 +41,13 @@ button{
 background:#0f766e;
 color:white;
 border:0;
-padding:12px 25px;
-border-radius:8px;
+padding:12px 20px;
+border-radius:10px;
 cursor:pointer;
+}
+
+button:hover{
+opacity:.8;
 }
 
 header{
@@ -45,65 +57,176 @@ padding:20px;
 text-align:center;
 }
 
+.container{
+padding:15px;
+}
+
 .card{
 background:white;
+margin:15px 0;
 padding:20px;
-margin:15px;
 border-radius:15px;
-box-shadow:0 2px 8px #ccc;
+box-shadow:0 3px 10px #ccc;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+}
+
+.stat{
+background:#fff;
+padding:20px;
+border-radius:15px;
+text-align:center;
+font-size:18px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:center;
+}
+
+th{
+background:#0f766e;
+color:white;
+}
+
+.delete{
+background:#c0392b;
+}
+
+.edit{
+background:#2980b9;
+}
+
+.hidden{
+display:none;
 }
 
 </style>
 
 </head>
 
+
 <body>
 
 
-<div class="login" id="loginBox">
+<div class="login" id="login">
 
 <h2>🔐 دخول الإدارة</h2>
 
-<input id="username" placeholder="اسم المستخدم">
+<input id="user" placeholder="اسم المستخدم">
 
-<input id="password" type="password" placeholder="كلمة السر">
+<input id="pass" type="password" placeholder="كلمة السر">
 
 <button onclick="login()">دخول</button>
 
-<p id="error" style="color:red"></p>
+<p id="msg" style="color:red"></p>
 
 </div>
 
 
 
-<div id="dashboard" style="display:none">
+<div id="panel" class="hidden">
+
 
 <header>
-<h1>لوحة إدارة منصة اختيار</h1>
+<h1>💍 منصة اختيار</h1>
+<h3>لوحة الإدارة والمراقبة</h3>
 </header>
 
 
-<div class="card">
-<h2>👥 المستخدمين</h2>
-<p>عدد المستخدمين: <span id="users">0</span></p>
+<div class="container">
+
+
+<div class="stats">
+
+<div class="stat">
+👥
+<br>
+المستخدمين
+<h2 id="countUsers">0</h2>
 </div>
 
 
-<div class="card">
-<h2>💍 طلبات الزواج</h2>
-<p>الطلبات: <span id="requests">0</span></p>
+<div class="stat">
+💌
+<br>
+طلبات الزواج
+<h2 id="countRequests">0</h2>
 </div>
 
 
-<div class="card">
-<h2>📊 الزيارات</h2>
-<p>الزيارات: <span id="views">0</span></p>
+<div class="stat">
+👁
+<br>
+الزيارات
+<h2 id="countViews">0</h2>
 </div>
 
-<div class="card">
-<h2>👤 إدارة المستخدمين</h2>
 
-<table border="1" width="100%" id="usersTable">
+</div>
+
+
+
+<div class="card">
+
+<h2>➕ إضافة مستخدم</h2>
+
+<input id="name" placeholder="الاسم">
+
+<input id="age" placeholder="العمر">
+
+<select id="status">
+
+<option>أعزب</option>
+<option>متزوج</option>
+<option>مطلق</option>
+
+</select>
+
+
+<button onclick="addUser()">
+إضافة
+</button>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+<h2>🔎 البحث</h2>
+
+<input id="search" 
+onkeyup="loadUsers()"
+placeholder="ابحث بالاسم">
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h2>👤 المستخدمين</h2>
+
+
+<table id="table">
+
 <tr>
 <th>الاسم</th>
 <th>العمر</th>
@@ -111,86 +234,162 @@ box-shadow:0 2px 8px #ccc;
 <th>إجراء</th>
 </tr>
 
+
 </table>
 
-</div>
-<button onclick="logout()">خروج</button>
-
 
 </div>
+
+
+
+<button onclick="logout()">
+تسجيل خروج
+</button>
+
+
+
+</div>
+
+</div>
+
+
 
 
 
 <script>
 
+
+let users =
+JSON.parse(localStorage.getItem("members")) || [];
+
+
+
+
 function login(){
 
-let user =
-document.getElementById("username").value;
-
-let pass =
-document.getElementById("password").value;
+let u=document.getElementById("user").value;
+let p=document.getElementById("pass").value;
 
 
-// بيانات المدير مؤقتاً
-if(user=="admin" && pass=="123456"){
+if(u=="admin" && p=="123456"){
 
-localStorage.setItem("adminLogin","yes");
+localStorage.setItem("admin","yes");
 
-showDashboard();
-
-}else{
-
-document.getElementById("error").innerHTML=
-"بيانات الدخول غير صحيحة";
+show();
 
 }
+
+else{
+
+document.getElementById("msg").innerHTML=
+"بيانات الدخول خطأ";
 
 }
 
 
-function showDashboard(){
-
-document.getElementById("loginBox").style.display="none";
-
-document.getElementById("dashboard").style.display="block";
+}
 
 
-document.getElementById("users").innerHTML=
-localStorage.getItem("users") || 0;
 
-document.getElementById("requests").innerHTML=
-localStorage.getItem("requests") || 0;
 
-document.getElementById("views").innerHTML=
-localStorage.getItem("views") || 0;
+function show(){
+
+document.getElementById("login").classList.add("hidden");
+
+document.getElementById("panel").classList.remove("hidden");
+
+loadUsers();
 
 }
+
 
 
 function logout(){
 
-localStorage.removeItem("adminLogin");
+localStorage.removeItem("admin");
 
 location.reload();
 
 }
 
 
-if(localStorage.getItem("adminLogin")=="yes"){
 
-showDashboard();
+
+if(localStorage.getItem("admin")=="yes"){
+
+show();
 
 }
 
-</script>
 
-let users = JSON.parse(localStorage.getItem("members")) || [];
+
+
+
+function addUser(){
+
+let name=
+document.getElementById("name").value;
+
+
+let age=
+document.getElementById("age").value;
+
+
+let status=
+document.getElementById("status").value;
+
+
+
+if(name==""){
+
+alert("اكتب الاسم");
+
+return;
+
+}
+
+
+
+users.push({
+
+name:name,
+age:age,
+status:status
+
+});
+
+
+
+localStorage.setItem(
+"members",
+JSON.stringify(users)
+);
+
+
+document.getElementById("name").value="";
+
+document.getElementById("age").value="";
+
+
+loadUsers();
+
+
+}
+
+
+
 
 
 function loadUsers(){
 
-let table=document.getElementById("usersTable");
+
+let table=document.getElementById("table");
+
+
+let search=
+document.getElementById("search")?.value || "";
+
+
 
 table.innerHTML=
 `
@@ -203,52 +402,88 @@ table.innerHTML=
 `;
 
 
-users.forEach((user,index)=>{
 
-table.innerHTML +=
+users
+.filter(x=>x.name.includes(search))
+.forEach((u,i)=>{
+
+
+table.innerHTML+=
 
 `
 <tr>
-<td>${user.name}</td>
-<td>${user.age}</td>
-<td>${user.status}</td>
+
+<td>${u.name}</td>
+
+<td>${u.age}</td>
+
+<td>${u.status}</td>
+
 
 <td>
-<button onclick="deleteUser(${index})">
+
+<button class="delete"
+onclick="removeUser(${i})">
 حذف
 </button>
+
+
 </td>
+
 
 </tr>
 `;
 
+
+
 });
 
-document.getElementById("users").innerHTML=users.length;
+
+
+document.getElementById("countUsers").innerHTML=
+users.length;
+
+
+document.getElementById("countRequests").innerHTML=
+localStorage.getItem("requests")||0;
+
+
+document.getElementById("countViews").innerHTML=
+localStorage.getItem("views")||0;
+
 
 }
 
 
 
-function deleteUser(index){
 
-if(confirm("هل تريد حذف هذا المستخدم؟")){
+function removeUser(i){
 
-users.splice(index,1);
+
+if(confirm("حذف المستخدم؟")){
+
+
+users.splice(i,1);
+
 
 localStorage.setItem(
 "members",
 JSON.stringify(users)
 );
 
+
 loadUsers();
+
 
 }
 
+
 }
 
 
-loadUsers();
+
+</script>
+
 
 </body>
 </html>
