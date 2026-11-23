@@ -484,6 +484,123 @@ loadUsers();
 
 </script>
 
+<script>
 
+// تسجيل زيارة
+let views = Number(localStorage.getItem("views") || 0);
+views++;
+localStorage.setItem("views", views);
+
+
+// إرسال الاستمارة للإدارة
+document.getElementById("visitor-form").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+
+let member = {
+
+id: Date.now(),
+
+name: document.getElementById("v-name").value,
+
+gender: document.getElementById("v-gender").value,
+
+age: document.getElementById("v-age").value,
+
+city: document.getElementById("v-city").value,
+
+work: document.getElementById("v-work").value,
+
+status: document.getElementById("v-status").value,
+
+religion: document.getElementById("v-religion").value,
+
+phone: document.getElementById("v-phone").value,
+
+guardian:
+document.getElementById("v-guardian-phone").value,
+
+specs:
+document.getElementById("v-specs").value,
+
+state:"جديد"
+
+};
+
+
+// حفظ المستخدمين
+
+let members =
+JSON.parse(localStorage.getItem("members")) || [];
+
+
+members.push(member);
+
+
+localStorage.setItem(
+"members",
+JSON.stringify(members)
+);
+
+
+// تحديث الأعداد
+
+localStorage.setItem(
+"users",
+members.length
+);
+
+
+let requests =
+Number(localStorage.getItem("requests") || 0);
+
+requests++;
+
+localStorage.setItem(
+"requests",
+requests
+);
+
+
+// كود المتقدم
+
+alert(
+"تم تسجيل طلبك بنجاح\n\nكودك السري: MW-"+member.id+
+"\nسيتم مراجعة البيانات من الإدارة."
+);
+
+
+this.reset();
+
+
+});
+
+
+// إظهار رقم ولي الأمر للفتاة
+
+function toggleGuardianField(){
+
+let gender =
+document.getElementById("v-gender").value;
+
+
+let input =
+document.getElementById("v-guardian-phone");
+
+
+if(gender=="female"){
+
+input.required=true;
+
+}else{
+
+input.required=false;
+
+}
+
+}
+
+</script>
 </body>
 </html>
