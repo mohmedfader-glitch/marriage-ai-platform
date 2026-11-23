@@ -2,92 +2,176 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة إدارة منصة اختيار</title>
+<title>إدارة منصة اختيار</title>
 
 <style>
 body{
 font-family:Tahoma;
-background:#f5f5f5;
+background:#f2f2f2;
 margin:0;
 }
+
+.login, .dashboard{
+max-width:400px;
+margin:80px auto;
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 3px 10px #ccc;
+text-align:center;
+}
+
+input{
+width:90%;
+padding:12px;
+margin:8px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+button{
+background:#0f766e;
+color:white;
+border:0;
+padding:12px 25px;
+border-radius:8px;
+cursor:pointer;
+}
+
 header{
 background:#0f766e;
 color:white;
 padding:20px;
 text-align:center;
 }
-.container{
-padding:20px;
-}
+
 .card{
 background:white;
-border-radius:15px;
 padding:20px;
-margin:15px 0;
-box-shadow:0 3px 10px #ccc;
+margin:15px;
+border-radius:15px;
+box-shadow:0 2px 8px #ccc;
 }
-button{
-background:#0f766e;
-color:white;
-border:0;
-padding:10px 20px;
-border-radius:8px;
-}
+
 </style>
 
 </head>
 
 <body>
 
+
+<div class="login" id="loginBox">
+
+<h2>🔐 دخول الإدارة</h2>
+
+<input id="username" placeholder="اسم المستخدم">
+
+<input id="password" type="password" placeholder="كلمة السر">
+
+<button onclick="login()">دخول</button>
+
+<p id="error" style="color:red"></p>
+
+</div>
+
+
+
+<div id="dashboard" style="display:none">
+
 <header>
 <h1>لوحة إدارة منصة اختيار</h1>
-<p>مراقبة وإدارة المنصة</p>
 </header>
 
 
-<div class="container">
-
 <div class="card">
 <h2>👥 المستخدمين</h2>
-<p>عدد الأعضاء: <span id="users">0</span></p>
+<p>عدد المستخدمين: <span id="users">0</span></p>
 </div>
 
 
 <div class="card">
 <h2>💍 طلبات الزواج</h2>
-<p>الطلبات الجديدة: <span id="requests">0</span></p>
+<p>الطلبات: <span id="requests">0</span></p>
 </div>
 
 
 <div class="card">
-<h2>📊 الإحصائيات</h2>
-<p>زيارات المنصة: <span id="views">0</span></p>
+<h2>📊 الزيارات</h2>
+<p>الزيارات: <span id="views">0</span></p>
 </div>
 
 
-<div class="card">
-<h2>⚙️ التحكم</h2>
-<button onclick="alert('سيتم إضافة التحكم قريباً')">
-فتح الإدارة
-</button>
-</div>
+<button onclick="logout()">خروج</button>
 
 
 </div>
+
 
 
 <script>
 
-document.getElementById("users").innerHTML = 
+function login(){
+
+let user =
+document.getElementById("username").value;
+
+let pass =
+document.getElementById("password").value;
+
+
+// بيانات المدير مؤقتاً
+if(user=="admin" && pass=="123456"){
+
+localStorage.setItem("adminLogin","yes");
+
+showDashboard();
+
+}else{
+
+document.getElementById("error").innerHTML=
+"بيانات الدخول غير صحيحة";
+
+}
+
+}
+
+
+function showDashboard(){
+
+document.getElementById("loginBox").style.display="none";
+
+document.getElementById("dashboard").style.display="block";
+
+
+document.getElementById("users").innerHTML=
 localStorage.getItem("users") || 0;
 
-document.getElementById("requests").innerHTML =
+document.getElementById("requests").innerHTML=
 localStorage.getItem("requests") || 0;
 
-document.getElementById("views").innerHTML =
+document.getElementById("views").innerHTML=
 localStorage.getItem("views") || 0;
 
+}
+
+
+function logout(){
+
+localStorage.removeItem("adminLogin");
+
+location.reload();
+
+}
+
+
+if(localStorage.getItem("adminLogin")=="yes"){
+
+showDashboard();
+
+}
+
 </script>
+
 
 </body>
 </html>
