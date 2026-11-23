@@ -1,13 +1,1309 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة الزواج بالذكاء الاصطناعي</title>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة مودة | التوافق والزواج الشرعي بإشراف الإدارة</title>
+    <!-- تحميل Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            850: '#064e3b',
+                            900: '#064e3b',
+                            950: '#022c22',
+                        },
+                        gold: {
+                            100: '#fef3c7',
+                            400: '#fbbf24',
+                            500: '#d97706',
+                            600: '#b45309',
+                        },
+                        cream: {
+                            50: '#fdfbf7',
+                            100: '#f7f3eb',
+                            200: '#ede5d5',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* خطوط عربية أصيلة مع بدائل نظامية فورية لضمان سرعة التحميل */
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;800&display=swap');
 
-<body>
-<h1>مرحباً بك في منصة الزواج بالذكاء الاصطناعي</h1>
-<p>نظام اختيار الشريك المناسب باستخدام الذكاء الاصطناعي</p>
+        body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+            background-color: #fdfbf7;
+            color: #1f2937;
+            margin: 0;
+            padding: 0;
+        }
+
+        .font-quran {
+            font-family: 'Amiri', Georgia, serif;
+        }
+
+        /* زخرفة هندسية خفيفة للخلفية */
+        .hero-pattern {
+            background-color: #fdfbf7;
+            background-image: radial-gradient(#d97706 0.6px, transparent 0.6px), radial-gradient(#064e3b 0.6px, #fdfbf7 0.6px);
+            background-size: 28px 28px;
+            background-position: 0 0, 14px 14px;
+        }
+
+        /* حركات انتقالية سلسة */
+        .fade-in {
+            animation: fadeIn 0.35s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-200 selection:text-emerald-950">
+
+    <!-- ===================================================================== -->
+    <!-- الشريط العلوي للتنبيه والتبديل السريع بين الزوار ولوحة الإدارة -->
+    <!-- ===================================================================== -->
+    <div class="bg-emerald-950 text-cream-100 text-xs sm:text-sm py-2.5 px-4 border-b border-gold-500/40 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <!-- معلومات النسخة التجريبية ورقم الإدارة -->
+            <div class="flex items-center gap-2">
+                <span class="bg-gold-500 text-white font-extrabold px-2.5 py-0.5 rounded-full text-[11px]">نسخة تجريبية</span>
+                <span class="hidden sm:inline text-cream-200">إدارة المنصة:</span>
+                <a href="https://wa.me/201020298357" target="_blank" dir="ltr" class="font-bold text-gold-400 hover:underline">01020298357</a>
+            </div>
+
+            <!-- أزرار التبديل الفوري بين الواجهتين -->
+            <div class="flex items-center gap-1.5 bg-emerald-900 p-1 rounded-xl border border-gold-500/30">
+                <button type="button" id="btn-mode-visitor" onclick="switchMode('visitor')" 
+                        class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-gold-500 text-white shadow transition flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span>واجهة المتقدمين (الزوار)</span>
+                </button>
+                <button type="button" id="btn-mode-admin" onclick="switchMode('admin')" 
+                        class="px-3 py-1.5 rounded-lg text-xs font-extrabold text-cream-100 hover:text-gold-400 transition flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <span>لوحة تحكم الإدارة (الخاطبة)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- الهيدر الرئيسي (Header) -->
+    <!-- ===================================================================== -->
+    <header class="bg-white border-b border-cream-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- شعار المنصة -->
+            <a href="#top" onclick="switchMode('visitor')" class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-900 flex items-center justify-center text-gold-400 shadow">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L9 7h6l-3-5zm0 6c-3.31 0-6 2.69-6 6v8h4v-5c0-1.1.9-2 2-2s2 .9 2 2v5h4v-8c0-3.31-2.69-6-6-6z"/></svg>
+                </div>
+                <div>
+                    <span class="font-quran text-2xl sm:text-3xl font-bold text-emerald-900 block leading-none">مَوَدَّة</span>
+                    <span class="text-[11px] sm:text-xs text-gold-600 font-bold">للتوافق والزواج الشرعي</span>
+                </div>
+            </a>
+
+            <!-- زر تواصل واتساب الإدارة المباشر -->
+            <a href="https://wa.me/201020298357?text=السلام%20عليكم%20ورحمة%20الله%20إدارة%20منصة%20مودة،%20أرغب%20في%20الاستفسار%20عن%20التسجيل%20للزواج%20الشرعي" 
+               target="_blank" 
+               class="flex items-center gap-2 bg-emerald-900 hover:bg-emerald-950 text-white px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow transition border border-gold-500/40">
+                <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+                <span class="hidden sm:inline">واتساب الإدارة:</span>
+                <span dir="ltr" class="text-gold-400">01020298357</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- القسم الأول: واجهة المتقدمين والزوار (VISITOR VIEW) -->
+    <!-- ===================================================================== -->
+    <main id="visitor-section" class="flex-grow fade-in">
+        
+        <!-- القسم التعريفي (Hero) -->
+        <section class="relative hero-pattern py-12 sm:py-20 border-b border-cream-200">
+            <div class="absolute inset-0 bg-gradient-to-b from-cream-50/90 via-cream-50/85 to-cream-50"></div>
+            <div class="relative max-w-5xl mx-auto px-4 sm:px-6 text-center">
+                <div class="inline-block bg-gold-100 border border-gold-500/30 rounded-full px-5 py-1.5 mb-5">
+                    <p class="font-quran text-emerald-900 text-base sm:text-lg">
+                        ﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾
+                    </p>
+                </div>
+
+                <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-emerald-950 leading-tight mb-5">
+                    طريقك الآمن والشرعي للبحث عن <span class="text-gold-500">شريك الحياة</span>
+                </h1>
+
+                <p class="text-sm sm:text-lg text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
+                    منصة <strong class="text-emerald-900">مودة</strong> تعمل بنظام الوساطة الشرعية الخاضعة لإشراف الإدارة الكامل؛ لا تُنشر أي أسماء أو أرقام هواتف أو صور للعامة، ويتم تبادل البيانات حصرياً عبر الإدارة بعد موافقة الطرفين.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5">
+                    <a href="#form-anchor" class="w-full sm:w-auto bg-emerald-900 hover:bg-emerald-950 text-white font-bold px-8 py-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
+                        <span>ابدأ تسجيل استمارة التوافق</span>
+                        <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    </a>
+                    <a href="https://wa.me/201020298357" target="_blank" class="w-full sm:w-auto bg-white hover:bg-gold-100 text-emerald-900 font-bold px-8 py-4 rounded-2xl shadow border-2 border-gold-500 transition flex items-center justify-center gap-2">
+                        <span>تواصل مباشر مع الخاطبة (01020298357)</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم استمارة تسجيل بيانات الجدية والتوافق -->
+        <section id="form-anchor" class="py-12 sm:py-16 bg-cream-100 border-b border-cream-200">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6">
+                <div class="text-center mb-8">
+                    <span class="bg-emerald-900 text-gold-400 text-xs font-bold px-3 py-1 rounded-full">سرية تامة 100%</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-2">استمارة طلب التوافق والزواج الشرعي</h2>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1">أدخل بياناتك بدقة؛ فور الإرسال ستحصل على كودك السري وتظهر لك الحالات المتوافقة المعتمدة من الإدارة.</p>
+                </div>
+
+                <div class="bg-white rounded-3xl shadow-xl border border-cream-200 overflow-hidden">
+                    <div class="bg-emerald-900 px-6 py-4 text-white flex items-center justify-between">
+                        <span class="font-bold text-sm sm:text-base">بيانات المتقدم (محفوظة لدى الإدارة فقط)</span>
+                        <span class="text-xs text-gold-400 font-bold">إدارة: 01020298357</span>
+                    </div>
+
+                    <form id="visitor-form" class="p-6 sm:p-8 space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <!-- الاسم الكامل -->
+                            <div>
+                                <label for="v-name" class="block text-sm font-bold text-gray-700 mb-1.5">الاسم الكامل (يظهر للإدارة فقط) <span class="text-red-600">*</span></label>
+                                <input type="text" id="v-name" required placeholder="مثال: عبد الله محمد / سارة محمود" 
+                                       class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
+                            </div>
+
+                            <!-- النوع -->
+                            <div>
+                                <label for="v-gender" class="block text-sm font-bold text-gray-700 mb-1.5">النوع <span class="text-red-600">*</span></label>
+                                <select id="v-gender" onchange="toggleGuardianField()" required 
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none bg-white text-sm font-semibold">
+                                    <option value="male">شاب / رجل (أبحث عن زوجة)</option>
+                                    <option value="female">فتاة / سيدة (أبحث عن زوج)</option>
+                                </select>
+                            </div>
+
+                            <!-- السن -->
+                            <div>
+                                <label for="v-age" class="block text-sm font-bold text-gray-700 mb-1.5">السن (بالسنوات) <span class="text-red-600">*</span></label>
+                                <input type="number" id="v-age" min="18" max="75" required placeholder="مثال: 28" 
+                                       class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
+                            </div>
+
+                            <!-- المحافظة -->
+                            <div>
+                                <label for="v-city" class="block text-sm font-bold text-gray-700 mb-1.5">المحافظة <span class="text-red-600">*</span></label>
+                                <select id="v-city" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none bg-white text-sm">
+                                    <option value="القاهرة">القاهرة</option>
+                                    <option value="الجيزة">الجيزة</option>
+                                    <option value="الإسكندرية">الإسكندرية</option>
+                                    <option value="الدقهلية">الدقهلية</option>
+                                    <option value="الشرقية">الشرقية</option>
+                                    <option value="المنوفية">المنوفية</option>
+                                    <option value="الغربية">الغربية</option>
+                                    <option value="أسيوط">أسيوط</option>
+                                    <option value="سوهاج">سوهاج</option>
+                                    <option value="المنيا">المنيا</option>
+                                    <option value="محافظة أخرى">محافظة أخرى</option>
+                                </select>
+                            </div>
+
+                            <!-- المؤهل والعمل -->
+                            <div>
+                                <label for="v-work" class="block text-sm font-bold text-gray-700 mb-1.5">المؤهل الدراسي والعمل <span class="text-red-600">*</span></label>
+                                <input type="text" id="v-work" required placeholder="مثال: بكالوريوس هندسة - مهندس مدني" 
+                                       class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
+                            </div>
+
+                            <!-- الحالة الاجتماعية -->
+                            <div>
+                                <label for="v-status" class="block text-sm font-bold text-gray-700 mb-1.5">الحالة الاجتماعية <span class="text-red-600">*</span></label>
+                                <select id="v-status" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none bg-white text-sm">
+                                    <option value="أعزب / آنسة">أعزب / آنسة (لم يسبق الزواج)</option>
+                                    <option value="مطلق / مطلقة (بدون أطفال)">مطلق / مطلقة (بدون أطفال)</option>
+                                    <option value="مطلق / مطلقة (مع أطفال)">مطلق / مطلقة (مع أطفال)</option>
+                                    <option value="أرمل / أرملة">أرمل / أرملة</option>
+                                </select>
+                            </div>
+
+                            <!-- الالتزام الديني -->
+                            <div>
+                                <label for="v-religion" class="block text-sm font-bold text-gray-700 mb-1.5">الالتزام الديني والأخلاقي <span class="text-red-600">*</span></label>
+                                <select id="v-religion" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none bg-white text-sm">
+                                    <option value="محافظ على الصلوات والفرائض">محافظ على الصلوات والفرائض</option>
+                                    <option value="ملتزم بالسنة (لحية / نقاب أو خمار شرعي)">ملتزم بالسنة (لحية / نقاب أو خمار شرعي)</option>
+                                    <option value="وسطي وأسعى لزيادة الالتزام">وسطي وأسعى لزيادة الالتزام</option>
+                                </select>
+                            </div>
+
+                            <!-- رقم الواتساب الشخصي -->
+                            <div>
+                                <label for="v-phone" class="block text-sm font-bold text-gray-700 mb-1.5">رقم الواتساب الشخصي <span class="text-red-600">*</span></label>
+                                <input type="tel" id="v-phone" dir="ltr" required placeholder="010xxxxxxxx" 
+                                       class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm text-right">
+                            </div>
+                        </div>
+
+                        <!-- رقم واتساب ولي الأمر (مطلوب للفتاة واختياري للشاب) -->
+                        <div id="guardian-phone-wrapper" class="bg-gold-100/60 p-4 rounded-2xl border border-gold-500/30">
+                            <label for="v-guardian-phone" class="block text-sm font-bold text-emerald-950 mb-1">
+                                رقم واتساب ولي الأمر <span id="guardian-badge" class="text-xs text-gray-600 font-normal">(اختياري للشاب - ومطلوب للفتاة لضمان التواصل الشرعي)</span>
+                            </label>
+                            <input type="tel" id="v-guardian-phone" dir="ltr" placeholder="01xxxxxxxxx (رقم الأب أو الأخ الأكبر)" 
+                                   class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white focus:border-emerald-900 outline-none text-sm text-right">
+                        </div>
+
+                        <!-- مواصفات شريك الحياة -->
+                        <div>
+                            <label for="v-specs" class="block text-sm font-bold text-gray-700 mb-1.5">نبذة عنك ومواصفات شريك الحياة المطلوب <span class="text-red-600">*</span></label>
+                            <textarea id="v-specs" rows="3" required placeholder="اذكر ظروفك باختصار وأهم الصفات التي تتمناها في شريك حياتك..." 
+                                      class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm"></textarea>
+                        </div>
+
+                        <!-- إقرار الجدية -->
+                        <div class="flex items-start gap-2.5 bg-cream-50 p-3.5 rounded-xl border border-cream-200">
+                            <input type="checkbox" id="v-pledge" required class="mt-1 w-4 h-4 accent-emerald-900 cursor-pointer">
+                            <label for="v-pledge" class="text-xs sm:text-sm text-gray-700 cursor-pointer leading-relaxed">
+                                <strong>أُقسم بالله العظيم</strong> أنني جاد في طلب الزواج الشرعي، وأن بياناتي صحيحة، وأفوّض إدارة منصة مودة بمراجعتها والربط الشرعي.
+                            </label>
+                        </div>
+
+                        <div class="text-center pt-2">
+                            <button type="submit" class="w-full sm:w-auto bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-base px-10 py-4 rounded-2xl shadow-lg transition">
+                                إرسال البيانات وعرض المرشحين المتوافقين
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- نتيجة التسجيل وقائمة المرشحين المتوافقين (تظهر بعد الإرسال) -->
+                    <div id="visitor-results-box" class="hidden p-6 sm:p-8 bg-cream-50 border-t-4 border-gold-500 space-y-6">
+                        <div class="bg-emerald-950 text-white p-6 rounded-2xl text-center space-y-3 shadow">
+                            <span class="inline-block bg-gold-500 text-white text-xs font-bold px-3 py-1 rounded-full">تم الحفظ في سجل الإدارة</span>
+                            <h3 class="text-xl sm:text-2xl font-bold text-gold-400">تم تسجيل استمارتك بنجاح!</h3>
+                            <p class="text-xs sm:text-sm text-cream-100">احتفظ بكودك السري للمتابعة مع إدارة المنصة:</p>
+                            <div class="inline-block bg-emerald-900 border-2 border-gold-400 px-8 py-2.5 rounded-xl">
+                                <span id="v-result-code" class="text-2xl sm:text-3xl font-extrabold text-gold-400 tracking-widest">MW-105</span>
+                            </div>
+                            <div class="pt-2 flex flex-wrap justify-center gap-3">
+                                <a id="v-confirm-admin-wa" href="#" target="_blank" class="bg-green-600 hover:bg-green-700 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl shadow transition">
+                                    إرسال تأكيد الجدية لواتساب الإدارة (01020298357)
+                                </a>
+                                <button type="button" onclick="resetVisitorForm()" class="bg-emerald-850 hover:bg-emerald-900 text-cream-100 text-xs font-bold px-4 py-3 rounded-xl border border-emerald-700">
+                                    تسجيل طلب آخر
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- عرض المرشحين المعتمدين من الجنس الآخر -->
+                        <div>
+                            <h4 class="text-lg sm:text-xl font-extrabold text-emerald-950 mb-1">المرشحون المعتمدون المتوافقون معك (بأكواد سرية):</h4>
+                            <p class="text-xs text-gray-600 mb-4">تم إخفاء الأسماء وأرقام الهواتف للسرية التامة. اختر الكود المناسب لطلب الترشيح عبر الإدارة.</p>
+                            <div id="matched-candidates-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <!-- يتم ملؤها تلقائياً -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم الحالات المعتمدة المتاحة للتصفح العام -->
+        <section class="py-12 sm:py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <span class="text-gold-600 font-bold text-xs">معتمدة من إدارة المنصة</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950">حالات متاحة للتوافق (بأكواد سرية)</h2>
+                    </div>
+                    <div class="flex items-center gap-2 bg-cream-100 p-1.5 rounded-xl border border-cream-200 self-start">
+                        <button type="button" onclick="setPublicFilter('all')" id="flt-all" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-900 text-white">الكل</button>
+                        <button type="button" onclick="setPublicFilter('male')" id="flt-male" class="px-4 py-1.5 rounded-lg text-xs font-bold text-gray-700">عرسان</button>
+                        <button type="button" onclick="setPublicFilter('female')" id="flt-female" class="px-4 py-1.5 rounded-lg text-xs font-bold text-gray-700">عرائس</button>
+                    </div>
+                </div>
+
+                <div id="public-approved-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- بطاقات الحالات المعتمدة -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- القسم الثاني: لوحة تحكم الإدارة / الخاطبة (ADMIN DASHBOARD) -->
+    <!-- ===================================================================== -->
+    <section id="admin-section" class="hidden flex-grow bg-cream-100 py-8 sm:py-12 fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+            <!-- شاشة تسجيل دخول الإدارة -->
+            <div id="admin-auth-box" class="max-w-md mx-auto bg-white rounded-3xl shadow-xl border border-cream-200 overflow-hidden my-8">
+                <div class="bg-emerald-950 p-6 text-center text-white border-b-4 border-gold-500">
+                    <h2 class="text-xl font-extrabold text-gold-400">دخول لوحة تحكم الإدارة (الخاطبة)</h2>
+                    <p class="text-xs text-cream-200 mt-1">التحكم الكامل في الطلبات وإرسال بيانات الطرفين</p>
+                </div>
+                <form id="admin-auth-form" class="p-6 space-y-4">
+                    <div>
+                        <label for="admin-pass-input" class="block text-sm font-bold text-gray-700 mb-1.5">كلمة مرور الإدارة</label>
+                        <input type="password" id="admin-pass-input" value="1234" required 
+                               class="w-full px-4 py-3 rounded-xl border border-gray-300 text-center text-lg font-bold tracking-widest outline-none focus:border-emerald-900">
+                        <p class="text-xs text-emerald-900 bg-gold-100 p-2 rounded-lg mt-2 text-center font-semibold">
+                            كلمة المرور التجريبية مُدخلة جاهزة: <strong>1234</strong> (اضغط دخول مباشرة)
+                        </p>
+                    </div>
+                    <p id="admin-auth-err" class="hidden text-xs text-red-600 font-bold text-center">كلمة المرور غير صحيحة!</p>
+                    <button type="submit" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold py-3.5 rounded-xl shadow transition">
+                        دخول إلى لوحة الإدارة
+                    </button>
+                </form>
+            </div>
+
+            <!-- لوحة التحكم الفعلية بعد الدخول -->
+            <div id="admin-panel" class="hidden space-y-8">
+                
+                <!-- رأس لوحة الإدارة -->
+                <div class="bg-emerald-950 text-white rounded-3xl p-6 shadow-lg border-b-4 border-gold-500 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs text-gold-400 font-bold">إدارة منصة مودة • 01020298357</span>
+                        <h1 class="text-xl sm:text-2xl font-extrabold mt-0.5">لوحة التحكم والمطابقة وإرسال البيانات</h1>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <button type="button" onclick="toggleAddMemberModal(true)" class="bg-gold-500 hover:bg-gold-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow transition">
+                            + إضافة عضو جديد يدوياً
+                        </button>
+                        <button type="button" onclick="logoutAdmin()" class="bg-emerald-900 hover:bg-emerald-800 text-cream-100 text-xs font-bold px-4 py-2.5 rounded-xl border border-emerald-700">
+                            خروج الإدارة
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 1. الإحصائيات السريعة -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm">
+                        <span class="text-xs text-gray-500 font-bold">إجمالي الطلبات</span>
+                        <span id="kpi-total" class="text-2xl sm:text-3xl font-extrabold text-emerald-950 block mt-1">0</span>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm">
+                        <span class="text-xs text-gray-500 font-bold">قيد المراجعة</span>
+                        <span id="kpi-pending" class="text-2xl sm:text-3xl font-extrabold text-amber-600 block mt-1">0</span>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm">
+                        <span class="text-xs text-gray-500 font-bold">المعتمدة والمنشورة</span>
+                        <span id="kpi-approved" class="text-2xl sm:text-3xl font-extrabold text-green-600 block mt-1">0</span>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm">
+                        <span class="text-xs text-gray-500 font-bold">تم التوفيق</span>
+                        <span id="kpi-matched" class="text-2xl sm:text-3xl font-extrabold text-gold-600 block mt-1">0</span>
+                    </div>
+                </div>
+
+                <!-- 2. قسم المطابقة وإرسال البيانات بين الطرفين (التحكم الأساسي للخاطبة) -->
+                <div class="bg-white rounded-3xl shadow-lg border-2 border-gold-500/50 overflow-hidden">
+                    <div class="bg-emerald-900 px-6 py-4 text-white flex items-center justify-between">
+                        <h2 class="font-bold text-base sm:text-lg">أداة المطابقة وإرسال بيانات الطرفين عبر الواتساب</h2>
+                        <span class="text-xs bg-gold-500 text-white font-bold px-3 py-1 rounded-full">إرسال رسمي</span>
+                    </div>
+
+                    <div class="p-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <!-- اختيار العريس -->
+                            <div class="bg-cream-50 p-4 rounded-2xl border border-cream-200">
+                                <label for="match-groom-select" class="block text-sm font-extrabold text-emerald-950 mb-2">1. اختر العريس (الطرف الأول):</label>
+                                <select id="match-groom-select" onchange="renderMatchComparison()" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-sm font-bold outline-none focus:border-emerald-900">
+                                </select>
+                            </div>
+
+                            <!-- اختيار العروس -->
+                            <div class="bg-cream-50 p-4 rounded-2xl border border-cream-200">
+                                <label for="match-bride-select" class="block text-sm font-extrabold text-emerald-950 mb-2">2. اختر العروس (الطرف الثاني):</label>
+                                <select id="match-bride-select" onchange="renderMatchComparison()" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-sm font-bold outline-none focus:border-emerald-900">
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- بطاقة المقارنة الشاملة وأزرار الإرسال -->
+                        <div id="match-comparison-box" class="hidden space-y-5 pt-4 border-t border-gray-200">
+                            <!-- نسبة التوافق المحسوبة تلقائياً -->
+                            <div class="bg-emerald-950 text-white p-4 rounded-2xl flex items-center justify-between">
+                                <div>
+                                    <span class="text-xs text-cream-200 block">نسبة التوافق التلقائية بين الطرفين</span>
+                                    <span id="match-reasons-text" class="text-xs sm:text-sm text-gold-400 font-bold"></span>
+                                </div>
+                                <span id="match-score-badge" class="text-3xl font-extrabold text-gold-400">95%</span>
+                            </div>
+
+                            <!-- مقارنة البيانات كاملة للإدارة -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
+                                <!-- بيانات العريس -->
+                                <div class="bg-cream-50 p-5 rounded-2xl border border-emerald-900/20 space-y-2">
+                                    <div class="flex justify-between items-center border-b border-cream-200 pb-2">
+                                        <span class="font-extrabold text-emerald-950">بيانات العريس (<span id="cmp-g-code"></span>)</span>
+                                        <span id="cmp-g-phone" dir="ltr" class="text-xs font-bold bg-emerald-900 text-white px-2.5 py-0.5 rounded-full"></span>
+                                    </div>
+                                    <p><strong>الاسم الكامل:</strong> <span id="cmp-g-name"></span></p>
+                                    <p><strong>السن والحالة:</strong> <span id="cmp-g-age"></span></p>
+                                    <p><strong>المحافظة:</strong> <span id="cmp-g-city"></span></p>
+                                    <p><strong>المؤهل والعمل:</strong> <span id="cmp-g-work"></span></p>
+                                    <p><strong>الالتزام:</strong> <span id="cmp-g-religion"></span></p>
+                                    <p><strong>رقم ولي الأمر (إن وجد):</strong> <span id="cmp-g-guardian" dir="ltr"></span></p>
+                                    <p class="text-xs bg-white p-2.5 rounded-xl border border-cream-200"><strong>المواصفات:</strong> <span id="cmp-g-specs"></span></p>
+                                </div>
+
+                                <!-- بيانات العروس -->
+                                <div class="bg-cream-50 p-5 rounded-2xl border border-gold-500/40 space-y-2">
+                                    <div class="flex justify-between items-center border-b border-cream-200 pb-2">
+                                        <span class="font-extrabold text-emerald-950">بيانات العروس (<span id="cmp-b-code"></span>)</span>
+                                        <span id="cmp-b-phone" dir="ltr" class="text-xs font-bold bg-gold-500 text-white px-2.5 py-0.5 rounded-full"></span>
+                                    </div>
+                                    <p><strong>الاسم الكامل:</strong> <span id="cmp-b-name"></span></p>
+                                    <p><strong>السن والحالة:</strong> <span id="cmp-b-age"></span></p>
+                                    <p><strong>المحافظة:</strong> <span id="cmp-b-city"></span></p>
+                                    <p><strong>المؤهل والعمل:</strong> <span id="cmp-b-work"></span></p>
+                                    <p><strong>الالتزام:</strong> <span id="cmp-b-religion"></span></p>
+                                    <p class="text-emerald-900"><strong>رقم واتساب ولي الأمر:</strong> <span id="cmp-b-guardian" dir="ltr" class="font-extrabold"></span></p>
+                                    <p class="text-xs bg-white p-2.5 rounded-xl border border-cream-200"><strong>المواصفات:</strong> <span id="cmp-b-specs"></span></p>
+                                </div>
+                            </div>
+
+                            <!-- زرا الإرسال المباشر عبر الواتساب -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <a id="link-send-bride-to-groom" href="#" target="_blank" 
+                                   class="bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs sm:text-sm py-4 px-5 rounded-2xl shadow text-center transition block">
+                                    إرسال بيانات العروس (وولي الأمر) إلى واتساب العريس
+                                </a>
+                                <a id="link-send-groom-to-bride" href="#" target="_blank" 
+                                   class="bg-gold-500 hover:bg-gold-600 text-white font-bold text-xs sm:text-sm py-4 px-5 rounded-2xl shadow text-center transition block">
+                                    إرسال بيانات العريس إلى واتساب العروس / ولي الأمر
+                                </a>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="button" onclick="confirmPairMatched()" class="text-xs font-extrabold text-emerald-900 hover:underline">
+                                    تحديث حالة الطرفين في السجل إلى "تم التوفيق"
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. سجل جميع الطلبات المسجلة (للإدارة فقط) -->
+                <div class="bg-white rounded-3xl shadow-lg border border-cream-200 overflow-hidden">
+                    <div class="bg-emerald-950 px-6 py-4 text-white flex flex-wrap items-center justify-between gap-3">
+                        <h2 class="font-bold text-base sm:text-lg">سجل الطلبات الكامل (الأسماء والأرقام السرية)</h2>
+                        <div class="flex items-center gap-2">
+                            <select id="adm-filter-status" onchange="renderAdminList()" class="bg-emerald-900 text-white text-xs font-bold px-3 py-2 rounded-xl border border-emerald-700 outline-none">
+                                <option value="all">جميع الحالات</option>
+                                <option value="pending">قيد المراجعة</option>
+                                <option value="approved">معتمدة ومنشورة</option>
+                                <option value="matched">تم التوفيق</option>
+                            </select>
+                            <select id="adm-filter-gender" onchange="renderAdminList()" class="bg-emerald-900 text-white text-xs font-bold px-3 py-2 rounded-xl border border-emerald-700 outline-none">
+                                <option value="all">الكل</option>
+                                <option value="male">العرسان فقط</option>
+                                <option value="female">العرائس فقط</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="admin-records-grid" class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-5">
+                        <!-- يتم توليد بطاقات الأعضاء للإدارة هنا -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- نافذة إضافة عضو جديد يدوياً من الإدارة -->
+    <!-- ===================================================================== -->
+    <div id="modal-add-member" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-cream-200 overflow-hidden max-h-[90vh] overflow-y-auto">
+            <div class="bg-emerald-900 px-6 py-4 text-white flex items-center justify-between">
+                <h3 class="font-bold text-base">إضافة عضو جديد يدوياً (الإدارة)</h3>
+                <button type="button" onclick="toggleAddMemberModal(false)" class="text-cream-200 hover:text-white text-2xl leading-none">&times;</button>
+            </div>
+            <form id="form-admin-add" class="p-6 space-y-4 text-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">الاسم الكامل *</label>
+                        <input type="text" id="a-name" required class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">النوع *</label>
+                        <select id="a-gender" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none">
+                            <option value="male">عريس (شاب / رجل)</option>
+                            <option value="female">عروس (فتاة / سيدة)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">السن *</label>
+                        <input type="number" id="a-age" min="18" max="75" required class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">المحافظة *</label>
+                        <input type="text" id="a-city" required placeholder="مثال: القاهرة" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">المؤهل والعمل *</label>
+                        <input type="text" id="a-work" required class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">الحالة الاجتماعية *</label>
+                        <input type="text" id="a-status" required value="أعزب / آنسة" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">الواتساب الشخصي *</label>
+                        <input type="tel" id="a-phone" dir="ltr" required placeholder="010xxxxxxxx" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none text-right">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">واتساب ولي الأمر (للفتاة)</label>
+                        <input type="tel" id="a-guardian" dir="ltr" placeholder="010xxxxxxxx" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none text-right">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">الالتزام الديني *</label>
+                    <input type="text" id="a-religion" required value="محافظ على الصلوات والضوابط الشرعية" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none">
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">نبذة والمواصفات المطلوبة *</label>
+                    <textarea id="a-specs" rows="2" required class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="toggleAddMemberModal(false)" class="px-4 py-2 rounded-xl border border-gray-300 font-bold text-gray-600">إلغاء</button>
+                    <button type="submit" class="px-6 py-2 rounded-xl bg-emerald-900 text-white font-bold">حفظ واعتماد</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- إشعار Toast بديل عن alert -->
+    <div id="toast-box" class="hidden fixed bottom-6 right-6 z-50 bg-emerald-950 text-white px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-gold-500 text-sm font-bold">
+        <span id="toast-msg">تم الحفظ بنجاح</span>
+    </div>
+
+    <!-- التذييل (Footer) -->
+    <footer class="bg-emerald-950 text-cream-100 py-8 border-t-4 border-gold-500 text-center text-xs sm:text-sm">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-bold text-gold-400">منصة مَوَدَّة للتوافق والزواج الشرعي • إدارة: 01020298357</p>
+            <p class="text-cream-200/80">جميع البيانات سرية وتُدار حصرياً عبر إدارة المنصة وفق الضوابط الشرعية.</p>
+        </div>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- كود JavaScript النظيف والمستقر لإدارة المنصة بالكامل -->
+    <!-- ===================================================================== -->
+    <script>
+        var ADMIN_WA_NUMBER = "201020298357";
+        var DB_STORAGE_KEY = "mawadda_platform_records_v2";
+        var isAdminLogged = false;
+        var currentPublicFilter = "all";
+
+        // بيانات تجريبية مبدئية جاهزة لاختبار المطابقة فوراً
+        var sampleRecords = [
+            {
+                id: 1001,
+                code: "MW-101",
+                name: "أحمد محمود السيد",
+                gender: "male",
+                age: 29,
+                city: "القاهرة",
+                work: "بكالوريوس هندسة - مهندس برمجيات",
+                maritalStatus: "أعزب",
+                religion: "محافظ على الصلوات والفرائض وذو خلق",
+                phone: "01001112233",
+                guardianPhone: "",
+                specs: "يمتلك شقة تمليك بالقاهرة، جاد في الزواج خلال أشهر، يبحث عن زوجة متدينة ومثقفة.",
+                status: "approved"
+            },
+            {
+                id: 1002,
+                code: "MW-102",
+                name: "عمر فاروق عبد الله",
+                gender: "male",
+                age: 32,
+                city: "الجيزة",
+                work: "بكالوريوس طب بشري - طبيب باطنة",
+                maritalStatus: "أعزب",
+                religion: "ملتزم بالسنة والضوابط الشرعية، لا يدخن",
+                phone: "01112223344",
+                guardianPhone: "",
+                specs: "من أسرة طيبة، يقدر الحياة الأسرية ويبحث عن زوجة صالحة تعينه على طاعة الله.",
+                status: "approved"
+            },
+            {
+                id: 1003,
+                code: "MW-103",
+                name: "يوسف إبراهيم حسن",
+                gender: "male",
+                age: 27,
+                city: "الإسكندرية",
+                work: "ليسانس شريعة وقانون - باحث قانوني",
+                maritalStatus: "أعزب",
+                religion: "حافظ لأجزاء من القرآن ومحافظ على صلاة الجماعة",
+                phone: "01223334455",
+                guardianPhone: "",
+                specs: "شاب هادئ الطباع، يبحث عن الاستقرار الأسري وبناء بيت مسلم على المودة والرحمة.",
+                status: "pending"
+            },
+            {
+                id: 2001,
+                code: "MW-201",
+                name: "مريم طارق محمد",
+                gender: "female",
+                age: 25,
+                city: "القاهرة",
+                work: "بكالوريوس صيدلة - صيدلانية",
+                maritalStatus: "آنسة",
+                religion: "منتقبة / خمار شرعي، حافظة للقرآن الكريم",
+                phone: "01098765432",
+                guardianPhone: "01055556666",
+                specs: "من أسرة محافظة، هادئة ومثقفة، تبحث عن شاب متدين ذو خلق ووظيفة مستقرة.",
+                status: "approved"
+            },
+            {
+                id: 2002,
+                code: "MW-202",
+                name: "فاطمة الزهراء علي",
+                gender: "female",
+                age: 27,
+                city: "الجيزة",
+                work: "ليسانس آداب وتربية - معلمة",
+                maritalStatus: "آنسة",
+                religion: "محجبة حجاباً شرعياً ومحافظة على الصلوات",
+                phone: "01198765432",
+                guardianPhone: "01144447777",
+                specs: "تقدر الحياة الزوجية وتفضل السكن المستقل، تبحث عن زوج يحترم المرأة ويخاف الله.",
+                status: "approved"
+            },
+            {
+                id: 2003,
+                code: "MW-203",
+                name: "هدى سامي محمود",
+                gender: "female",
+                age: 24,
+                city: "الإسكندرية",
+                work: "بكالوريوس تجارة - محاسبة",
+                maritalStatus: "آنسة",
+                religion: "ملتزمة بالفرائض ومن أسرة كريمة",
+                phone: "01298765432",
+                guardianPhone: "01233338888",
+                specs: "تبحث عن التفاهم والمودة والاحترام المتبادل والاستقرار.",
+                status: "pending"
+            }
+        ];
+
+        // قراءة وحفظ البيانات في localStorage بأمان
+        function loadRecords() {
+            try {
+                var raw = localStorage.getItem(DB_STORAGE_KEY);
+                if (!raw) {
+                    localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(sampleRecords));
+                    return sampleRecords.slice();
+                }
+                return JSON.parse(raw);
+            } catch (err) {
+                return sampleRecords.slice();
+            }
+        }
+
+        function saveRecords(list) {
+            try {
+                localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(list));
+            } catch (err) {
+                // تجاهل في حال تقييد التخزين
+            }
+        }
+
+        // معالجة أرقام الهواتف المصرية وتحويل 010... إلى 2010... لروابط الواتساب
+        function toEgyptianWhatsApp(phoneStr) {
+            if (!phoneStr) return ADMIN_WA_NUMBER;
+            var digits = String(phoneStr).replace(/\D/g, "");
+            if (digits.indexOf("01") === 0 && digits.length === 11) {
+                return "2" + digits;
+            }
+            if (digits.indexOf("201") === 0) {
+                return digits;
+            }
+            return digits || ADMIN_WA_NUMBER;
+        }
+
+        // إشعار عائم سلس
+        function notifyUser(msg) {
+            var box = document.getElementById("toast-box");
+            var txt = document.getElementById("toast-msg");
+            txt.textContent = msg;
+            box.classList.remove("hidden");
+            setTimeout(function() {
+                box.classList.add("hidden");
+            }, 3500);
+        }
+
+        // حساب نسبة التوافق بين طرفين
+        function calculateMatchPercentage(groom, bride) {
+            var score = 76;
+            var notes = [];
+            var diff = groom.age - bride.age;
+            if (diff >= 0 && diff <= 8) {
+                score += 10;
+                notes.push("فارق عمر مثالي");
+            } else if (diff >= -2 && diff <= 12) {
+                score += 5;
+                notes.push("فارق عمر متقارب");
+            }
+            if (groom.city === bride.city) {
+                score += 9;
+                notes.push("نفس المحافظة (" + groom.city + ")");
+            } else {
+                score += 3;
+            }
+            if (groom.religion && bride.religion) {
+                score += 4;
+                notes.push("توافق في الالتزام الشرعي");
+            }
+            if (score > 99) score = 99;
+            return {
+                score: score,
+                reasonText: notes.length > 0 ? notes.join(" • ") : "توافق مبدئي جيد"
+            };
+        }
+
+        // التبديل بين واجهة المتقدمين ولوحة الإدارة
+        function switchMode(mode) {
+            var visitorSec = document.getElementById("visitor-section");
+            var adminSec = document.getElementById("admin-section");
+            var btnVisitor = document.getElementById("btn-mode-visitor");
+            var btnAdmin = document.getElementById("btn-mode-admin");
+
+            if (mode === "admin") {
+                visitorSec.classList.add("hidden");
+                adminSec.classList.remove("hidden");
+
+                btnAdmin.classList.add("bg-gold-500", "text-white", "shadow");
+                btnAdmin.classList.remove("text-cream-100");
+                btnVisitor.classList.remove("bg-gold-500", "text-white", "shadow");
+                btnVisitor.classList.add("text-cream-100");
+
+                if (isAdminLogged) {
+                    document.getElementById("admin-auth-box").classList.add("hidden");
+                    document.getElementById("admin-panel").classList.remove("hidden");
+                    refreshAdminUI();
+                } else {
+                    document.getElementById("admin-auth-box").classList.remove("hidden");
+                    document.getElementById("admin-panel").classList.add("hidden");
+                }
+            } else {
+                adminSec.classList.add("hidden");
+                visitorSec.classList.remove("hidden");
+
+                btnVisitor.classList.add("bg-gold-500", "text-white", "shadow");
+                btnVisitor.classList.remove("text-cream-100");
+                btnAdmin.classList.remove("bg-gold-500", "text-white", "shadow");
+                btnAdmin.classList.add("text-cream-100");
+
+                renderPublicApprovedList();
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // تحديث حقل ولي الأمر حسب النوع (شاب أم فتاة)
+        function toggleGuardianField() {
+            var gender = document.getElementById("v-gender").value;
+            var guardianInput = document.getElementById("v-guardian-phone");
+            var badge = document.getElementById("guardian-badge");
+            if (gender === "female") {
+                guardianInput.required = true;
+                badge.textContent = "(مطلوب للفتاة لضمان التواصل الشرعي الرسمي) *";
+                badge.className = "text-xs text-red-700 font-bold";
+            } else {
+                guardianInput.required = false;
+                badge.textContent = "(اختياري للشاب)";
+                badge.className = "text-xs text-gray-600 font-normal";
+            }
+        }
+
+        // إرسال استمارة الزائر
+        document.getElementById("visitor-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var records = loadRecords();
+            var gender = document.getElementById("v-gender").value;
+            var prefix = gender === "male" ? "MW-1" : "MW-2";
+            var randDigits = Math.floor(10 + Math.random() * 89);
+            var generatedCode = prefix + randDigits;
+
+            var newEntry = {
+                id: Date.now(),
+                code: generatedCode,
+                name: document.getElementById("v-name").value.trim(),
+                gender: gender,
+                age: parseInt(document.getElementById("v-age").value, 10),
+                city: document.getElementById("v-city").value,
+                work: document.getElementById("v-work").value.trim(),
+                maritalStatus: document.getElementById("v-status").value,
+                religion: document.getElementById("v-religion").value,
+                phone: document.getElementById("v-phone").value.trim(),
+                guardianPhone: document.getElementById("v-guardian-phone").value.trim(),
+                specs: document.getElementById("v-specs").value.trim(),
+                status: "pending"
+            };
+
+            records.unshift(newEntry);
+            saveRecords(records);
+
+            // تجهيز رسالة تأكيد الجدية لواتساب الإدارة
+            var roleLabel = gender === "male" ? "عريس" : "عروس";
+            var confirmText = "السلام عليكم ورحمة الله إدارة منصة مودة،\n" +
+                "قمت بتسجيل استمارتي وأؤكد جديتي في طلب الزواج الشرعي:\n" +
+                "- كود الطلب: *" + generatedCode + "*\n" +
+                "- الاسم: " + newEntry.name + "\n" +
+                "- الصفة: " + roleLabel + " (" + newEntry.age + " سنة - " + newEntry.city + ")\n" +
+                "- المؤهل/العمل: " + newEntry.work + "\n" +
+                "يرجى مراجعة طلبي واعتماده.";
+
+            document.getElementById("v-result-code").textContent = generatedCode;
+            document.getElementById("v-confirm-admin-wa").href = "https://wa.me/" + ADMIN_WA_NUMBER + "?text=" + encodeURIComponent(confirmText);
+
+            // عرض المرشحين المعتمدين من الجنس الآخر بأكواد سرية فقط
+            renderMatchedCandidatesForVisitor(newEntry, records);
+
+            document.getElementById("visitor-form").classList.add("hidden");
+            document.getElementById("visitor-results-box").classList.remove("hidden");
+            notifyUser("تم حفظ استمارتك بنجاح بكود " + generatedCode);
+        });
+
+        function resetVisitorForm() {
+            document.getElementById("visitor-form").reset();
+            toggleGuardianField();
+            document.getElementById("visitor-form").classList.remove("hidden");
+            document.getElementById("visitor-results-box").classList.add("hidden");
+        }
+
+        // عرض المرشحين المعتمدين من الجنس الآخر بعد تسجيل الزائر
+        function renderMatchedCandidatesForVisitor(userEntry, allRecords) {
+            var oppositeGender = userEntry.gender === "male" ? "female" : "male";
+            var candidates = allRecords.filter(function(item) {
+                return item.status === "approved" && item.gender === oppositeGender;
+            });
+
+            var grid = document.getElementById("matched-candidates-grid");
+            grid.innerHTML = "";
+
+            if (candidates.length === 0) {
+                grid.innerHTML = '<div class="col-span-full bg-white p-5 rounded-2xl border border-cream-200 text-center text-sm text-gray-600">سيتم ترشيح الحالات المناسبة لك من قبل إدارة المنصة فور مراجعة طلبك.</div>';
+                return;
+            }
+
+            candidates.forEach(function(cand) {
+                var groomObj = userEntry.gender === "male" ? userEntry : cand;
+                var brideObj = userEntry.gender === "female" ? userEntry : cand;
+                var matchInfo = calculateMatchPercentage(groomObj, brideObj);
+
+                var reqMsg = "السلام عليكم ورحمة الله إدارة منصة مودة،\n" +
+                    "أنا صاحب الكود: *" + userEntry.code + "*\n" +
+                    "أرغب في طلب ترشيح وتواصل شرعي بخصوص الحالة صاحبة الكود السري: *" + cand.code + "* (نسبة التوافق: " + matchInfo.score + "%).";
+
+                var waUrl = "https://wa.me/" + ADMIN_WA_NUMBER + "?text=" + encodeURIComponent(reqMsg);
+
+                var card = document.createElement("div");
+                card.className = "bg-white rounded-2xl p-5 border border-cream-200 shadow-sm flex flex-col justify-between space-y-4";
+                card.innerHTML = 
+                    '<div>' +
+                        '<div class="flex items-center justify-between border-b border-cream-200 pb-3 mb-3">' +
+                            '<div>' +
+                                '<span class="text-[11px] text-gray-500 block">الكود السري للمرشح</span>' +
+                                '<span class="font-extrabold text-emerald-950 text-lg">' + cand.code + '</span>' +
+                            '</div>' +
+                            '<span class="bg-gold-100 text-emerald-950 border border-gold-500/40 font-extrabold text-xs px-3 py-1 rounded-full">توافق ' + matchInfo.score + '%</span>' +
+                        '</div>' +
+                        '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700 mb-3">' +
+                            '<li><strong>السن والحالة:</strong> ' + cand.age + ' سنة (' + cand.maritalStatus + ')</li>' +
+                            '<li><strong>المحافظة:</strong> ' + cand.city + '</li>' +
+                            '<li><strong>المؤهل/العمل:</strong> ' + cand.work + '</li>' +
+                            '<li><strong>الالتزام:</strong> ' + cand.religion + '</li>' +
+                        '</ul>' +
+                        '<p class="text-xs text-gray-600 bg-cream-50 p-3 rounded-xl border border-cream-200">"' + cand.specs + '"</p>' +
+                    '</div>' +
+                    '<a href="' + waUrl + '" target="_blank" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl text-center shadow transition block">' +
+                        'طلب ترشيح عبر الإدارة (' + cand.code + ')' +
+                    '</a>';
+                grid.appendChild(card);
+            });
+        }
+
+        // عرض الحالات المعتمدة في الصفحة الرئيسية للزوار (بدون أسماء أو أرقام)
+        function setPublicFilter(filterVal) {
+            currentPublicFilter = filterVal;
+            ["all", "male", "female"].forEach(function(key) {
+                var btn = document.getElementById("flt-" + key);
+                if (key === filterVal) {
+                    btn.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-900 text-white";
+                } else {
+                    btn.className = "px-4 py-1.5 rounded-lg text-xs font-bold text-gray-700";
+                }
+            });
+            renderPublicApprovedList();
+        }
+
+        function renderPublicApprovedList() {
+            var records = loadRecords();
+            var filtered = records.filter(function(r) {
+                return r.status === "approved" && (currentPublicFilter === "all" || r.gender === currentPublicFilter);
+            });
+
+            var container = document.getElementById("public-approved-grid");
+            container.innerHTML = "";
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500 bg-cream-50 rounded-2xl border border-cream-200">لا توجد حالات معتمدة في هذا التصنيف حالياً.</div>';
+                return;
+            }
+
+            filtered.forEach(function(item) {
+                var isMale = item.gender === "male";
+                var msg = "السلام عليكم ورحمة الله إدارة منصة مودة،\n" +
+                    "أرغب في طلب ترشيح وتواصل شرعي بخصوص الحالة صاحبة الكود السري: *" + item.code + "* (" + (isMale ? "عريس" : "عروس") + " - " + item.age + " سنة - " + item.city + ").";
+                var waHref = "https://wa.me/" + ADMIN_WA_NUMBER + "?text=" + encodeURIComponent(msg);
+
+                var card = document.createElement("div");
+                card.className = "bg-cream-50 rounded-2xl p-6 border border-cream-200 shadow-sm flex flex-col justify-between space-y-4";
+                card.innerHTML = 
+                    '<div>' +
+                        '<div class="flex items-center justify-between border-b border-cream-200 pb-3 mb-3">' +
+                            '<span class="font-extrabold text-emerald-950 text-base">الكود السري: ' + item.code + '</span>' +
+                            '<span class="text-xs font-bold px-3 py-1 rounded-full ' + (isMale ? 'bg-emerald-900 text-gold-400' : 'bg-gold-500 text-white') + '">' +
+                                (isMale ? 'عريس' : 'عروس') +
+                            '</span>' +
+                        '</div>' +
+                        '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700 mb-3">' +
+                            '<li><strong>السن والحالة:</strong> ' + item.age + ' سنة (' + item.maritalStatus + ')</li>' +
+                            '<li><strong>المحافظة:</strong> ' + item.city + '</li>' +
+                            '<li><strong>المؤهل/العمل:</strong> ' + item.work + '</li>' +
+                            '<li><strong>الالتزام:</strong> ' + item.religion + '</li>' +
+                        '</ul>' +
+                        '<p class="text-xs text-gray-600 bg-white p-3 rounded-xl border border-cream-200">"' + item.specs + '"</p>' +
+                    '</div>' +
+                    '<a href="' + waHref + '" target="_blank" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl text-center shadow transition block">' +
+                        'طلب ترشيح هذا الكود عبر الإدارة' +
+                    '</a>';
+                container.appendChild(card);
+            });
+        }
+
+        // =====================================================================
+        // وظائف لوحة تحكم الإدارة (الخاطبة)
+        // =====================================================================
+        document.getElementById("admin-auth-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var pass = document.getElementById("admin-pass-input").value.trim();
+            if (pass === "1234") {
+                isAdminLogged = true;
+                document.getElementById("admin-auth-err").classList.add("hidden");
+                document.getElementById("admin-auth-box").classList.add("hidden");
+                document.getElementById("admin-panel").classList.remove("hidden");
+                refreshAdminUI();
+                notifyUser("مرحباً بك في لوحة تحكم الإدارة");
+            } else {
+                document.getElementById("admin-auth-err").classList.remove("hidden");
+            }
+        });
+
+        function logoutAdmin() {
+            isAdminLogged = false;
+            switchMode("visitor");
+            notifyUser("تم الخروج من لوحة الإدارة");
+        }
+
+        function refreshAdminUI() {
+            updateKPIs();
+            populateMatchDropdowns();
+            renderAdminList();
+        }
+
+        function updateKPIs() {
+            var records = loadRecords();
+            document.getElementById("kpi-total").textContent = records.length;
+            document.getElementById("kpi-pending").textContent = records.filter(function(r) { return r.status === "pending"; }).length;
+            document.getElementById("kpi-approved").textContent = records.filter(function(r) { return r.status === "approved"; }).length;
+            document.getElementById("kpi-matched").textContent = records.filter(function(r) { return r.status === "matched"; }).length;
+        }
+
+        // تعبئة قوائم المطابقة بين الطرفين
+        function populateMatchDropdowns() {
+            var records = loadRecords();
+            var grooms = records.filter(function(r) { return r.gender === "male"; });
+            var brides = records.filter(function(r) { return r.gender === "female"; });
+
+            var gSelect = document.getElementById("match-groom-select");
+            var bSelect = document.getElementById("match-bride-select");
+
+            var oldG = gSelect.value;
+            var oldB = bSelect.value;
+
+            gSelect.innerHTML = '<option value="">-- اختر العريس --</option>';
+            grooms.forEach(function(g) {
+                gSelect.innerHTML += '<option value="' + g.id + '">[' + g.code + '] ' + g.name + ' (' + g.age + ' سنة - ' + g.city + ')</option>';
+            });
+
+            bSelect.innerHTML = '<option value="">-- اختر العروس --</option>';
+            brides.forEach(function(b) {
+                bSelect.innerHTML += '<option value="' + b.id + '">[' + b.code + '] ' + b.name + ' (' + b.age + ' سنة - ' + b.city + ')</option>';
+            });
+
+            if (oldG && grooms.some(function(x) { return String(x.id) === String(oldG); })) {
+                gSelect.value = oldG;
+            } else if (grooms.length > 0) {
+                gSelect.value = grooms[0].id;
+            }
+
+            if (oldB && brides.some(function(x) { return String(x.id) === String(oldB); })) {
+                bSelect.value = oldB;
+            } else if (brides.length > 0) {
+                bSelect.value = brides[0].id;
+            }
+
+            renderMatchComparison();
+        }
+
+        // عرض المقارنة وتوليد روابط إرسال البيانات بين الطرفين
+        function renderMatchComparison() {
+            var records = loadRecords();
+            var gId = document.getElementById("match-groom-select").value;
+            var bId = document.getElementById("match-bride-select").value;
+            var box = document.getElementById("match-comparison-box");
+
+            var groom = records.find(function(r) { return String(r.id) === String(gId); });
+            var bride = records.find(function(r) { return String(r.id) === String(bId); });
+
+            if (!groom || !bride) {
+                box.classList.add("hidden");
+                return;
+            }
+
+            box.classList.remove("hidden");
+            var matchData = calculateMatchPercentage(groom, bride);
+
+            document.getElementById("match-score-badge").textContent = matchData.score + "%";
+            document.getElementById("match-reasons-text").textContent = matchData.reasonText;
+
+            // تعبئة بطاقة العريس
+            document.getElementById("cmp-g-code").textContent = groom.code;
+            document.getElementById("cmp-g-phone").textContent = groom.phone;
+            document.getElementById("cmp-g-name").textContent = groom.name;
+            document.getElementById("cmp-g-age").textContent = groom.age + " سنة (" + groom.maritalStatus + ")";
+            document.getElementById("cmp-g-city").textContent = groom.city;
+            document.getElementById("cmp-g-work").textContent = groom.work;
+            document.getElementById("cmp-g-religion").textContent = groom.religion;
+            document.getElementById("cmp-g-guardian").textContent = groom.guardianPhone || "لا يوجد";
+            document.getElementById("cmp-g-specs").textContent = groom.specs;
+
+            // تعبئة بطاقة العروس
+            document.getElementById("cmp-b-code").textContent = bride.code;
+            document.getElementById("cmp-b-phone").textContent = bride.phone;
+            document.getElementById("cmp-b-name").textContent = bride.name;
+            document.getElementById("cmp-b-age").textContent = bride.age + " سنة (" + bride.maritalStatus + ")";
+            document.getElementById("cmp-b-city").textContent = bride.city;
+            document.getElementById("cmp-b-work").textContent = bride.work;
+            document.getElementById("cmp-b-religion").textContent = bride.religion;
+            document.getElementById("cmp-b-guardian").textContent = bride.guardianPhone || bride.phone;
+            document.getElementById("cmp-b-specs").textContent = bride.specs;
+
+            // تحديد رقم التواصل المعتمد للعروس (رقم ولي الأمر إن وجد، وإلا رقمها)
+            var brideContactNumber = bride.guardianPhone ? bride.guardianPhone : bride.phone;
+
+            // زر 1: إرسال بيانات العروس (وولي الأمر) إلى واتساب العريس
+            var msgToGroom = "السلام عليكم ورحمة الله وبركاته أستاذ *" + groom.name + "*،\n" +
+                "معك *إدارة منصة مودة للتوافق والزواج الشرعي* (01020298357).\n" +
+                "بناءً على طلبك (" + groom.code + ")، نرشح لك عروساً متوافقة معك بنسبة *" + matchData.score + "%*:\n\n" +
+                "📋 *بيانات المرشحة (" + bride.code + "):*\n" +
+                "- الاسم: " + bride.name + "\n" +
+                "- السن: " + bride.age + " سنة (" + bride.maritalStatus + ")\n" +
+                "- المحافظة: " + bride.city + "\n" +
+                "- المؤهل والعمل: " + bride.work + "\n" +
+                "- الالتزام الديني: " + bride.religion + "\n" +
+                "- نبذة: " + bride.specs + "\n\n" +
+                "📞 *رقم التواصل الشرعي (ولي الأمر / العروس):*\n" +
+                brideContactNumber + "\n\n" +
+                "نسأل الله لكما التوفيق والسداد، ويرجى إبلاغ الإدارة بنتيجة التواصل.";
+
+            document.getElementById("link-send-bride-to-groom").href = "https://wa.me/" + toEgyptianWhatsApp(groom.phone) + "?text=" + encodeURIComponent(msgToGroom);
+
+            // زر 2: إرسال بيانات العريس إلى واتساب العروس / ولي الأمر
+            var msgToBride = "السلام عليكم ورحمة الله وبركاته،\n" +
+                "معك *إدارة منصة مودة للتوافق والزواج الشرعي* (01020298357).\n" +
+                "بخصوص طلبكم (" + bride.code + ")، نرشح لكم عريساً متوافقاً معكم بنسبة *" + matchData.score + "%*:\n\n" +
+                "📋 *بيانات المرشح (" + groom.code + "):*\n" +
+                "- الاسم الكامل: " + groom.name + "\n" +
+                "- السن: " + groom.age + " سنة (" + groom.maritalStatus + ")\n" +
+                "- المحافظة: " + groom.city + "\n" +
+                "- المؤهل والعمل: " + groom.work + "\n" +
+                "- الالتزام الديني: " + groom.religion + "\n" +
+                "- نبذة: " + groom.specs + "\n\n" +
+                "📞 *رقم واتساب العريس للتواصل الرسمي:*\n" +
+                groom.phone + "\n\n" +
+                "نسأل الله أن يكتب لكم الخير، ويرجى إعلام الإدارة عند تحديد موعد الرؤية الشرعية.";
+
+            document.getElementById("link-send-groom-to-bride").href = "https://wa.me/" + toEgyptianWhatsApp(brideContactNumber) + "?text=" + encodeURIComponent(msgToBride);
+        }
+
+        function confirmPairMatched() {
+            var gId = document.getElementById("match-groom-select").value;
+            var bId = document.getElementById("match-bride-select").value;
+            var records = loadRecords();
+
+            records.forEach(function(item) {
+                if (String(item.id) === String(gId) || String(item.id) === String(bId)) {
+                    item.status = "matched";
+                }
+            });
+
+            saveRecords(records);
+            refreshAdminUI();
+            notifyUser("تم تحديث حالة الطرفين إلى (تم التوفيق) بنجاح");
+        }
+
+        // عرض سجل الطلبات الكامل للإدارة
+        function renderAdminList() {
+            var records = loadRecords();
+            var fStatus = document.getElementById("adm-filter-status").value;
+            var fGender = document.getElementById("adm-filter-gender").value;
+
+            var list = records.filter(function(r) {
+                var okS = fStatus === "all" || r.status === fStatus;
+                var okG = fGender === "all" || r.gender === fGender;
+                return okS && okG;
+            });
+
+            var container = document.getElementById("admin-records-grid");
+            container.innerHTML = "";
+
+            if (list.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500">لا توجد طلبات مطابقة للفلتر.</div>';
+                return;
+            }
+
+            var statusMap = {
+                pending: { label: "قيد المراجعة", css: "bg-amber-100 text-amber-800 border-amber-300" },
+                approved: { label: "معتمدة ومنشورة", css: "bg-green-100 text-green-800 border-green-300" },
+                matched: { label: "تم التوفيق", css: "bg-gold-100 text-emerald-950 border-gold-500" }
+            };
+
+            list.forEach(function(rec) {
+                var isMale = rec.gender === "male";
+                var st = statusMap[rec.status] || statusMap.pending;
+                var directMsg = "السلام عليكم ورحمة الله *" + rec.name + "*،\nمعك *إدارة منصة مودة للزواج الشرعي* (01020298357) بخصوص استمارتك رقم (" + rec.code + ").";
+                var directWa = "https://wa.me/" + toEgyptianWhatsApp(rec.phone) + "?text=" + encodeURIComponent(directMsg);
+
+                var card = document.createElement("div");
+                card.className = "bg-cream-50 rounded-2xl p-5 border border-cream-200 shadow-sm flex flex-col justify-between space-y-4";
+                card.innerHTML = 
+                    '<div>' +
+                        '<div class="flex flex-wrap items-center justify-between gap-2 border-b border-cream-200 pb-3 mb-3">' +
+                            '<div class="flex items-center gap-2">' +
+                                '<span class="font-extrabold text-xs px-2.5 py-1 rounded-lg ' + (isMale ? 'bg-emerald-900 text-gold-400' : 'bg-gold-500 text-white') + '">' + rec.code + '</span>' +
+                                '<span class="font-extrabold text-emerald-950 text-base">' + rec.name + '</span>' +
+                            '</div>' +
+                            '<span class="text-xs font-bold px-2.5 py-1 rounded-full border ' + st.css + '">' + st.label + '</span>' +
+                        '</div>' +
+                        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-gray-700 mb-3">' +
+                            '<p><strong>النوع والسن:</strong> ' + (isMale ? 'عريس' : 'عروس') + ' (' + rec.age + ' سنة)</p>' +
+                            '<p><strong>المحافظة:</strong> ' + rec.city + '</p>' +
+                            '<p><strong>الحالة:</strong> ' + rec.maritalStatus + '</p>' +
+                            '<p><strong>الواتساب الشخصي:</strong> <span dir="ltr" class="font-bold text-emerald-900">' + rec.phone + '</span></p>' +
+                            (rec.guardianPhone ? '<p class="sm:col-span-2 text-emerald-950"><strong>واتساب ولي الأمر:</strong> <span dir="ltr" class="font-extrabold">' + rec.guardianPhone + '</span></p>' : '') +
+                            '<p class="sm:col-span-2"><strong>المؤهل/العمل:</strong> ' + rec.work + '</p>' +
+                            '<p class="sm:col-span-2"><strong>الالتزام:</strong> ' + rec.religion + '</p>' +
+                        '</div>' +
+                        '<p class="text-xs text-gray-600 bg-white p-2.5 rounded-xl border border-cream-200"><strong>المواصفات:</strong> ' + rec.specs + '</p>' +
+                    '</div>' +
+                    '<div class="pt-3 border-t border-cream-200 flex flex-wrap items-center gap-2">' +
+                        '<button type="button" onclick="updateRecordStatus(' + rec.id + ', \'approved\')" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition">اعتماد ونشر</button>' +
+                        '<button type="button" onclick="updateRecordStatus(' + rec.id + ', \'matched\')" class="bg-gold-500 hover:bg-gold-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition">تم التوفيق</button>' +
+                        '<a href="' + directWa + '" target="_blank" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-bold px-3 py-2 rounded-lg transition">واتساب العضو</a>' +
+                        '<button type="button" onclick="removeRecord(' + rec.id + ')" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold px-3 py-2 rounded-lg transition mr-auto">حذف</button>' +
+                    '</div>';
+                container.appendChild(card);
+            });
+        }
+
+        function updateRecordStatus(id, newStatus) {
+            var records = loadRecords();
+            records.forEach(function(r) {
+                if (r.id === id) {
+                    r.status = newStatus;
+                }
+            });
+            saveRecords(records);
+            refreshAdminUI();
+            notifyUser("تم تحديث حالة الطلب بنجاح");
+        }
+
+        function removeRecord(id) {
+            var records = loadRecords().filter(function(r) {
+                return r.id !== id;
+            });
+            saveRecords(records);
+            refreshAdminUI();
+            notifyUser("تم حذف الطلب من السجل");
+        }
+
+        // نافذة إضافة عضو يدوياً من الإدارة
+        function toggleAddMemberModal(show) {
+            var modal = document.getElementById("modal-add-member");
+            if (show) {
+                modal.classList.remove("hidden");
+            } else {
+                modal.classList.add("hidden");
+            }
+        }
+
+        document.getElementById("form-admin-add").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var records = loadRecords();
+            var gender = document.getElementById("a-gender").value;
+            var prefix = gender === "male" ? "MW-1" : "MW-2";
+            var code = prefix + Math.floor(10 + Math.random() * 89);
+
+            var item = {
+                id: Date.now(),
+                code: code,
+                name: document.getElementById("a-name").value.trim(),
+                gender: gender,
+                age: parseInt(document.getElementById("a-age").value, 10),
+                city: document.getElementById("a-city").value.trim(),
+                work: document.getElementById("a-work").value.trim(),
+                maritalStatus: document.getElementById("a-status").value.trim(),
+                religion: document.getElementById("a-religion").value.trim(),
+                phone: document.getElementById("a-phone").value.trim(),
+                guardianPhone: document.getElementById("a-guardian").value.trim(),
+                specs: document.getElementById("a-specs").value.trim(),
+                status: "approved"
+            };
+
+            records.unshift(item);
+            saveRecords(records);
+            this.reset();
+            toggleAddMemberModal(false);
+            refreshAdminUI();
+            notifyUser("تمت إضافة العضو (" + code + ") واعتماده بنجاح");
+        });
+
+        // تهيئة التشغيل عند تحميل الصفحة
+        window.onload = function() {
+            loadRecords();
+            toggleGuardianField();
+            renderPublicApprovedList();
+        };
+    </script>
 </body>
 </html>
+```
