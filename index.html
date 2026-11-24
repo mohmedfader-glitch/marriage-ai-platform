@@ -397,9 +397,28 @@
                             خروج الإدارة
                         </button>
                     </div>
+       
                 </div>
 
-                <!-- 1. الإحصائيات السريعة -->
+     <div class="text-center mt-4">
+    <button 
+        type="submit"
+        class="w-full bg-emerald-800 text-white py-3 rounded-xl font-bold">
+        تسجيل الدخول
+    </button>
+
+    <a href="#" 
+       onclick="forgotPassword()"
+       class="block mt-3 text-sm text-emerald-700 hover:underline">
+        هل نسيت كلمة السر؟
+    </a>
+</div>
+
+<script>
+function forgotPassword(){
+    alert("يرجى التواصل مع إدارة منصة مودة لاستعادة كلمة السر.");
+}
+</script>           <!-- 1. الإحصائيات السريعة -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm">
                         <span class="text-xs text-gray-500 font-bold">إجمالي الطلبات</span>
