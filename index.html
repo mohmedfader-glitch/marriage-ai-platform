@@ -356,22 +356,58 @@
     <!-- ===================================================================== -->
     <section id="admin-section" class="hidden flex-grow bg-cream-100 py-8 sm:py-12 fade-in">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
+<div class="text-center mt-4">
+    <label class="block text-sm font-bold mb-2">
+        كلمة مرور الإدارة
+    </label>
 
-            <!-- شاشة تسجيل دخول الإدارة -->
-            <div id="admin-auth-box" class="max-w-md mx-auto bg-white rounded-3xl shadow-xl border border-cream-200 overflow-hidden my-8">
-                <div class="bg-emerald-950 p-6 text-center text-white border-b-4 border-gold-500">
-                    <h2 class="text-xl font-extrabold text-gold-400">دخول لوحة تحكم الإدارة (الخاطبة)</h2>
-                    <p class="text-xs text-cream-200 mt-1">التحكم الكامل في الطلبات وإرسال بيانات الطرفين</p>
-                </div>
-                <form id="admin-auth-form" class="p-6 space-y-4">
-                    <div>
-                        <label for="admin-pass-input" class="block text-sm font-bold text-gray-700 mb-1.5">كلمة مرور الإدارة</label>
-                        <input type="password" id="admin-pass-input" value="1234" required 
-                               class="w-full px-4 py-3 rounded-xl border border-gray-300 text-center text-lg font-bold tracking-widest outline-none focus:border-emerald-900">
-                        <p class="text-xs text-emerald-900 bg-gold-100 p-2 rounded-lg mt-2 text-center font-semibold">
-                            كلمة المرور التجريبية مُدخلة جاهزة: <strong>1234</strong> (اضغط دخول مباشرة)
-                        </p>
-                    </div>
+    <input 
+        id="adminPassword"
+        type="password"
+        placeholder="أدخل كلمة المرور"
+        class="w-full px-4 py-3 rounded-xl border"
+    >
+
+    <button 
+        onclick="loginAdmin()"
+        class="w-full mt-3 bg-emerald-800 text-white py-3 rounded-xl font-bold">
+        تسجيل الدخول
+    </button>
+
+    <a href="#" 
+       onclick="forgotPassword()"
+       class="block mt-3 text-sm text-emerald-700">
+        هل نسيت كلمة السر؟
+    </a>
+</div>
+
+<script>
+function loginAdmin(){
+
+    let pass = document.getElementById("adminPassword").value;
+
+    if(pass === "ضع_كلمة_السر_الجديدة"){
+
+        alert("تم تسجيل الدخول بنجاح");
+        // هنا ضع كود فتح لوحة الإدارة
+
+    }else{
+
+        alert("كلمة المرور غير صحيحة");
+
+    }
+}
+
+
+function forgotPassword(){
+
+    window.open(
+    "https://wa.me/201095383936?text=نسيت كلمة مرور إدارة منصة مودة",
+    "_blank"
+    );
+
+}
+</script>
                     <p id="admin-auth-err" class="hidden text-xs text-red-600 font-bold text-center">كلمة المرور غير صحيحة!</p>
                     <button type="submit" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold py-3.5 rounded-xl shadow transition">
                         دخول إلى لوحة الإدارة
