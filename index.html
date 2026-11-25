@@ -373,33 +373,6 @@
 
     <button 
         onclick="loginAdmin()"
-        class="w-full mt-3 bg-emerald-800 text-white py-3 rounded-xl font-bold">
-        تسجيل الدخول
-    </button>
-
-    <a href="#" 
-       onclick="forgotPassword()"
-       class="block mt-3 text-sm text-emerald-700">
-        هل نسيت كلمة السر؟
-    </a>
-</div>
-
-<script>
-function loginAdmin(){
-
-    let pass = document.getElementById("adminPassword").value;
-
-    if(pass === "ضع_كلمة_السر_الجديدة"){
-
-        alert("تم تسجيل الدخول بنجاح");
-        // هنا ضع كود فتح لوحة الإدارة
-
-    }else{
-
-        alert("كلمة المرور غير صحيحة");
-
-    }
-}
 
 
 function forgotPassword(){
@@ -410,18 +383,17 @@ function forgotPassword(){
     );
 
 }
-</script>
-                    <p id="admin-auth-err" class="hidden text-xs text-red-600 font-bold text-center">كلمة المرور غير صحيحة!</p>
-                    <button type="submit" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold py-3.5 rounded-xl shadow transition">
-                        دخول إلى لوحة الإدارة
-                    </button>
-                </form>
-            </div>
+</script><p id="admin-auth-err" class="hidden text-xs text-red-600 font-bold text-center">كلمة المرور غير صحيحة!</p>
 
-            <!-- لوحة التحكم الفعلية بعد الدخول -->
-            <div id="admin-panel" class="hidden space-y-8">
-                
-                <!-- رأس لوحة الإدارة -->
+<button type="button" onclick="loginAdmin()" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold py-3.5 rounded-xl shadow transition">
+    دخول إلى لوحة الإدارة
+</button>
+         </form>
+</div>
+
+<!-- لوحة التحكم الفعلية بعد الدخول -->
+<div id="admin-panel" class="hidden space-y-8">
+        <!-- رأس لوحة الإدارة -->
                 <div class="bg-emerald-950 text-white rounded-3xl p-6 shadow-lg border-b-4 border-gold-500 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                                    <span class="text-xs text-gold-400 font-bold">إدارة منصة مودة • 01095383936</span>
@@ -474,6 +446,40 @@ supabaseClient.rpc('get_public_approved_profiles')
             alert("تم الاتصال بقاعدة بيانات اختيار بنجاح");
         }
     });
+    
+async function loginAdmin(){
+
+    const email = "mohmed.fader@gmail.com";
+    const password = document.getElementById("adminPassword").value;
+
+    if (!password) {
+        alert("من فضلك أدخل كلمة المرور");
+        return;
+    }
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+        alert("بيانات الدخول غير صحيحة: " + error.message);
+        return;
+    }
+
+    const { data: isAdmin, error: adminError } =
+        await supabaseClient.rpc("is_main_admin");
+
+    if (adminError || isAdmin !== true) {
+        await supabaseClient.auth.signOut();
+        alert("هذا الحساب ليس لديه صلاحية المدير الرئيسي");
+        return;
+    }
+
+    alert("تم تسجيل دخول المدير بنجاح");
+    document.getElementById("admin-panel").classList.remove("hidden");
+}
+
     function forgotPassword(){
     alert("يرجى التواصل مع إدارة منصة مودة لاستعادة كلمة السر.");
 }
