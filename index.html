@@ -67,6 +67,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-200 selection:text-emerald-950">
 
@@ -450,8 +453,28 @@ function forgotPassword(){
     </a>
 </div>
 
+
 <script>
-function forgotPassword(){
+
+
+// الاتصال بقاعدة بيانات منصة اختيار
+const SUPABASE_URL = "https://sgjbfycgelvhatwahxhq.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_2VKHFXedPqNQXuhombNpSA_hOf1FNU2";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+// اختبار الاتصال
+supabaseClient.rpc('get_public_approved_profiles')
+    .then(({ data, error }) => {
+        if (error) {
+            alert("خطأ الاتصال: " + error.message);
+        } else {
+            alert("تم الاتصال بقاعدة بيانات اختيار بنجاح");
+        }
+    });
+    function forgotPassword(){
     alert("يرجى التواصل مع إدارة منصة مودة لاستعادة كلمة السر.");
 }
 </script>           <!-- 1. الإحصائيات السريعة -->
