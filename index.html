@@ -506,16 +506,6 @@ async function forgotPassword(){
 }
 
 
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(
-        "mohmed.fader@gmail.com"
-    );
-
-    if (error) {
-        alert("تعذر إرسال رابط الاستعادة: " + error.message);
-    } else {
-        alert("تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني");
-    }
-}
 </script>           <!-- 1. الإحصائيات السريعة -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm">
