@@ -434,9 +434,7 @@ async function forgotPassword(){
     </a>
 </div>
 
-
 <script>
-
 
 // الاتصال بقاعدة بيانات منصة اختيار
 const SUPABASE_URL = "https://sgjbfycgelvhatwahxhq.supabase.co";
@@ -446,17 +444,19 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
+
 // اختبار الاتصال
 supabaseClient.rpc('get_public_approved_profiles')
     .then(({ data, error }) => {
         if (error) {
-            alert("خطأ الاتصال: " + error.message);
+            console.error("خطأ الاتصال:", error.message);
         } else {
-            alert("تم الاتصال بقاعدة بيانات اختيار بنجاح");
+            console.log("تم الاتصال بقاعدة بيانات اختيار بنجاح");
         }
     });
-    
-async function loginAdmin(){
+
+// تسجيل دخول المدير الرئيسي
+async function loginAdmin() {
 
     const email = "mohmed.fader@gmail.com";
     const password = document.getElementById("adminPassword").value;
@@ -489,7 +489,8 @@ async function loginAdmin(){
     document.getElementById("admin-panel").classList.remove("hidden");
 }
 
-async function forgotPassword(){
+// استعادة كلمة المرور
+async function forgotPassword() {
 
     const { error } = await supabaseClient.auth.resetPasswordForEmail(
         "mohmed.fader@gmail.com",
@@ -505,94 +506,9 @@ async function forgotPassword(){
     }
 }
 
+</script>
 
-</script>           <!-- 1. الإحصائيات السريعة -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm">
-                        <span class="text-xs text-gray-500 font-bold">إجمالي الطلبات</span>
-                        <span id="kpi-total" class="text-2xl sm:text-3xl font-extrabold text-emerald-950 block mt-1">0</span>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm">
-                        <span class="text-xs text-gray-500 font-bold">قيد المراجعة</span>
-                        <span id="kpi-pending" class="text-2xl sm:text-3xl font-extrabold text-amber-600 block mt-1">0</span>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm">
-                        <span class="text-xs text-gray-500 font-bold">المعتمدة والمنشورة</span>
-                        <span id="kpi-approved" class="text-2xl sm:text-3xl font-extrabold text-green-600 block mt-1">0</span>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm">
-                        <span class="text-xs text-gray-500 font-bold">تم التوفيق</span>
-                        <span id="kpi-matched" class="text-2xl sm:text-3xl font-extrabold text-gold-600 block mt-1">0</span>
-                    </div>
-                </div>
-
-                <!-- 2. قسم المطابقة وإرسال البيانات بين الطرفين (التحكم الأساسي للخاطبة) -->
-                <div class="bg-white rounded-3xl shadow-lg border-2 border-gold-500/50 overflow-hidden">
-                    <div class="bg-emerald-900 px-6 py-4 text-white flex items-center justify-between">
-                        <h2 class="font-bold text-base sm:text-lg">أداة المطابقة وإرسال بيانات الطرفين عبر الواتساب</h2>
-                        <span class="text-xs bg-gold-500 text-white font-bold px-3 py-1 rounded-full">إرسال رسمي</span>
-                    </div>
-
-                    <div class="p-6 space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <!-- اختيار العريس -->
-                            <div class="bg-cream-50 p-4 rounded-2xl border border-cream-200">
-                                <label for="match-groom-select" class="block text-sm font-extrabold text-emerald-950 mb-2">1. اختر العريس (الطرف الأول):</label>
-                                <select id="match-groom-select" onchange="renderMatchComparison()" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-sm font-bold outline-none focus:border-emerald-900">
-                                </select>
-                            </div>
-
-                            <!-- اختيار العروس -->
-                            <div class="bg-cream-50 p-4 rounded-2xl border border-cream-200">
-                                <label for="match-bride-select" class="block text-sm font-extrabold text-emerald-950 mb-2">2. اختر العروس (الطرف الثاني):</label>
-                                <select id="match-bride-select" onchange="renderMatchComparison()" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-sm font-bold outline-none focus:border-emerald-900">
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- بطاقة المقارنة الشاملة وأزرار الإرسال -->
-                        <div id="match-comparison-box" class="hidden space-y-5 pt-4 border-t border-gray-200">
-                            <!-- نسبة التوافق المحسوبة تلقائياً -->
-                            <div class="bg-emerald-950 text-white p-4 rounded-2xl flex items-center justify-between">
-                                <div>
-                                    <span class="text-xs text-cream-200 block">نسبة التوافق التلقائية بين الطرفين</span>
-                                    <span id="match-reasons-text" class="text-xs sm:text-sm text-gold-400 font-bold"></span>
-                                </div>
-                                <span id="match-score-badge" class="text-3xl font-extrabold text-gold-400">95%</span>
-                            </div>
-
-                            <!-- مقارنة البيانات كاملة للإدارة -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
-                                <!-- بيانات العريس -->
-                                <div class="bg-cream-50 p-5 rounded-2xl border border-emerald-900/20 space-y-2">
-                                    <div class="flex justify-between items-center border-b border-cream-200 pb-2">
-                                        <span class="font-extrabold text-emerald-950">بيانات العريس (<span id="cmp-g-code"></span>)</span>
-                                        <span id="cmp-g-phone" dir="ltr" class="text-xs font-bold bg-emerald-900 text-white px-2.5 py-0.5 rounded-full"></span>
-                                    </div>
-                                    <p><strong>الاسم الكامل:</strong> <span id="cmp-g-name"></span></p>
-                                    <p><strong>السن والحالة:</strong> <span id="cmp-g-age"></span></p>
-                                    <p><strong>المحافظة:</strong> <span id="cmp-g-city"></span></p>
-                                    <p><strong>المؤهل والعمل:</strong> <span id="cmp-g-work"></span></p>
-                                    <p><strong>الالتزام:</strong> <span id="cmp-g-religion"></span></p>
-                                    <p><strong>رقم ولي الأمر (إن وجد):</strong> <span id="cmp-g-guardian" dir="ltr"></span></p>
-                                    <p class="text-xs bg-white p-2.5 rounded-xl border border-cream-200"><strong>المواصفات:</strong> <span id="cmp-g-specs"></span></p>
-                                </div>
-
-                                <!-- بيانات العروس -->
-                                <div class="bg-cream-50 p-5 rounded-2xl border border-gold-500/40 space-y-2">
-                                    <div class="flex justify-between items-center border-b border-cream-200 pb-2">
-                                        <span class="font-extrabold text-emerald-950">بيانات العروس (<span id="cmp-b-code"></span>)</span>
-                                        <span id="cmp-b-phone" dir="ltr" class="text-xs font-bold bg-gold-500 text-white px-2.5 py-0.5 rounded-full"></span>
-                                    </div>
-                                    <p><strong>الاسم الكامل:</strong> <span id="cmp-b-name"></span></p>
-                                    <p><strong>السن والحالة:</strong> <span id="cmp-b-age"></span></p>
-                                    <p><strong>المحافظة:</strong> <span id="cmp-b-city"></span></p>
-                                    <p><strong>المؤهل والعمل:</strong> <span id="cmp-b-work"></span></p>
-                                    <p><strong>الالتزام:</strong> <span id="cmp-b-religion"></span></p>
-                                    <p class="text-emerald-900"><strong>رقم واتساب ولي الأمر:</strong> <span id="cmp-b-guardian" dir="ltr" class="font-extrabold"></span></p>
-                                    <p class="text-xs bg-white p-2.5 rounded-xl border border-cream-200"><strong>المواصفات:</strong> <span id="cmp-b-specs"></span></p>
-                                </div>
-                            </div>
+<!-- 1. الإحصائيات السريعة -->
 
                             <!-- زرا الإرسال المباشر عبر الواتساب -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
