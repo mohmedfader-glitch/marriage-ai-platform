@@ -374,14 +374,20 @@
     <button 
         onclick="loginAdmin()"
 
+async function forgotPassword(){
 
-function forgotPassword(){
-
-    window.open(
-    "https://wa.me/201095383936?text=نسيت كلمة مرور إدارة منصة مودة",
-    "_blank"
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(
+        "mohmed.fader@gmail.com",
+        {
+            redirectTo: "https://mohmedfader-glitch.github.io/marriage-ai-platform/"
+        }
     );
 
+    if (error) {
+        alert("خطأ: " + error.message);
+    } else {
+        alert("تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني");
+    }
 }
 </script><p id="admin-auth-err" class="hidden text-xs text-red-600 font-bold text-center">كلمة المرور غير صحيحة!</p>
 
