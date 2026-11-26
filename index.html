@@ -1611,60 +1611,6 @@ async function renderAdminList() {
             return okS && okG;
         });
 
-async function updateSupabaseRequestStatus(requestId, newStatus) {
-    var labels = {
-        pending: "قيد المراجعة",
-        approved: "معتمدة",
-        rejected: "مرفوضة",
-        matched: "تم التوفيق"
-    };
-
-    if (!labels[newStatus]) return;
-
-    if (!confirm("هل تريد تغيير حالة الطلب إلى: " + labels[newStatus] + "؟")) {
-        return;
-    }
-
-    var result = await supabaseClient.rpc(
-        "admin_update_registration_status",
-        {
-            p_request_id: requestId,
-            p_new_status: newStatus
-        }
-    );
-
-    if (result.error) {
-        alert("تعذر تغيير الحالة: " + result.error.message);
-        return;
-    }
-
-    alert("تم تغيير حالة الطلب بنجاح");
-    await renderAdminList();
-    await loadRegistrationRequests();
-}
-
-async function deleteSupabaseRequest(requestId) {
-    if (!confirm("تحذير: هل أنت متأكد من حذف هذا الطلب نهائياً؟ لا يمكن التراجع عن الحذف.")) {
-        return;
-    }
-
-    var result = await supabaseClient.rpc(
-        "admin_delete_registration_request",
-        {
-            p_request_id: requestId
-        }
-    );
-
-    if (result.error) {
-        alert("تعذر حذف الطلب: " + result.error.message);
-        return;
-    }
-
-    alert("تم حذف الطلب نهائياً");
-    await renderAdminList();
-    await loadRegistrationRequests();
-}
-
         container.innerHTML = "";
 
         if (!list.length) {
@@ -1837,7 +1783,60 @@ container.appendChild(card);
     }
 }
 
+async function updateSupabaseRequestStatus(requestId, newStatus) {
+    var labels = {
+        pending: "قيد المراجعة",
+        approved: "معتمدة",
+        rejected: "مرفوضة",
+        matched: "تم التوفيق"
+    };
 
+    if (!labels[newStatus]) return;
+
+    if (!confirm("هل تريد تغيير حالة الطلب إلى: " + labels[newStatus] + "؟")) {
+        return;
+    }
+
+    var result = await supabaseClient.rpc(
+        "admin_update_registration_status",
+        {
+            p_request_id: requestId,
+            p_new_status: newStatus
+        }
+    );
+
+    if (result.error) {
+        alert("تعذر تغيير الحالة: " + result.error.message);
+        return;
+    }
+
+    alert("تم تغيير حالة الطلب بنجاح");
+    await renderAdminList();
+    await loadRegistrationRequests();
+}
+
+async function deleteSupabaseRequest(requestId) {
+    if (!confirm("تحذير: هل أنت متأكد من حذف هذا الطلب نهائياً؟")) {
+        return;
+    }
+
+    var result = await supabaseClient.rpc(
+        "admin_delete_registration_request",
+        {
+            p_request_id: requestId
+        }
+    );
+
+    if (result.error) {
+        alert("تعذر حذف الطلب: " + result.error.message);
+        return;
+    }
+
+    alert("تم حذف الطلب نهائياً");
+    await renderAdminList();
+    await loadRegistrationRequests();
+}
+        
         function updateRecordStatus(id, newStatus) {
             var records = loadRecords();
             records.forEach(function(r) {
