@@ -1130,13 +1130,21 @@ async function renderPublicApprovedList() {
             var list = document.createElement("ul");
             list.className =
                 "space-y-1.5 text-xs sm:text-sm text-gray-700 mb-3";
-
-            var fields = [
-                ["السن والحالة", (item.age || "") + " سنة (" + (item.maritalStatus || "") + ")"],
-                ["المحافظة", item.city],
-                ["المؤهل/العمل", item.work],
-                ["الالتزام", item.religion]
-            ];
+var fields = [
+    ["السن والحالة", (item.age || "") + " سنة (" + (item.maritalStatus || "") + ")"],
+    ["المحافظة", item.city],
+    ["المنطقة", item.area],
+    ["المؤهل", item.work],
+    ["الوظيفة", item.job],
+    ["الالتزام", item.religion],
+    ["الطول", item.height ? item.height + " سم" : ""],
+    ["الوزن", item.weight ? item.weight + " كجم" : ""],
+    ["لون البشرة", item.skinTone],
+    ["البلد", item.country],
+    ["وظيفة الوالد", item.fatherJob],
+    ["وظيفة الوالدة", item.motherJob],
+    ["عدد الأولاد", item.childrenCount]
+];
 
             fields.forEach(function(pair) {
                 if (!pair[1]) return;
