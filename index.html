@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -360,45 +359,133 @@
     <!-- ===================================================================== -->
     <section id="admin-section" class="hidden flex-grow bg-cream-100 py-8 sm:py-12 fade-in">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
-<div class="text-center mt-4">
-    <label class="block text-sm font-bold mb-2">
-        كلمة مرور الإدارة
-    </label>
 
-    <input 
-        id="adminPassword"
-        type="password"
-        placeholder="أدخل كلمة المرور"
-        class="w-full px-4 py-3 rounded-xl border"
-    >
+            <!-- نموذج دخول الإدارة -->
+            <div id="admin-auth-box" class="bg-white rounded-3xl shadow-lg border border-cream-200 max-w-md mx-auto p-6 sm:p-8">
+                <form id="admin-login-form" onsubmit="event.preventDefault(); loginAdmin();" class="space-y-4">
+                    <div class="text-center">
+                        <h2 class="text-xl font-extrabold text-emerald-950">دخول الإدارة</h2>
+                        <p class="text-sm text-gray-600 mt-2">أدخل كلمة مرور المدير للمتابعة</p>
+                    </div>
+                    <div>
+                        <label for="adminPassword" class="block text-sm font-bold mb-2">كلمة مرور الإدارة</label>
+                        <input id="adminPassword" type="password" autocomplete="current-password"
+                               placeholder="أدخل كلمة المرور"
+                               class="w-full px-4 py-3 rounded-xl border border-gray-300">
+                    </div>
+                    <p id="admin-auth-err" class="hidden text-xs text-red-600 font-bold text-center">كلمة المرور غير صحيحة!</p>
+                    <button type="submit" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold py-3.5 rounded-xl shadow transition">
+                        دخول إلى لوحة الإدارة
+                    </button>
+                    <a href="#" onclick="forgotPassword(); return false;"
+                       class="block mt-3 text-sm text-emerald-700 text-center hover:underline">
+                        هل نسيت كلمة السر؟
+                    </a>
+                </form>
+            </div>
 
-    <button 
-        onclick="loginAdmin()"
-        
-            redirectTo: "https://mohmedfader-glitch.github.io/marriage-ai-platform/"
-        }
-    );
+            <!-- إعداد Supabase واستعادة كلمة المرور -->
+            <script>
+                const SUPABASE_URL = "https://sgjbfycgelvhatwahxhq.supabase.co";
+                const SUPABASE_ANON_KEY = "sb_publishable_2VKHFXedPqNQXuhombNpSA_hOf1FNU2";
 
-    if (error) {
-        alert("خطأ: " + error.message);
-    } else {
-        alert("تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني");
-    }
-}
+                const supabaseClient = window.supabase.createClient(
+                    SUPABASE_URL,
+                    SUPABASE_ANON_KEY
+                );
 
+                function showPasswordRecoveryPanel() {
+                    const panel = document.getElementById("reset-password-panel");
+                    if (!panel) {
+                        console.error("لم يتم العثور على نموذج تغيير كلمة المرور");
+                        return;
+                    }
 
-</script><p id="admin-auth-err" class="hidden text-xs text-red-600 font-bold text-center">كلمة المرور غير صحيحة!</p>
-<button type="button" onclick="loginAdmin()" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold py-3.5 rounded-xl shadow transition">
-    دخول إلى لوحة الإدارة
-</button>
+                    Array.from(document.body.children).forEach((element) => {
+                        if (element !== panel && element.tagName !== "SCRIPT") {
+                            element.classList.add("hidden");
+                        }
+                    });
 
-<a href="#" onclick="forgotPassword(); return false;"
-   class="block mt-3 text-sm text-emerald-700 text-center hover:underline">
-    هل نسيت كلمة السر؟
-</a>
-    </form>
-</div>
-<!-- لوحة التحكم الفعلية بعد الدخول -->
+                    panel.classList.remove("hidden");
+                }
+
+                supabaseClient.auth.onAuthStateChange((event, session) => {
+                    if (event === "PASSWORD_RECOVERY") {
+                        if (document.readyState === "loading") {
+                            document.addEventListener("DOMContentLoaded", showPasswordRecoveryPanel, { once: true });
+                        } else {
+                            showPasswordRecoveryPanel();
+                        }
+                    }
+                });
+
+                async function loginAdmin() {
+                    const email = "mohmed.fader@gmail.com";
+                    const password = document.getElementById("adminPassword").value;
+
+                    if (!password) {
+                        alert("من فضلك أدخل كلمة المرور");
+                        return;
+                    }
+
+                    const { error } = await supabaseClient.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+
+                    if (error) {
+                        const errorBox = document.getElementById("admin-auth-err");
+                        if (errorBox) {
+                            errorBox.textContent = "تعذر تسجيل الدخول: " + error.message;
+                            errorBox.classList.remove("hidden");
+                        } else {
+                            alert("تعذر تسجيل الدخول: " + error.message);
+                        }
+                        return;
+                    }
+
+                    const { data: isAdmin, error: adminError } =
+                        await supabaseClient.rpc("is_main_admin");
+
+                    if (adminError || isAdmin !== true) {
+                        await supabaseClient.auth.signOut();
+                        alert("هذا الحساب ليس لديه صلاحية المدير الرئيسي");
+                        return;
+                    }
+
+                    isAdminLogged = true;
+                    document.getElementById("admin-auth-err").classList.add("hidden");
+                    document.getElementById("admin-auth-box").classList.add("hidden");
+                    document.getElementById("admin-panel").classList.remove("hidden");
+                    refreshAdminUI();
+                    alert("تم تسجيل دخول المدير بنجاح");
+                }
+
+                async function forgotPassword() {
+                    const email = prompt("أدخل البريد الإلكتروني للمدير:");
+
+                    if (!email || !email.trim()) {
+                        alert("يرجى إدخال البريد الإلكتروني");
+                        return;
+                    }
+
+                    const { error } = await supabaseClient.auth.resetPasswordForEmail(
+                        email.trim(),
+                        {
+                            redirectTo: "https://mohmedfader-glitch.github.io/marriage-ai-platform/"
+                        }
+                    );
+
+                    if (error) {
+                        alert("خطأ: " + error.message);
+                    } else {
+                        alert("تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني");
+                    }
+                }
+            </script>
+
+            <!-- لوحة التحكم الفعلية بعد الدخول -->
 <div id="admin-panel" class="hidden space-y-8">
         <!-- رأس لوحة الإدارة -->
                 <div class="bg-emerald-950 text-white rounded-3xl p-6 shadow-lg border-b-4 border-gold-500 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -418,114 +505,7 @@
        
                 </div>
 
-     <div class="text-center mt-4">
-    <button 
-        type="submit"
-        class="w-full bg-emerald-800 text-white py-3 rounded-xl font-bold">
-        تسجيل الدخول
-    </button>
-
-
-<!-- رابط استعادة كلمة المرور -->
-<a href="#" onclick="forgotPassword(); return false;"
-   class="block mt-3 text-sm text-emerald-700 hover:underline">
-    هل نسيت كلمة السر؟
-</a>
-</div>
-<script>
-// الاتصال بقاعدة بيانات منصة اختيار
-const SUPABASE_URL = "https://sgjbfycgelvhatwahxhq.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_2VKHFXedPqNQXuhombNpSA_hOf1FNU2";
-
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
-
-// اكتشاف طلب استعادة كلمة المرور
-supabaseClient.auth.onAuthStateChange((event, session) => {
-    if (event === "PASSWORD_RECOVERY") {
-        const panel = document.getElementById("reset-password-panel");
-
-        if (panel) {
-            panel.classList.remove("hidden");
-        }
-    }
-});
-
-// اختبار الاتصال
-supabaseClient.rpc("get_public_approved_profiles")
-    .then(({ data, error }) => {
-        if (error) {
-            console.error("خطأ الاتصال:", error.message);
-        } else {
-            console.log("تم الاتصال بقاعدة بيانات اختيار بنجاح");
-        }
-    });
-
-// تسجيل دخول المدير الرئيسي
-async function loginAdmin() {
-    const email = "mohmed.fader@gmail.com";
-    const password = document.getElementById("adminPassword").value;
-
-    if (!password) {
-        alert("من فضلك أدخل كلمة المرور");
-        return;
-    }
-
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
-    });
-
-    if (error) {
-        alert("بيانات الدخول غير صحيحة: " + error.message);
-        return;
-    }
-
-    const { data: isAdmin, error: adminError } =
-        await supabaseClient.rpc("is_main_admin");
-
-    if (adminError || isAdmin !== true) {
-        await supabaseClient.auth.signOut();
-        alert("هذا الحساب ليس لديه صلاحية المدير الرئيسي");
-        return;
-    }
-
-    alert("تم تسجيل دخول المدير بنجاح");
-    document.getElementById("admin-panel").classList.remove("hidden");
-}
-
-// استعادة كلمة المرور
-async function forgotPassword() {
-    const email = prompt("أدخل البريد الإلكتروني للمدير:");
-
-    if (!email || !email.trim()) {
-        alert("يرجى إدخال البريد الإلكتروني");
-        return;
-    }
-
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(
-        email.trim(),
-        {
-            redirectTo: "https://mohmedfader-glitch.github.io/marriage-ai-platform/"
-        }
-    );
-
-    if (error) {
-        alert("خطأ: " + error.message);
-    } else {
-        alert("تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني");
-    }
-}
-</script>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. سجل جميع الطلبات المسجلة (للإدارة فقط) -->
+     <!-- 3. سجل جميع الطلبات المسجلة (للإدارة فقط) -->
                 <div class="bg-white rounded-3xl shadow-lg border border-cream-200 overflow-hidden">
                     <div class="bg-emerald-950 px-6 py-4 text-white flex flex-wrap items-center justify-between gap-3">
                         <h2 class="font-bold text-base sm:text-lg">سجل الطلبات الكامل (الأسماء والأرقام السرية)</h2>
@@ -638,111 +618,32 @@ async function forgotPassword() {
         var isAdminLogged = false;
         var currentPublicFilter = "all";
 
-        // بيانات تجريبية مبدئية جاهزة لاختبار المطابقة فوراً
-        var sampleRecords = [
-            {
-                id: 1001,
-                code: "MW-101",
-                name: "أحمد محمود السيد",
-                gender: "male",
-                age: 29,
-                city: "القاهرة",
-                work: "بكالوريوس هندسة - مهندس برمجيات",
-                maritalStatus: "أعزب",
-                religion: "محافظ على الصلوات والفرائض وذو خلق",
-                phone: "01001112233",
-                guardianPhone: "",
-                specs: "يمتلك شقة تمليك بالقاهرة، جاد في الزواج خلال أشهر، يبحث عن زوجة متدينة ومثقفة.",
-                status: "approved"
-            },
-            {
-                id: 1002,
-                code: "MW-102",
-                name: "عمر فاروق عبد الله",
-                gender: "male",
-                age: 32,
-                city: "الجيزة",
-                work: "بكالوريوس طب بشري - طبيب باطنة",
-                maritalStatus: "أعزب",
-                religion: "ملتزم بالسنة والضوابط الشرعية، لا يدخن",
-                phone: "01112223344",
-                guardianPhone: "",
-                specs: "من أسرة طيبة، يقدر الحياة الأسرية ويبحث عن زوجة صالحة تعينه على طاعة الله.",
-                status: "approved"
-            },
-            {
-                id: 1003,
-                code: "MW-103",
-                name: "يوسف إبراهيم حسن",
-                gender: "male",
-                age: 27,
-                city: "الإسكندرية",
-                work: "ليسانس شريعة وقانون - باحث قانوني",
-                maritalStatus: "أعزب",
-                religion: "حافظ لأجزاء من القرآن ومحافظ على صلاة الجماعة",
-                phone: "01223334455",
-                guardianPhone: "",
-                specs: "شاب هادئ الطباع، يبحث عن الاستقرار الأسري وبناء بيت مسلم على المودة والرحمة.",
-                status: "pending"
-            },
-            {
-                id: 2001,
-                code: "MW-201",
-                name: "مريم طارق محمد",
-                gender: "female",
-                age: 25,
-                city: "القاهرة",
-                work: "بكالوريوس صيدلة - صيدلانية",
-                maritalStatus: "آنسة",
-                religion: "منتقبة / خمار شرعي، حافظة للقرآن الكريم",
-                phone: "01098765432",
-                guardianPhone: "01055556666",
-                specs: "من أسرة محافظة، هادئة ومثقفة، تبحث عن شاب متدين ذو خلق ووظيفة مستقرة.",
-                status: "approved"
-            },
-            {
-                id: 2002,
-                code: "MW-202",
-                name: "فاطمة الزهراء علي",
-                gender: "female",
-                age: 27,
-                city: "الجيزة",
-                work: "ليسانس آداب وتربية - معلمة",
-                maritalStatus: "آنسة",
-                religion: "محجبة حجاباً شرعياً ومحافظة على الصلوات",
-                phone: "01198765432",
-                guardianPhone: "01144447777",
-                specs: "تقدر الحياة الزوجية وتفضل السكن المستقل، تبحث عن زوج يحترم المرأة ويخاف الله.",
-                status: "approved"
-            },
-            {
-                id: 2003,
-                code: "MW-203",
-                name: "هدى سامي محمود",
-                gender: "female",
-                age: 24,
-                city: "الإسكندرية",
-                work: "بكالوريوس تجارة - محاسبة",
-                maritalStatus: "آنسة",
-                religion: "ملتزمة بالفرائض ومن أسرة كريمة",
-                phone: "01298765432",
-                guardianPhone: "01233338888",
-                specs: "تبحث عن التفاهم والمودة والاحترام المتبادل والاستقرار.",
-                status: "pending"
-            }
-        ];
+        // لا نعرض بيانات تجريبية أو ملفات شخصية غير حقيقية.
+        var sampleRecords = [];
 
         // قراءة وحفظ البيانات في localStorage بأمان
         function loadRecords() {
             try {
                 var raw = localStorage.getItem(DB_STORAGE_KEY);
                 if (!raw) {
-                    localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(sampleRecords));
-                    return sampleRecords.slice();
+                    localStorage.setItem(DB_STORAGE_KEY, "[]");
+                    return [];
                 }
-                return JSON.parse(raw);
+                var parsed = JSON.parse(raw);
+                if (!Array.isArray(parsed)) return [];
+
+                // حذف الحالات التجريبية القديمة المعروفة فقط، مع الإبقاء على طلبات المستخدمين.
+                var demoIds = [1001, 1002, 1003, 2001, 2002, 2003];
+                var clean = parsed.filter(function(item) {
+                    return !item || demoIds.indexOf(Number(item.id)) === -1;
+                });
+                if (clean.length !== parsed.length) {
+                    localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(clean));
+                }
+                return clean;
             } catch (err) {
-                return sampleRecords.slice();
+                console.error("تعذر قراءة الطلبات المحفوظة:", err);
+                return [];
             }
         }
 
@@ -771,6 +672,7 @@ async function forgotPassword() {
         function notifyUser(msg) {
             var box = document.getElementById("toast-box");
             var txt = document.getElementById("toast-msg");
+            if (!box || !txt) { console.log(msg); return; }
             txt.textContent = msg;
             box.classList.remove("hidden");
             setTimeout(function() {
@@ -1031,30 +933,26 @@ async function forgotPassword() {
         // =====================================================================
         // وظائف لوحة تحكم الإدارة (الخاطبة)
         // =====================================================================
-        document.getElementById("admin-auth-form").addEventListener("submit", function(e) {
-            e.preventDefault();
-            var pass = document.getElementById("admin-pass-input").value.trim();
-            if (pass === "1234") {
-                isAdminLogged = true;
-                document.getElementById("admin-auth-err").classList.add("hidden");
-                document.getElementById("admin-auth-box").classList.add("hidden");
-                document.getElementById("admin-panel").classList.remove("hidden");
-                refreshAdminUI();
-                notifyUser("مرحباً بك في لوحة تحكم الإدارة");
-            } else {
-                document.getElementById("admin-auth-err").classList.remove("hidden");
-            }
-        });
+        // تسجيل الدخول يتم حصرياً عبر Supabase والتحقق من صلاحية المدير الرئيسي.
+        // لا توجد كلمة مرور ثابتة داخل ملف الموقع.
 
-        function logoutAdmin() {
+        async function logoutAdmin() {
+            try {
+                await supabaseClient.auth.signOut();
+            } catch (err) {
+                console.error("تعذر إنهاء جلسة الإدارة:", err);
+            }
             isAdminLogged = false;
+            var panel = document.getElementById("admin-panel");
+            var authBox = document.getElementById("admin-auth-box");
+            if (panel) panel.classList.add("hidden");
+            if (authBox) authBox.classList.remove("hidden");
             switchMode("visitor");
             notifyUser("تم الخروج من لوحة الإدارة");
         }
 
         function refreshAdminUI() {
-            updateKPIs();
-            populateMatchDropdowns();
+            // الواجهة الحالية تعرض سجل الطلبات فقط؛ لا نستدعي عناصر إحصائيات/مطابقة غير موجودة.
             renderAdminList();
         }
 
@@ -1203,8 +1101,10 @@ async function forgotPassword() {
         // عرض سجل الطلبات الكامل للإدارة
         function renderAdminList() {
             var records = loadRecords();
-            var fStatus = document.getElementById("adm-filter-status").value;
-            var fGender = document.getElementById("adm-filter-gender").value;
+            var statusFilter = document.getElementById("adm-filter-status");
+            var genderFilter = document.getElementById("adm-filter-gender");
+            var fStatus = statusFilter ? statusFilter.value : "all";
+            var fGender = genderFilter ? genderFilter.value : "all";
 
             var list = records.filter(function(r) {
                 var okS = fStatus === "all" || r.status === fStatus;
@@ -1213,6 +1113,7 @@ async function forgotPassword() {
             });
 
             var container = document.getElementById("admin-records-grid");
+            if (!container) return;
             container.innerHTML = "";
 
             if (list.length === 0) {
@@ -1373,6 +1274,8 @@ async function saveNewAdminPassword() {
     const confirmPassword = document.getElementById("confirmAdminPassword").value;
     const message = document.getElementById("resetPasswordMessage");
 
+    message.textContent = "";
+
     if (password.length < 8) {
         message.textContent = "كلمة المرور يجب ألا تقل عن 8 أحرف";
         message.style.color = "red";
@@ -1385,24 +1288,39 @@ async function saveNewAdminPassword() {
         return;
     }
 
-    const { error } = await supabaseClient.auth.updateUser({
-        password: password
- 
-    });
+    const saveButton = document.querySelector(
+        '#reset-password-panel button[onclick="saveNewAdminPassword()"]'
+    );
 
-    if (error) {
-        message.textContent = "حدث خطأ: " + error.message;
-        message.style.color = "red";
-    } else {
-        message.textContent = "تم تغيير كلمة المرور بنجاح";
+    if (saveButton) {
+        saveButton.disabled = true;
+        saveButton.textContent = "جارٍ حفظ كلمة المرور...";
+    }
 
+    try {
+        const { error } = await supabaseClient.auth.updateUser({
+            password: password
+        });
+
+        if (error) {
+            throw error;
+        }
+
+        message.textContent = "تم تغيير كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول.";
         message.style.color = "green";
-
+        document.getElementById("newAdminPassword").value = "";
+        document.getElementById("confirmAdminPassword").value = "";
+    } catch (error) {
+        message.textContent = "تعذر تغيير كلمة المرور: " + (error.message || "حدث خطأ غير معروف");
+        message.style.color = "red";
+    } finally {
+        if (saveButton) {
+            saveButton.disabled = false;
+            saveButton.textContent = "حفظ كلمة المرور الجديدة";
+        }
     }
 }
 </script>
 
 </body>
 </html>
-```
-
