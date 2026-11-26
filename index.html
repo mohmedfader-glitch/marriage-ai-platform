@@ -1040,9 +1040,10 @@ async function renderPublicApprovedList() {
 
     try {
         var result = await supabaseClient
-            .from("approved_guest_profiles")
-            .select("profile_code, gender, age, governorate, city, work, marital_status, religion, specs")
-            .order("approved_at", { ascending: false });
+    .from("registration_requests")
+    .select("*")
+    .eq("status", "pending")
+    .order("created_at", { ascending: false });
 
         if (result.error) throw result.error;
 
