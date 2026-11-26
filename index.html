@@ -1868,45 +1868,58 @@ async function deleteSupabaseRequest(requestId) {
             }
         }
 
-        document.getElementById("form-admin-add").addEventListener("submit", function(e) {
-            e.preventDefault();
-            var records = loadRecords();
-            var gender = document.getElementById("a-gender").value;
-            var prefix = gender === "male" ? "MW-1" : "MW-2";
-            var code = prefix + Math.floor(10 + Math.random() * 89);
+document.getElementById("form-admin-add").addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-            var item = {
-                id: Date.now(),
-                code: code,
-                name: document.getElementById("a-name").value.trim(),
-                gender: gender,
-                age: parseInt(document.getElementById("a-age").value, 10),
-                city: document.getElementById("a-city").value.trim(),
-                work: document.getElementById("a-work").value.trim(),
-                job: document.getElementById("a-job").value.trim(),
-                height: document.getElementById("a-height").value,
-                weight: document.getElementById("a-weight").value,
-                skinTone: document.getElementById("a-skin-tone").value,
-                country: document.getElementById("a-country").value.trim(),
-                area: document.getElementById("a-area").value.trim(),
-                fatherJob: document.getElementById("a-father-job").value.trim(),
-                motherJob: document.getElementById("a-mother-job").value.trim(),
-                childrenCount: document.getElementById("a-children-count").value,
-                maritalStatus: document.getElementById("a-status").value.trim(),
-                religion: document.getElementById("a-religion").value.trim(),
-                phone: document.getElementById("a-phone").value.trim(),
-                guardianPhone: document.getElementById("a-guardian").value.trim(),
-                specs: document.getElementById("a-specs").value.trim(),
-                status: "approved"
-            };
+    if (!isAdminLogged) {
+        alert("يجب تسجيل دخول الإدارة أولاً");
+        return;
+    }
 
-            records.unshift(item);
-            saveRecords(records);
-            this.reset();
-            toggleAddMemberModal(false);
-            refreshAdminUI();
-            notifyUser("تمت إضافة العضو (" + code + ") واعتماده بنجاح");
-        });
+    var gender = document.getElementById("a-gender").value;
+    var prefix = gender === "male" ? "MW-1" : "MW-2";
+    var code = prefix + Math.floor(10 + Math.random() * 89);
+
+    var result = await supabaseClient.rpc(
+        "admin_add_registration_request",
+        {
+            p_profile_code: code,
+            p_display_name: document.getElementById("a-name").value.trim(),
+            p_gender: gender,
+            p_age: parseInt(document.getElementById("a-age").value, 10),
+            p_governorate: document.getElementById("a-city").value.trim(),
+            p_work: document.getElementById("a-work").value.trim(),
+            p_marital_status: document.getElementById("a-status").value.trim(),
+            p_religion: document.getElementById("a-religion").value.trim(),
+            p_phone: document.getElementById("a-phone").value.trim(),
+            p_guardian_phone: document.getElementById("a-guardian").value.trim(),
+            p_specs: document.getElementById("a-specs").value.trim(),
+            p_height: document.getElementById("a-height").value,
+            p_weight: document.getElementById("a-weight").value,
+            p_skin_tone: document.getElementById("a-skin-tone").value,
+            p_job: document.getElementById("a-job").value.trim(),
+            p_country: document.getElementById("a-country").value.trim(),
+            p_area: document.getElementById("a-area").value.trim(),
+            p_father_job: document.getElementById("a-father-job").value.trim(),
+            p_mother_job: document.getElementById("a-mother-job").value.trim(),
+            p_children_count: document.getElementById("a-children-count").value
+        }
+    );
+
+    if (result.error) {
+        console.error("خطأ إضافة العضو:", result.error);
+        alert("تعذرت إضافة العضو: " + result.error.message);
+        return;
+    }
+
+    this.reset();
+    toggleAddMemberModal(false);
+
+    await renderAdminList();
+    await loadRegistrationRequests();
+
+    notifyUser("تمت إضافة العضو (" + code + ") واعتماده بنجاح");
+});
 
         // تهيئة التشغيل عند تحميل الصفحة
         window.onload = function() {
