@@ -1611,6 +1611,60 @@ async function renderAdminList() {
             return okS && okG;
         });
 
+async function updateSupabaseRequestStatus(requestId, newStatus) {
+    var labels = {
+        pending: "قيد المراجعة",
+        approved: "معتمدة",
+        rejected: "مرفوضة",
+        matched: "تم التوفيق"
+    };
+
+    if (!labels[newStatus]) return;
+
+    if (!confirm("هل تريد تغيير حالة الطلب إلى: " + labels[newStatus] + "؟")) {
+        return;
+    }
+
+    var result = await supabaseClient.rpc(
+        "admin_update_registration_status",
+        {
+            p_request_id: requestId,
+            p_new_status: newStatus
+        }
+    );
+
+    if (result.error) {
+        alert("تعذر تغيير الحالة: " + result.error.message);
+        return;
+    }
+
+    alert("تم تغيير حالة الطلب بنجاح");
+    await renderAdminList();
+    await loadRegistrationRequests();
+}
+
+async function deleteSupabaseRequest(requestId) {
+    if (!confirm("تحذير: هل أنت متأكد من حذف هذا الطلب نهائياً؟ لا يمكن التراجع عن الحذف.")) {
+        return;
+    }
+
+    var result = await supabaseClient.rpc(
+        "admin_delete_registration_request",
+        {
+            p_request_id: requestId
+        }
+    );
+
+    if (result.error) {
+        alert("تعذر حذف الطلب: " + result.error.message);
+        return;
+    }
+
+    alert("تم حذف الطلب نهائياً");
+    await renderAdminList();
+    await loadRegistrationRequests();
+}
+
         container.innerHTML = "";
 
         if (!list.length) {
@@ -1731,14 +1785,49 @@ async function renderAdminList() {
                 wa.removeAttribute("href");
             }
 
-            actions.appendChild(wa);
+actions.appendChild(wa);
 
-            card.appendChild(header);
-            card.appendChild(details);
-            card.appendChild(specs);
-            card.appendChild(actions);
+// أزرار تغيير حالة الطلب
+var statusActions = document.createElement("div");
+statusActions.className = "flex flex-wrap gap-2 mt-3";
 
-            container.appendChild(card);
+var statusOptions = [
+    { value: "pending", label: "قيد المراجعة" },
+    { value: "approved", label: "اعتماد" },
+    { value: "rejected", label: "رفض" },
+    { value: "matched", label: "تم التوفيق" }
+];
+
+statusOptions.forEach(function(option) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = option.label;
+    btn.className = "px-3 py-2 rounded-lg text-xs font-bold bg-amber-100 text-gray-800";
+    btn.addEventListener("click", function() {
+        updateSupabaseRequestStatus(rec.id, option.value);
+    });
+    statusActions.appendChild(btn);
+});
+
+// زر الحذف النهائي
+var deleteBtn = document.createElement("button");
+deleteBtn.type = "button";
+deleteBtn.textContent = "حذف نهائي";
+deleteBtn.className = "px-3 py-2 rounded-lg text-xs font-bold bg-red-100 text-red-700";
+deleteBtn.addEventListener("click", function() {
+    deleteSupabaseRequest(rec.id);
+});
+statusActions.appendChild(deleteBtn);
+
+card.appendChild(header);
+card.appendChild(details);
+card.appendChild(specs);
+card.appendChild(actions);
+card.appendChild(statusActions);
+
+container.appendChild(card);
+});
+
         });
 
     } catch (err) {
