@@ -1046,12 +1046,9 @@ async function renderPublicApprovedList() {
         '<div class="col-span-full text-center py-6 text-gray-500">جارٍ تحميل الحالات المعتمدة...</div>';
 
     try {
-        var result = await supabaseClient
-    .from("registration_requests")
-    .select("*")
-    .eq("status", "pending")
-    .order("created_at", { ascending: false });
-
+var result = await supabaseClient.rpc(
+    "get_public_approved_guest_profiles"
+);
         if (result.error) throw result.error;
 var guestRecords = (result.data || []).map(function(item) {
     return {
