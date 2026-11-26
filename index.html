@@ -251,6 +251,40 @@
         placeholder="مثال: مهندس - طبيب - معلم - محاسب"
         class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
 </div>
+                            <div>
+                                <label for="v-height" class="block text-sm font-bold text-gray-700 mb-1.5">الطول (سم)</label>
+                                <input type="number" id="v-height" min="100" max="230" placeholder="مثال: 170" class="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none text-sm">
+                            </div>
+                            <div>
+                                <label for="v-weight" class="block text-sm font-bold text-gray-700 mb-1.5">الوزن (كجم)</label>
+                                <input type="number" id="v-weight" min="30" max="300" placeholder="مثال: 75" class="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none text-sm">
+                            </div>
+                            <div>
+                                <label for="v-skin-tone" class="block text-sm font-bold text-gray-700 mb-1.5">لون البشرة</label>
+                                <select id="v-skin-tone" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white outline-none text-sm">
+                                    <option value="">اختر لون البشرة</option><option>أبيض</option><option>قمحي</option><option>خمري</option><option>أسمر</option><option>أسود</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="v-country" class="block text-sm font-bold text-gray-700 mb-1.5">البلد</label>
+                                <input type="text" id="v-country" value="مصر" class="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none text-sm">
+                            </div>
+                            <div>
+                                <label for="v-area" class="block text-sm font-bold text-gray-700 mb-1.5">المنطقة / المركز / القرية</label>
+                                <input type="text" id="v-area" placeholder="مثال: أسيوط - مركز القوصية" class="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none text-sm">
+                            </div>
+                            <div>
+                                <label for="v-father-job" class="block text-sm font-bold text-gray-700 mb-1.5">وظيفة الوالد</label>
+                                <input type="text" id="v-father-job" placeholder="وظيفة الأب" class="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none text-sm">
+                            </div>
+                            <div>
+                                <label for="v-mother-job" class="block text-sm font-bold text-gray-700 mb-1.5">وظيفة الوالدة</label>
+                                <input type="text" id="v-mother-job" placeholder="وظيفة الأم" class="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none text-sm">
+                            </div>
+                            <div>
+                                <label for="v-children-count" class="block text-sm font-bold text-gray-700 mb-1.5">عدد الأولاد</label>
+                                <input type="number" id="v-children-count" min="0" max="30" value="0" class="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none text-sm">
+                            </div>
                             <!-- الالتزام الديني -->
                             <div>
                                 <label for="v-religion" class="block text-sm font-bold text-gray-700 mb-1.5">الالتزام الديني والأخلاقي <span class="text-red-600">*</span></label>
@@ -568,8 +602,12 @@
                         <input type="text" id="a-work" required class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none">
                     </div>
                     <div>
+                        <label class="block font-bold text-gray-700 mb-1" for="a-job">الوظيفة</label>
+                        <input type="text" id="a-job" placeholder="مثال: مهندس - طبيب - موظف" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none">
+                    </div>
+                    <div>
                         <label class="block font-bold text-gray-700 mb-1">الحالة الاجتماعية *</label>
-                        <input type="text" id="a-status" required value="أعزب / آنسة" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none">
+                        <select id="a-status" required class="w-full px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none"><option value="أعزب / آنسة">أعزب / آنسة</option><option value="مطلق / مطلقة (بدون أطفال)">مطلق / مطلقة (بدون أطفال)</option><option value="مطلق / مطلقة (مع أطفال)">مطلق / مطلقة (مع أطفال)</option><option value="أرمل / أرملة">أرمل / أرملة</option></select>
                     </div>
                     <div>
                         <label class="block font-bold text-gray-700 mb-1">الواتساب الشخصي *</label>
@@ -579,6 +617,16 @@
                         <label class="block font-bold text-gray-700 mb-1">واتساب ولي الأمر (للفتاة)</label>
                         <input type="tel" id="a-guardian" dir="ltr" placeholder="010xxxxxxxx" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none text-right">
                     </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label class="block font-bold text-gray-700 mb-1" for="a-height">الطول (سم)</label><input type="number" id="a-height" min="100" max="230" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none"></div>
+                    <div><label class="block font-bold text-gray-700 mb-1" for="a-weight">الوزن (كجم)</label><input type="number" id="a-weight" min="30" max="300" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none"></div>
+                    <div><label class="block font-bold text-gray-700 mb-1" for="a-skin-tone">لون البشرة</label><select id="a-skin-tone" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 bg-white outline-none"><option value="">اختر لون البشرة</option><option>أبيض</option><option>قمحي</option><option>خمري</option><option>أسمر</option><option>أسود</option></select></div>
+                    <div><label class="block font-bold text-gray-700 mb-1" for="a-country">البلد</label><input type="text" id="a-country" value="مصر" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none"></div>
+                    <div><label class="block font-bold text-gray-700 mb-1" for="a-area">المنطقة / المركز / القرية</label><input type="text" id="a-area" placeholder="مثال: أسيوط - مركز القوصية" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none"></div>
+                    <div><label class="block font-bold text-gray-700 mb-1" for="a-father-job">وظيفة الوالد</label><input type="text" id="a-father-job" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none"></div>
+                    <div><label class="block font-bold text-gray-700 mb-1" for="a-mother-job">وظيفة الوالدة</label><input type="text" id="a-mother-job" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none"></div>
+                    <div><label class="block font-bold text-gray-700 mb-1" for="a-children-count">عدد الأولاد</label><input type="number" id="a-children-count" min="0" max="30" value="0" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 outline-none"></div>
                 </div>
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">الالتزام الديني *</label>
@@ -763,53 +811,127 @@
             }
         }
 
-        // إرسال استمارة الزائر
-        document.getElementById("visitor-form").addEventListener("submit", function(e) {
+        // إرسال استمارة الزائر إلى جدول registration_requests في Supabase
+        document.getElementById("visitor-form").addEventListener("submit", async function(e) {
             e.preventDefault();
-            var records = loadRecords();
-            var gender = document.getElementById("v-gender").value;
-            var prefix = gender === "male" ? "MW-1" : "MW-2";
-            var randDigits = Math.floor(10 + Math.random() * 89);
-            var generatedCode = prefix + randDigits;
 
-            var newEntry = {
-                id: Date.now(),
-                code: generatedCode,
-                name: document.getElementById("v-name").value.trim(),
-                gender: gender,
-                age: parseInt(document.getElementById("v-age").value, 10),
-                city: document.getElementById("v-city").value,
-                work: document.getElementById("v-work").value.trim(),
-                maritalStatus: document.getElementById("v-status").value,
-                religion: document.getElementById("v-religion").value,
-                phone: document.getElementById("v-phone").value.trim(),
-                guardianPhone: document.getElementById("v-guardian-phone").value.trim(),
-                specs: document.getElementById("v-specs").value.trim(),
-                status: "pending"
-            };
+            var form = this;
+            var submitButton = form.querySelector('button[type="submit"]');
+            var originalButtonText = submitButton ? submitButton.textContent : "إرسال البيانات";
 
-            records.unshift(newEntry);
-            saveRecords(records);
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = "جارٍ إرسال طلبك...";
+            }
 
-            // تجهيز رسالة تأكيد الجدية لواتساب الإدارة
-            var roleLabel = gender === "male" ? "عريس" : "عروس";
-            var confirmText = "السلام عليكم ورحمة الله إدارة منصة مودة،\n" +
-                "قمت بتسجيل استمارتي وأؤكد جديتي في طلب الزواج الشرعي:\n" +
-                "- كود الطلب: *" + generatedCode + "*\n" +
-                "- الاسم: " + newEntry.name + "\n" +
-                "- الصفة: " + roleLabel + " (" + newEntry.age + " سنة - " + newEntry.city + ")\n" +
-                "- المؤهل/العمل: " + newEntry.work + "\n" +
-                "يرجى مراجعة طلبي واعتماده.";
+            try {
+                var gender = document.getElementById("v-gender").value;
+                var prefix = gender === "male" ? "MW-1" : "MW-2";
+                var generatedCode = prefix + Date.now().toString().slice(-7) + Math.floor(Math.random() * 10);
+                var age = parseInt(document.getElementById("v-age").value, 10);
+                var phone = document.getElementById("v-phone").value.trim();
+                var guardianPhone = document.getElementById("v-guardian-phone").value.trim();
 
-            document.getElementById("v-result-code").textContent = generatedCode;
-            document.getElementById("v-confirm-admin-wa").href = "https://wa.me/" + ADMIN_WA_NUMBER + "?text=" + encodeURIComponent(confirmText);
+                if (!Number.isInteger(age) || age < 18 || age > 100) {
+                    throw new Error("السن يجب أن يكون بين 18 و100 سنة.");
+                }
+                if (!phone) {
+                    throw new Error("من فضلك أدخل رقم الواتساب الشخصي.");
+                }
+                if (gender === "female" && !guardianPhone) {
+                    throw new Error("رقم ولي الأمر مطلوب لتسجيل الفتاة.");
+                }
 
-            // عرض المرشحين المعتمدين من الجنس الآخر بأكواد سرية فقط
-            renderMatchedCandidatesForVisitor(newEntry, records);
+                var name = document.getElementById("v-name").value.trim();
+                var governorate = document.getElementById("v-city").value;
+                var educationWork = document.getElementById("v-work").value.trim();
+                var jobField = document.getElementById("v-job");
+                var job = jobField ? jobField.value.trim() : "";
+                var maritalStatus = document.getElementById("v-status").value;
+                var religion = document.getElementById("v-religion").value;
+                var specs = document.getElementById("v-specs").value.trim();
 
-            document.getElementById("visitor-form").classList.add("hidden");
-            document.getElementById("visitor-results-box").classList.remove("hidden");
-            notifyUser("تم حفظ استمارتك بنجاح بكود " + generatedCode);
+                // الجدول الحالي يحتوي على أعمدة أساسية فقط؛ نضمّن الحقول الإضافية داخل specs مؤقتاً.
+                var extraDetails = [];
+                [
+                    ["الوظيفة", job],
+                    ["الطول", document.getElementById("v-height")?.value],
+                    ["الوزن", document.getElementById("v-weight")?.value],
+                    ["لون البشرة", document.getElementById("v-skin-tone")?.value],
+                    ["البلد", document.getElementById("v-country")?.value],
+                    ["المنطقة", document.getElementById("v-area")?.value],
+                    ["وظيفة الوالد", document.getElementById("v-father-job")?.value],
+                    ["وظيفة الوالدة", document.getElementById("v-mother-job")?.value],
+                    ["عدد الأولاد", document.getElementById("v-children-count")?.value]
+                ].forEach(function(pair) {
+                    var value = String(pair[1] || "").trim();
+                    if (value) extraDetails.push(pair[0] + ": " + value);
+                });
+
+                var fullSpecs = specs;
+                if (extraDetails.length) {
+                    fullSpecs += (fullSpecs ? "\n\n" : "") + "بيانات إضافية:\n" + extraDetails.join("\n");
+                }
+
+                const { error } = await supabaseClient
+                    .from("registration_requests")
+                    .insert({
+                        profile_code: generatedCode,
+                        display_name: name,
+                        gender: gender,
+                        age: age,
+                        governorate: governorate,
+                        work: [educationWork, job].filter(Boolean).join(" - "),
+                        marital_status: maritalStatus,
+                        religion: religion,
+                        phone: phone,
+                        guardian_phone: guardianPhone || null,
+                        specs: fullSpecs
+                    });
+
+                if (error) throw error;
+
+                var newEntry = {
+                    code: generatedCode,
+                    name: name,
+                    gender: gender,
+                    age: age,
+                    city: governorate,
+                    work: [educationWork, job].filter(Boolean).join(" - "),
+                    maritalStatus: maritalStatus,
+                    religion: religion,
+                    phone: phone,
+                    guardianPhone: guardianPhone,
+                    specs: fullSpecs,
+                    status: "pending"
+                };
+
+                var roleLabel = gender === "male" ? "عريس" : "عروس";
+                var confirmText = "السلام عليكم ورحمة الله إدارة منصة مودة،\n" +
+                    "قمت بتسجيل استمارتي وأؤكد جديتي في طلب الزواج الشرعي:\n" +
+                    "- كود الطلب: *" + generatedCode + "*\n" +
+                    "- الصفة: " + roleLabel + " (" + age + " سنة - " + governorate + ")\n" +
+                    "يرجى مراجعة طلبي واعتماده.";
+
+                document.getElementById("v-result-code").textContent = generatedCode;
+                document.getElementById("v-confirm-admin-wa").href =
+                    "https://wa.me/" + ADMIN_WA_NUMBER + "?text=" + encodeURIComponent(confirmText);
+
+                // لا نعرض بيانات محلية أو غير معتمدة.
+                renderMatchedCandidatesForVisitor(newEntry, []);
+                form.classList.add("hidden");
+                document.getElementById("visitor-results-box").classList.remove("hidden");
+                notifyUser("تم إرسال طلبك إلى الإدارة بنجاح. كودك: " + generatedCode);
+
+            } catch (err) {
+                console.error("Registration error:", err);
+                alert("تعذر إرسال الطلب: " + (err.message || "حدث خطأ غير معروف"));
+            } finally {
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalButtonText;
+                }
+            }
         });
 
         function resetVisitorForm() {
@@ -918,6 +1040,10 @@
                         '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700 mb-3">' +
                             '<li><strong>السن والحالة:</strong> ' + item.age + ' سنة (' + item.maritalStatus + ')</li>' +
                             '<li><strong>المحافظة:</strong> ' + item.city + '</li>' +
+                            (item.area ? '<li><strong>المنطقة:</strong> ' + item.area + '</li>' : '') +
+                            (item.height ? '<li><strong>الطول:</strong> ' + item.height + ' سم</li>' : '') +
+                            (item.weight ? '<li><strong>الوزن:</strong> ' + item.weight + ' كجم</li>' : '') +
+                            (item.skinTone ? '<li><strong>لون البشرة:</strong> ' + item.skinTone + '</li>' : '') +
                             '<li><strong>المؤهل/العمل:</strong> ' + item.work + '</li>' +
                             '<li><strong>الالتزام:</strong> ' + item.religion + '</li>' +
                         '</ul>' +
@@ -1148,6 +1274,13 @@
                             '<p><strong>النوع والسن:</strong> ' + (isMale ? 'عريس' : 'عروس') + ' (' + rec.age + ' سنة)</p>' +
                             '<p><strong>المحافظة:</strong> ' + rec.city + '</p>' +
                             '<p><strong>الحالة:</strong> ' + rec.maritalStatus + '</p>' +
+                            (rec.height ? '<p><strong>الطول:</strong> ' + rec.height + ' سم</p>' : '') +
+                            (rec.weight ? '<p><strong>الوزن:</strong> ' + rec.weight + ' كجم</p>' : '') +
+                            (rec.skinTone ? '<p><strong>لون البشرة:</strong> ' + rec.skinTone + '</p>' : '') +
+                            (rec.country || rec.area ? '<p><strong>البلد والمنطقة:</strong> ' + (rec.country || '') + ' - ' + (rec.area || rec.city || '') + '</p>' : '') +
+                            (rec.childrenCount !== undefined ? '<p><strong>عدد الأولاد:</strong> ' + rec.childrenCount + '</p>' : '') +
+                            (rec.fatherJob ? '<p><strong>وظيفة الوالد:</strong> ' + rec.fatherJob + '</p>' : '') +
+                            (rec.motherJob ? '<p><strong>وظيفة الوالدة:</strong> ' + rec.motherJob + '</p>' : '') +
                             '<p><strong>الواتساب الشخصي:</strong> <span dir="ltr" class="font-bold text-emerald-900">' + rec.phone + '</span></p>' +
                             (rec.guardianPhone ? '<p class="sm:col-span-2 text-emerald-950"><strong>واتساب ولي الأمر:</strong> <span dir="ltr" class="font-extrabold">' + rec.guardianPhone + '</span></p>' : '') +
                             '<p class="sm:col-span-2"><strong>المؤهل/العمل:</strong> ' + rec.work + '</p>' +
@@ -1211,6 +1344,15 @@
                 age: parseInt(document.getElementById("a-age").value, 10),
                 city: document.getElementById("a-city").value.trim(),
                 work: document.getElementById("a-work").value.trim(),
+                job: document.getElementById("a-job").value.trim(),
+                height: document.getElementById("a-height").value,
+                weight: document.getElementById("a-weight").value,
+                skinTone: document.getElementById("a-skin-tone").value,
+                country: document.getElementById("a-country").value.trim(),
+                area: document.getElementById("a-area").value.trim(),
+                fatherJob: document.getElementById("a-father-job").value.trim(),
+                motherJob: document.getElementById("a-mother-job").value.trim(),
+                childrenCount: document.getElementById("a-children-count").value,
                 maritalStatus: document.getElementById("a-status").value.trim(),
                 religion: document.getElementById("a-religion").value.trim(),
                 phone: document.getElementById("a-phone").value.trim(),
