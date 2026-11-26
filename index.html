@@ -1121,108 +1121,236 @@
             loadRegistrationRequests();
         }
 
-        // تحميل طلبات الزوار من Supabase (صلاحية القراءة محكومة بسياسة RLS للإدارة).
-        async function loadRegistrationRequests() {
-            var grid = document.getElementById("registration-requests-grid");
-            var message = document.getElementById("registration-requests-message");
-            if (!grid) return;
-            if (!isAdminLogged) {
-                grid.textContent = "سجّل دخول الإدارة أولاً لعرض الطلبات.";
-                return;
-            }
-            grid.textContent = "جارٍ تحميل الطلبات...";
-            if (message) message.classList.add("hidden");
+// تحميل طلبات الزوار من Supabase
+async function loadRegistrationRequests() {
+    var grid = document.getElementById("registration-requests-grid");
+    var message = document.getElementById("registration-requests-message");
 
-            try {
-                var result = await supabaseClient
-                    .from("registration_requests")
-                    .select("id, profile_code, display_name, gender, age, governorate, work, marital_status, religion, phone, guardian_phone, specs, status, created_at")
-                    .order("created_at", { ascending: false });
-                if (result.error) throw result.error;
+    if (!grid) return;
 
-                var requests = result.data || [];
-                grid.innerHTML = "";
-                if (!requests.length) {
-                    grid.textContent = "لا توجد طلبات تسجيل جديدة حتى الآن.";
-                    return;
-                }
+    if (!isAdminLogged) {
+        grid.textContent = "سجّل دخول الإدارة أولاً لعرض الطلبات.";
+        return;
+    }
 
-                requests.forEach(function(req) {
-                    var card = document.createElement("article");
-                    card.className = "bg-cream-50 rounded-2xl p-5 border border-cream-200 shadow-sm";
-                    var head = document.createElement("div");
-                    head.className = "flex flex-wrap items-center justify-between gap-2 border-b border-cream-200 pb-3 mb-3";
-                    var title = document.createElement("strong");
-                    title.className = "text-emerald-950";
-                    title.textContent = (req.profile_code || "بدون كود") + " — " + (req.display_name || "بدون اسم");
-                    var status = document.createElement("span");
-                    status.className = "text-xs font-bold rounded-full px-3 py-1 " + (req.status === "approved" ? "bg-green-100 text-green-800" : req.status === "rejected" ? "bg-red-100 text-red-700" : "bg-amber-100 text-amber-800");
-                    status.textContent = req.status === "approved" ? "معتمد" : req.status === "rejected" ? "مرفوض" : "قيد المراجعة";
-                    head.append(title, status);
-                    card.appendChild(head);
+    grid.textContent = "جارٍ تحميل الطلبات...";
+    if (message) message.classList.add("hidden");
 
-                    var details = document.createElement("div");
-                    details.className = "grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-700";
-                    var fields = [
-                        ["النوع", req.gender === "male" ? "عريس" : "عروس"],
-                        ["السن", req.age],
-                        ["المحافظة", req.governorate],
-                        ["الحالة الاجتماعية", req.marital_status],
-                        ["المؤهل والعمل", req.work],
-                        ["الالتزام", req.religion],
-                        ["رقم الهاتف", req.phone],
-                        ["رقم ولي الأمر", req.guardian_phone],
-                        ["المواصفات والتفاصيل", req.specs]
-                    ];
-                    fields.forEach(function(pair) {
-                        if (pair[1] === null || pair[1] === undefined || pair[1] === "") return;
-                        var line = document.createElement("p");
-                        line.className = "break-words";
-                        var label = document.createElement("strong");
-                        label.textContent = pair[0] + ": ";
-                        var value = document.createElement("span");
-                        value.textContent = String(pair[1]);
-                        line.append(label, value);
-                        details.appendChild(line);
-                    });
-                    card.appendChild(details);
+    try {
+        var result = await supabaseClient
+            .from("registration_requests")
+            .select("id, profile_code, display_name, gender, age, governorate, work, marital_status, religion, phone, guardian_phone, specs, status, created_at")
+            .order("created_at", { ascending: false });
 
-                    var actions = document.createElement("div");
-                    actions.className = "mt-4 pt-3 border-t border-cream-200 flex flex-wrap gap-2";
-                    if (req.phone) {
-                        var wa = document.createElement("a");
-                        wa.href = "https://wa.me/" + toEgyptianWhatsApp(req.phone);
-                        wa.target = "_blank";
-                        wa.rel = "noopener noreferrer";
-                        wa.className = "bg-emerald-900 text-white text-xs font-bold px-3 py-2 rounded-lg";
-                        wa.textContent = "فتح واتساب المتقدم";
-                        actions.appendChild(wa);
-                    }
-                    var code = document.createElement("button");
-                    code.type = "button";
-                    code.className = "bg-white border border-cream-200 text-emerald-900 text-xs font-bold px-3 py-2 rounded-lg";
-                    code.textContent = "نسخ كود الطلب";
-                    code.addEventListener("click", function() {
-                        if (navigator.clipboard && navigator.clipboard.writeText) {
-                            navigator.clipboard.writeText(req.profile_code || "").then(function() { notifyUser("تم نسخ كود الطلب"); }).catch(function() { alert("تعذر النسخ تلقائياً؛ الكود: " + req.profile_code); });
-                        } else {
-                            alert("كود الطلب: " + req.profile_code);
-                        }
-                    });
-                    actions.appendChild(code);
-                    card.appendChild(actions);
-                    grid.appendChild(card);
-                });
-            } catch (err) {
-                console.error("Registration requests load error:", err);
-                grid.textContent = "تعذر تحميل الطلبات من قاعدة البيانات: " + (err.message || "خطأ غير معروف");
-                if (message) {
-                    message.textContent = "تأكد من تسجيل دخول حساب المدير وأن سياسة قراءة registration_requests مفعّلة.";
-                    message.classList.remove("hidden");
-                    message.classList.add("text-red-700");
-                }
-            }
+        if (result.error) throw result.error;
+
+        var requests = result.data || [];
+        grid.innerHTML = "";
+
+        if (!requests.length) {
+            grid.textContent = "لا توجد طلبات تسجيل جديدة حتى الآن.";
+            return;
         }
+
+        requests.forEach(function(req) {
+            var card = document.createElement("article");
+            card.className = "bg-cream-50 rounded-2xl p-5 border border-cream-200 shadow-sm";
+
+            var head = document.createElement("div");
+            head.className = "flex flex-wrap items-center justify-between gap-2 border-b border-cream-200 pb-3 mb-3";
+
+            var title = document.createElement("strong");
+            title.className = "text-emerald-950";
+            title.textContent = (req.profile_code || "بدون كود") + " — " + (req.display_name || "بدون اسم");
+
+            var status = document.createElement("span");
+            status.className = "text-xs font-bold rounded-full px-3 py-1 " +
+                (req.status === "approved" ? "bg-green-100 text-green-800" :
+                req.status === "rejected" ? "bg-red-100 text-red-700" :
+                "bg-amber-100 text-amber-800");
+
+            status.textContent = req.status === "approved" ? "معتمد" :
+                req.status === "rejected" ? "مرفوض" : "قيد المراجعة";
+
+            head.append(title, status);
+            card.appendChild(head);
+
+            var details = document.createElement("div");
+            details.className = "grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-700";
+
+            var fields = [
+                ["النوع", req.gender === "male" ? "عريس" : "عروس"],
+                ["السن", req.age],
+                ["المحافظة", req.governorate],
+                ["الحالة الاجتماعية", req.marital_status],
+                ["المؤهل والعمل", req.work],
+                ["الالتزام", req.religion],
+                ["رقم الهاتف", req.phone],
+                ["رقم ولي الأمر", req.guardian_phone],
+                ["المواصفات والتفاصيل", req.specs]
+            ];
+
+            fields.forEach(function(pair) {
+                if (pair[1] === null || pair[1] === undefined || pair[1] === "") return;
+
+                var line = document.createElement("p");
+                line.className = "break-words";
+
+                var label = document.createElement("strong");
+                label.textContent = pair[0] + ": ";
+
+                var value = document.createElement("span");
+                value.textContent = String(pair[1]);
+
+                line.append(label, value);
+                details.appendChild(line);
+            });
+
+            card.appendChild(details);
+
+            var actions = document.createElement("div");
+            actions.className = "mt-4 pt-3 border-t border-cream-200 flex flex-wrap gap-2";
+
+            function makeButton(text, color, callback) {
+                var btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = color + " text-white text-xs font-bold px-3 py-2 rounded-lg";
+                btn.textContent = text;
+                btn.addEventListener("click", callback);
+                actions.appendChild(btn);
+                return btn;
+            }
+
+            // الموافقة والرفض للطلبات قيد المراجعة فقط
+            if (req.status === "pending") {
+
+                makeButton("موافقة على الطلب", "bg-green-700", async function() {
+                    if (!confirm("هل تريد اعتماد هذا الطلب ونشر بياناته العامة؟")) return;
+
+                    try {
+                        var response = await supabaseClient.rpc(
+                            "admin_approve_registration_request",
+                            { p_request_id: req.id }
+                        );
+
+                        if (response.error) throw response.error;
+
+                        alert("تم اعتماد الطلب بنجاح.");
+                        await loadRegistrationRequests();
+
+                    } catch (err) {
+                        alert("تعذر اعتماد الطلب: " + (err.message || "خطأ غير معروف"));
+                    }
+                });
+
+                makeButton("رفض الطلب", "bg-orange-600", async function() {
+                    if (!confirm("هل أنت متأكد من رفض هذا الطلب؟")) return;
+
+                    try {
+                        var response = await supabaseClient.rpc(
+                            "admin_reject_registration_request",
+                            { p_request_id: req.id }
+                        );
+
+                        if (response.error) throw response.error;
+
+                        alert("تم رفض الطلب.");
+                        await loadRegistrationRequests();
+
+                    } catch (err) {
+                        alert("تعذر رفض الطلب: " + (err.message || "خطأ غير معروف"));
+                    }
+                });
+            }
+
+            // طلب صورة عبر واتساب برسالة قابلة للتعديل
+            if (req.phone) {
+                makeButton("طلب صورة", "bg-purple-700", function() {
+                    var phone = toEgyptianWhatsApp(req.phone);
+
+                    var msg =
+                        "السلام عليكم ورحمة الله وبركاته\n" +
+                        "معك إدارة منصة مودة للزواج الشرعي.\n" +
+                        "بخصوص طلب التسجيل رقم: " + (req.profile_code || "") + "\n" +
+                        "نرجو إرسال صورة شخصية حديثة لاستكمال بيانات الطلب.\n" +
+                        "شكرًا لثقتكم بنا.";
+
+                    var editedMessage = prompt("يمكنك تعديل رسالة طلب الصورة قبل فتح واتساب:", msg);
+
+                    if (editedMessage === null) return;
+
+                    var url = "https://wa.me/" + phone +
+                        "?text=" + encodeURIComponent(editedMessage);
+
+                    window.open(url, "_blank");
+                });
+            }
+
+            // فتح واتساب المتقدم
+            if (req.phone) {
+                var wa = document.createElement("a");
+                wa.href = "https://wa.me/" + toEgyptianWhatsApp(req.phone);
+                wa.target = "_blank";
+                wa.rel = "noopener noreferrer";
+                wa.className = "bg-emerald-900 text-white text-xs font-bold px-3 py-2 rounded-lg";
+                wa.textContent = "فتح واتساب المتقدم";
+                actions.appendChild(wa);
+            }
+
+            // نسخ كود الطلب
+            makeButton("نسخ كود الطلب", "bg-gray-600", function() {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(req.profile_code || "")
+                        .then(function() {
+                            notifyUser("تم نسخ كود الطلب");
+                        })
+                        .catch(function() {
+                            alert("كود الطلب: " + req.profile_code);
+                        });
+                } else {
+                    alert("كود الطلب: " + req.profile_code);
+                }
+            });
+
+            // حذف الطلب
+            makeButton("حذف الطلب", "bg-red-700", async function() {
+                if (!confirm("تنبيه: سيتم حذف الطلب نهائيًا. هل تريد الاستمرار؟")) return;
+
+                try {
+                    var response = await supabaseClient.rpc(
+                        "admin_delete_registration_request",
+                        { p_request_id: req.id }
+                    );
+
+                    if (response.error) throw response.error;
+
+                    alert("تم حذف الطلب.");
+                    await loadRegistrationRequests();
+
+                } catch (err) {
+                    alert("تعذر حذف الطلب: " + (err.message || "خطأ غير معروف"));
+                }
+            });
+
+            card.appendChild(actions);
+            grid.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error("Registration requests load error:", err);
+
+        grid.textContent =
+            "تعذر تحميل الطلبات من قاعدة البيانات: " +
+            (err.message || "خطأ غير معروف");
+
+        if (message) {
+            message.textContent =
+                "تأكد من تسجيل دخول حساب المدير وأن سياسة قراءة registration_requests مفعّلة.";
+            message.classList.remove("hidden");
+            message.classList.add("text-red-700");
+        }
+    }
+}
 
         function updateKPIs() {
             var records = loadRecords();
