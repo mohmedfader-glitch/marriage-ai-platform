@@ -1578,78 +1578,176 @@ grid.innerHTML = "";
         }
 
         // عرض سجل الطلبات الكامل للإدارة
-        function renderAdminList() {
-            var records = loadRecords();
-            var statusFilter = document.getElementById("adm-filter-status");
-            var genderFilter = document.getElementById("adm-filter-gender");
-            var fStatus = statusFilter ? statusFilter.value : "all";
-            var fGender = genderFilter ? genderFilter.value : "all";
+     
+// عرض سجل الطلبات الكامل من Supabase للإدارة
+async function renderAdminList() {
+    var container = document.getElementById("admin-records-grid");
+    if (!container) return;
 
-            var list = records.filter(function(r) {
-                var okS = fStatus === "all" || r.status === fStatus;
-                var okG = fGender === "all" || r.gender === fGender;
-                return okS && okG;
-            });
+    var statusFilter = document.getElementById("adm-filter-status");
+    var genderFilter = document.getElementById("adm-filter-gender");
+    var fStatus = statusFilter ? statusFilter.value : "all";
+    var fGender = genderFilter ? genderFilter.value : "all";
 
-            var container = document.getElementById("admin-records-grid");
-            if (!container) return;
-            container.innerHTML = "";
+    container.textContent = "جارٍ تحميل سجل الطلبات الكامل...";
 
-            if (list.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500">لا توجد طلبات مطابقة للفلتر.</div>';
-                return;
+    if (!isAdminLogged) {
+        container.textContent = "سجّل دخول الإدارة أولاً.";
+        return;
+    }
+
+    try {
+        var result = await supabaseClient.rpc(
+            "admin_get_all_registration_requests"
+        );
+
+        if (result.error) throw result.error;
+
+        var records = result.data || [];
+
+        var list = records.filter(function(r) {
+            var okS = fStatus === "all" || r.status === fStatus;
+            var okG = fGender === "all" || r.gender === fGender;
+            return okS && okG;
+        });
+
+        container.innerHTML = "";
+
+        if (!list.length) {
+            container.textContent = "لا توجد طلبات مطابقة للفلتر.";
+            return;
+        }
+
+        var statusMap = {
+            pending: {
+                label: "قيد المراجعة",
+                css: "bg-amber-100 text-amber-800 border-amber-300"
+            },
+            approved: {
+                label: "معتمدة",
+                css: "bg-green-100 text-green-800 border-green-300"
+            },
+            rejected: {
+                label: "مرفوضة",
+                css: "bg-red-100 text-red-800 border-red-300"
+            },
+            matched: {
+                label: "تم التوفيق",
+                css: "bg-gold-100 text-emerald-950 border-gold-500"
+            }
+        };
+
+        function addField(parent, label, value) {
+            if (value === null || value === undefined || value === "") return;
+
+            var p = document.createElement("p");
+            var strong = document.createElement("strong");
+            strong.textContent = label + ": ";
+            p.appendChild(strong);
+            p.appendChild(document.createTextNode(String(value)));
+            parent.appendChild(p);
+        }
+
+        list.forEach(function(rec) {
+            var isMale = rec.gender === "male";
+            var st = statusMap[rec.status] || statusMap.pending;
+
+            var card = document.createElement("article");
+            card.className =
+                "bg-cream-50 rounded-2xl p-5 border border-cream-200 shadow-sm space-y-4";
+
+            var header = document.createElement("div");
+            header.className =
+                "flex flex-wrap items-center justify-between gap-2 border-b border-cream-200 pb-3";
+
+            var identity = document.createElement("div");
+            identity.className = "flex flex-wrap items-center gap-2";
+
+            var code = document.createElement("span");
+            code.className =
+                "font-extrabold text-xs px-2.5 py-1 rounded-lg " +
+                (isMale
+                    ? "bg-emerald-900 text-gold-400"
+                    : "bg-gold-500 text-white");
+            code.textContent = rec.profile_code || "";
+
+            var name = document.createElement("span");
+            name.className = "font-extrabold text-emerald-950 text-base";
+            name.textContent = rec.display_name || "بدون اسم";
+
+            identity.appendChild(code);
+            identity.appendChild(name);
+
+            var status = document.createElement("span");
+            status.className =
+                "text-xs font-bold px-2.5 py-1 rounded-full border " + st.css;
+            status.textContent = st.label;
+
+            header.appendChild(identity);
+            header.appendChild(status);
+
+            var details = document.createElement("div");
+            details.className =
+                "grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700";
+
+            addField(details, "النوع", isMale ? "عريس" : "عروس");
+            addField(details, "السن", rec.age ? rec.age + " سنة" : "");
+            addField(details, "المحافظة", rec.governorate);
+            addField(details, "الحالة الاجتماعية", rec.marital_status);
+            addField(details, "المؤهل والعمل", rec.work);
+            addField(details, "الالتزام", rec.religion);
+            addField(details, "واتساب العضو", rec.phone);
+            addField(details, "واتساب ولي الأمر", rec.guardian_phone);
+
+            var specs = document.createElement("p");
+            specs.className =
+                "text-xs text-gray-600 bg-white p-3 rounded-xl border border-cream-200";
+            specs.textContent = "المواصفات: " + (rec.specs || "لا توجد تفاصيل");
+
+            var actions = document.createElement("div");
+            actions.className =
+                "pt-3 border-t border-cream-200 flex flex-wrap items-center gap-2";
+
+            var wa = document.createElement("a");
+            wa.className =
+                "bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-bold px-3 py-2 rounded-lg";
+            wa.textContent = "واتساب العضو";
+            wa.target = "_blank";
+            wa.rel = "noopener noreferrer";
+
+            if (rec.phone) {
+                var msg =
+                    "السلام عليكم ورحمة الله " +
+                    (rec.display_name || "") +
+                    "، معك إدارة منصة مودة للزواج الشرعي بخصوص استمارتك رقم (" +
+                    (rec.profile_code || "") + ").";
+
+                wa.href =
+                    "https://wa.me/" +
+                    toEgyptianWhatsApp(rec.phone) +
+                    "?text=" + encodeURIComponent(msg);
+            } else {
+                wa.textContent = "لا يوجد رقم هاتف";
+                wa.removeAttribute("href");
             }
 
-            var statusMap = {
-                pending: { label: "قيد المراجعة", css: "bg-amber-100 text-amber-800 border-amber-300" },
-                approved: { label: "معتمدة ومنشورة", css: "bg-green-100 text-green-800 border-green-300" },
-                matched: { label: "تم التوفيق", css: "bg-gold-100 text-emerald-950 border-gold-500" }
-            };
+            actions.appendChild(wa);
 
-            list.forEach(function(rec) {
-                var isMale = rec.gender === "male";
-                var st = statusMap[rec.status] || statusMap.pending;
-                var directMsg = "السلام عليكم ورحمة الله *" + rec.name + "*،\nمعك *إدارة منصة مودة للزواج الشرعي* (01095383936) بخصوص استمارتك رقم (" + rec.code + ").";
-                var directWa = "https://wa.me/" + toEgyptianWhatsApp(rec.phone) + "?text=" + encodeURIComponent(directMsg);
+            card.appendChild(header);
+            card.appendChild(details);
+            card.appendChild(specs);
+            card.appendChild(actions);
 
-                var card = document.createElement("div");
-                card.className = "bg-cream-50 rounded-2xl p-5 border border-cream-200 shadow-sm flex flex-col justify-between space-y-4";
-                card.innerHTML = 
-                    '<div>' +
-                        '<div class="flex flex-wrap items-center justify-between gap-2 border-b border-cream-200 pb-3 mb-3">' +
-                            '<div class="flex items-center gap-2">' +
-                                '<span class="font-extrabold text-xs px-2.5 py-1 rounded-lg ' + (isMale ? 'bg-emerald-900 text-gold-400' : 'bg-gold-500 text-white') + '">' + rec.code + '</span>' +
-                                '<span class="font-extrabold text-emerald-950 text-base">' + rec.name + '</span>' +
-                            '</div>' +
-                            '<span class="text-xs font-bold px-2.5 py-1 rounded-full border ' + st.css + '">' + st.label + '</span>' +
-                        '</div>' +
-                        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-gray-700 mb-3">' +
-                            '<p><strong>النوع والسن:</strong> ' + (isMale ? 'عريس' : 'عروس') + ' (' + rec.age + ' سنة)</p>' +
-                            '<p><strong>المحافظة:</strong> ' + rec.city + '</p>' +
-                            '<p><strong>الحالة:</strong> ' + rec.maritalStatus + '</p>' +
-                            (rec.height ? '<p><strong>الطول:</strong> ' + rec.height + ' سم</p>' : '') +
-                            (rec.weight ? '<p><strong>الوزن:</strong> ' + rec.weight + ' كجم</p>' : '') +
-                            (rec.skinTone ? '<p><strong>لون البشرة:</strong> ' + rec.skinTone + '</p>' : '') +
-                            (rec.country || rec.area ? '<p><strong>البلد والمنطقة:</strong> ' + (rec.country || '') + ' - ' + (rec.area || rec.city || '') + '</p>' : '') +
-                            (rec.childrenCount !== undefined ? '<p><strong>عدد الأولاد:</strong> ' + rec.childrenCount + '</p>' : '') +
-                            (rec.fatherJob ? '<p><strong>وظيفة الوالد:</strong> ' + rec.fatherJob + '</p>' : '') +
-                            (rec.motherJob ? '<p><strong>وظيفة الوالدة:</strong> ' + rec.motherJob + '</p>' : '') +
-                            '<p><strong>الواتساب الشخصي:</strong> <span dir="ltr" class="font-bold text-emerald-900">' + rec.phone + '</span></p>' +
-                            (rec.guardianPhone ? '<p class="sm:col-span-2 text-emerald-950"><strong>واتساب ولي الأمر:</strong> <span dir="ltr" class="font-extrabold">' + rec.guardianPhone + '</span></p>' : '') +
-                            '<p class="sm:col-span-2"><strong>المؤهل/العمل:</strong> ' + rec.work + '</p>' +
-                            '<p class="sm:col-span-2"><strong>الالتزام:</strong> ' + rec.religion + '</p>' +
-                        '</div>' +
-                        '<p class="text-xs text-gray-600 bg-white p-2.5 rounded-xl border border-cream-200"><strong>المواصفات:</strong> ' + rec.specs + '</p>' +
-                    '</div>' +
-                    '<div class="pt-3 border-t border-cream-200 flex flex-wrap items-center gap-2">' +
-                        '<button type="button" onclick="updateRecordStatus(' + rec.id + ', \'approved\')" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition">اعتماد ونشر</button>' +
-                        '<button type="button" onclick="updateRecordStatus(' + rec.id + ', \'matched\')" class="bg-gold-500 hover:bg-gold-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition">تم التوفيق</button>' +
-                        '<a href="' + directWa + '" target="_blank" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-bold px-3 py-2 rounded-lg transition">واتساب العضو</a>' +
-                        '<button type="button" onclick="removeRecord(' + rec.id + ')" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold px-3 py-2 rounded-lg transition mr-auto">حذف</button>' +
-                    '</div>';
-                container.appendChild(card);
-            });
-        }
+            container.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error("خطأ تحميل السجل الكامل:", err);
+        container.textContent =
+            "تعذر تحميل سجل الطلبات: " + (err.message || err);
+    }
+}
+
 
         function updateRecordStatus(id, newStatus) {
             var records = loadRecords();
