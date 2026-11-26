@@ -489,8 +489,7 @@ if (requestsError) {
     alert("خطأ في قراءة السجل الكامل: " + requestsError.message);
     return;
 }
-
-console.log("عدد طلبات السجل الكامل:", allRequests.length);
+alert("عدد الطلبات في سجل Supabase الكامل: " + allRequests.length);
                     isAdminLogged = true;
                     document.getElementById("admin-auth-err").classList.add("hidden");
                     document.getElementById("admin-auth-box").classList.add("hidden");
