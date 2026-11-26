@@ -1031,68 +1031,142 @@
             });
         }
 
-        // عرض الحالات المعتمدة في الصفحة الرئيسية للزوار (بدون أسماء أو أرقام)
-        function setPublicFilter(filterVal) {
-            currentPublicFilter = filterVal;
-            ["all", "male", "female"].forEach(function(key) {
-                var btn = document.getElementById("flt-" + key);
-                if (key === filterVal) {
-                    btn.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-900 text-white";
-                } else {
-                    btn.className = "px-4 py-1.5 rounded-lg text-xs font-bold text-gray-700";
-                }
-            });
-            renderPublicApprovedList();
+async function renderPublicApprovedList() {
+    var container = document.getElementById("public-approved-grid");
+    if (!container) return;
+
+    container.innerHTML =
+        '<div class="col-span-full text-center py-6 text-gray-500">جارٍ تحميل الحالات المعتمدة...</div>';
+
+    try {
+        var result = await supabaseClient
+            .from("approved_guest_profiles")
+            .select("profile_code, gender, age, governorate, city, work, marital_status, religion, specs")
+            .order("approved_at", { ascending: false });
+
+        if (result.error) throw result.error;
+
+        var guestRecords = (result.data || []).map(function(item) {
+            return {
+                code: item.profile_code,
+                gender: item.gender,
+                age: item.age,
+                city: item.city || item.governorate || "",
+                work: item.work || "",
+                maritalStatus: item.marital_status || "",
+                religion: item.religion || "",
+                specs: item.specs || ""
+            };
+        });
+
+        // الاحتفاظ بالحالات المعتمدة القديمة من السجل المحلي
+        var localRecords = loadRecords().filter(function(item) {
+            return item.status === "approved";
+        });
+
+        var allRecords = guestRecords.concat(localRecords);
+
+        // إزالة التكرار باستخدام كود الحالة
+        var seen = {};
+        var filtered = allRecords.filter(function(item) {
+            var key = item.code || "";
+            if (seen[key]) return false;
+            seen[key] = true;
+
+            return currentPublicFilter === "all" ||
+                item.gender === currentPublicFilter;
+        });
+
+        container.innerHTML = "";
+
+        if (!filtered.length) {
+            container.innerHTML =
+                '<div class="col-span-full text-center py-8 text-gray-500 bg-cream-50 rounded-2xl border border-cream-200">لا توجد حالات معتمدة في هذا التصنيف حالياً.</div>';
+            return;
         }
 
-        function renderPublicApprovedList() {
-            var records = loadRecords();
-            var filtered = records.filter(function(r) {
-                return r.status === "approved" && (currentPublicFilter === "all" || r.gender === currentPublicFilter);
+        filtered.forEach(function(item) {
+            var isMale = item.gender === "male";
+
+            var msg =
+                "السلام عليكم ورحمة الله إدارة منصة مودة،\n" +
+                "أرغب في طلب ترشيح وتواصل شرعي بخصوص الحالة صاحبة الكود السري: *" +
+                item.code + "*.";
+
+            var waHref = "https://wa.me/" + ADMIN_WA_NUMBER +
+                "?text=" + encodeURIComponent(msg);
+
+            var card = document.createElement("div");
+            card.className =
+                "bg-cream-50 rounded-2xl p-6 border border-cream-200 shadow-sm flex flex-col justify-between space-y-4";
+
+            var content = document.createElement("div");
+
+            var head = document.createElement("div");
+            head.className =
+                "flex items-center justify-between border-b border-cream-200 pb-3 mb-3";
+
+            var code = document.createElement("span");
+            code.className = "font-extrabold text-emerald-950 text-base";
+            code.textContent = "الكود السري: " + item.code;
+
+            var gender = document.createElement("span");
+            gender.className =
+                "text-xs font-bold px-3 py-1 rounded-full " +
+                (isMale ? "bg-emerald-900 text-white" : "bg-gold-500 text-white");
+            gender.textContent = isMale ? "عريس" : "عروس";
+
+            head.append(code, gender);
+            content.appendChild(head);
+
+            var list = document.createElement("ul");
+            list.className =
+                "space-y-1.5 text-xs sm:text-sm text-gray-700 mb-3";
+
+            var fields = [
+                ["السن والحالة", (item.age || "") + " سنة (" + (item.maritalStatus || "") + ")"],
+                ["المحافظة", item.city],
+                ["المؤهل/العمل", item.work],
+                ["الالتزام", item.religion]
+            ];
+
+            fields.forEach(function(pair) {
+                if (!pair[1]) return;
+                var li = document.createElement("li");
+                var strong = document.createElement("strong");
+                strong.textContent = pair[0] + ": ";
+                li.append(strong, document.createTextNode(String(pair[1])));
+                list.appendChild(li);
             });
 
-            var container = document.getElementById("public-approved-grid");
-            container.innerHTML = "";
+            content.appendChild(list);
 
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500 bg-cream-50 rounded-2xl border border-cream-200">لا توجد حالات معتمدة في هذا التصنيف حالياً.</div>';
-                return;
+            if (item.specs) {
+                var specs = document.createElement("p");
+                specs.className =
+                    "text-xs text-gray-600 bg-white p-3 rounded-xl border border-cream-200";
+                specs.textContent = item.specs;
+                content.appendChild(specs);
             }
 
-            filtered.forEach(function(item) {
-                var isMale = item.gender === "male";
-                var msg = "السلام عليكم ورحمة الله إدارة منصة مودة،\n" +
-                    "أرغب في طلب ترشيح وتواصل شرعي بخصوص الحالة صاحبة الكود السري: *" + item.code + "* (" + (isMale ? "عريس" : "عروس") + " - " + item.age + " سنة - " + item.city + ").";
-                var waHref = "https://wa.me/" + ADMIN_WA_NUMBER + "?text=" + encodeURIComponent(msg);
+            var link = document.createElement("a");
+            link.href = waHref;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.className =
+                "w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl text-center shadow transition block";
+            link.textContent = "طلب ترشيح هذا الكود عبر الإدارة";
 
-                var card = document.createElement("div");
-                card.className = "bg-cream-50 rounded-2xl p-6 border border-cream-200 shadow-sm flex flex-col justify-between space-y-4";
-                card.innerHTML = 
-                    '<div>' +
-                        '<div class="flex items-center justify-between border-b border-cream-200 pb-3 mb-3">' +
-                            '<span class="font-extrabold text-emerald-950 text-base">الكود السري: ' + item.code + '</span>' +
-                            '<span class="text-xs font-bold px-3 py-1 rounded-full ' + (isMale ? 'bg-emerald-900 text-gold-400' : 'bg-gold-500 text-white') + '">' +
-                                (isMale ? 'عريس' : 'عروس') +
-                            '</span>' +
-                        '</div>' +
-                        '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700 mb-3">' +
-                            '<li><strong>السن والحالة:</strong> ' + item.age + ' سنة (' + item.maritalStatus + ')</li>' +
-                            '<li><strong>المحافظة:</strong> ' + item.city + '</li>' +
-                            (item.area ? '<li><strong>المنطقة:</strong> ' + item.area + '</li>' : '') +
-                            (item.height ? '<li><strong>الطول:</strong> ' + item.height + ' سم</li>' : '') +
-                            (item.weight ? '<li><strong>الوزن:</strong> ' + item.weight + ' كجم</li>' : '') +
-                            (item.skinTone ? '<li><strong>لون البشرة:</strong> ' + item.skinTone + '</li>' : '') +
-                            '<li><strong>المؤهل/العمل:</strong> ' + item.work + '</li>' +
-                            '<li><strong>الالتزام:</strong> ' + item.religion + '</li>' +
-                        '</ul>' +
-                        '<p class="text-xs text-gray-600 bg-white p-3 rounded-xl border border-cream-200">"' + item.specs + '"</p>' +
-                    '</div>' +
-                    '<a href="' + waHref + '" target="_blank" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl text-center shadow transition block">' +
-                        'طلب ترشيح هذا الكود عبر الإدارة' +
-                    '</a>';
-                container.appendChild(card);
-            });
-        }
+            card.append(content, link);
+            container.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error("Public approved profiles error:", err);
+        container.textContent =
+            "تعذر تحميل الحالات المعتمدة: " + (err.message || "خطأ غير معروف");
+    }
+}
 
         // =====================================================================
         // وظائف لوحة تحكم الإدارة (الخاطبة)
