@@ -1167,14 +1167,19 @@ var fields = [
 
             content.appendChild(list);
 
-            if (item.specs) {
-                var specs = document.createElement("p");
-                specs.className =
-                    "text-xs text-gray-600 bg-white p-3 rounded-xl border border-cream-200";
-                specs.textContent = item.specs;
-                content.appendChild(specs);
-            }
+if (item.specs) {
+    var publicSpecs = String(item.specs)
+        .split("بيانات إضافية:")[0]
+        .trim();
 
+    if (publicSpecs) {
+        var specs = document.createElement("p");
+        specs.className =
+            "text-xs text-gray-600 bg-white p-3 rounded-xl border border-cream-200";
+        specs.textContent = publicSpecs;
+        content.appendChild(specs);
+    }
+}
             var link = document.createElement("a");
             link.href = waHref;
             link.target = "_blank";
