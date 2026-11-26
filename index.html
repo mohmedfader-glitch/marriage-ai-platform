@@ -374,8 +374,8 @@
     <button 
         onclick="loginAdmin()"
 
-async function forgotPassword(){
-
+async function forgotPassword() {
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(
         "mohmed.fader@gmail.com",
         {
             redirectTo: "https://mohmedfader-glitch.github.io/marriage-ai-platform/"
@@ -388,6 +388,8 @@ async function forgotPassword(){
         alert("تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني");
     }
 }
+
+
 </script><p id="admin-auth-err" class="hidden text-xs text-red-600 font-bold text-center">كلمة المرور غير صحيحة!</p>
 
 <button type="button" onclick="loginAdmin()" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold py-3.5 rounded-xl shadow transition">
