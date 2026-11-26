@@ -374,11 +374,7 @@
 
     <button 
         onclick="loginAdmin()"
-
-async function forgotPassword() {
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(
-        "mohmed.fader@gmail.com",
-        {
+        
             redirectTo: "https://mohmedfader-glitch.github.io/marriage-ai-platform/"
         }
     );
@@ -438,7 +434,28 @@ async function forgotPassword() {
 </div>
 
 <script>
+async function forgotPassword() {
+    const email = prompt("أدخل البريد الإلكتروني للمدير:");
 
+    if (!email || !email.trim()) {
+        alert("يرجى إدخال البريد الإلكتروني");
+        return;
+    }
+
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(
+        email.trim(),
+        {
+            redirectTo: "https://mohmedfader-glitch.github.io/marriage-ai-platform/"
+        }
+    );
+
+    if (error) {
+        alert("خطأ: " + error.message);
+    } else {
+        alert("تم إرسال رابط الاستعادة إلى بريدك الإلكتروني");
+    }
+}
+</script>
 // الاتصال بقاعدة بيانات منصة اختيار
 const SUPABASE_URL = "https://sgjbfycgelvhatwahxhq.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_2VKHFXedPqNQXuhombNpSA_hOf1FNU2";
