@@ -1878,7 +1878,7 @@ document.getElementById("form-admin-add").addEventListener("submit", async funct
 
     var gender = document.getElementById("a-gender").value;
     var prefix = gender === "male" ? "MW-1" : "MW-2";
-    var code = prefix + Math.floor(10 + Math.random() * 89);
+   var code = prefix + Date.now().toString().slice(-8) + Math.floor(100 + Math.random() * 900);
 
     var result = await supabaseClient.rpc(
         "admin_add_registration_request",
