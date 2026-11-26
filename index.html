@@ -1215,9 +1215,9 @@ async function loadRegistrationRequests() {
 var result = await supabaseClient
     .from("registration_requests")
     .select("*")
+    .eq("status", "pending")
     .order("created_at", { ascending: false });
-
-if (result.error) {
+        if (result.error) {
     throw result.error;
 }
 
