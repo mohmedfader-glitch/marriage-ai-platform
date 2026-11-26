@@ -388,17 +388,16 @@
 
 
 </script><p id="admin-auth-err" class="hidden text-xs text-red-600 font-bold text-center">كلمة المرور غير صحيحة!</p>
-
 <button type="button" onclick="loginAdmin()" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold py-3.5 rounded-xl shadow transition">
     دخول إلى لوحة الإدارة
 </button>
-     <a href="#" onclick="forgotPassword(); return false;"
+
+<a href="#" onclick="forgotPassword(); return false;"
    class="block mt-3 text-sm text-emerald-700 text-center hover:underline">
     هل نسيت كلمة السر؟
 </a>
     </form>
 </div>
-
 <!-- لوحة التحكم الفعلية بعد الدخول -->
 <div id="admin-panel" class="hidden space-y-8">
         <!-- رأس لوحة الإدارة -->
@@ -426,36 +425,14 @@
         تسجيل الدخول
     </button>
 
-    <a href="#" 
-       onclick="forgotPassword()"
-       class="block mt-3 text-sm text-emerald-700 hover:underline">
-        هل نسيت كلمة السر؟
-    </a>
+
+<!-- رابط استعادة كلمة المرور -->
+<a href="#" onclick="forgotPassword(); return false;"
+   class="block mt-3 text-sm text-emerald-700 hover:underline">
+    هل نسيت كلمة السر؟
+</a>
 </div>
-
 <script>
-async function forgotPassword() {
-    const email = prompt("أدخل البريد الإلكتروني للمدير:");
-
-    if (!email || !email.trim()) {
-        alert("يرجى إدخال البريد الإلكتروني");
-        return;
-    }
-
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(
-        email.trim(),
-        {
-            redirectTo: "https://mohmedfader-glitch.github.io/marriage-ai-platform/"
-        }
-    );
-
-    if (error) {
-        alert("خطأ: " + error.message);
-    } else {
-        alert("تم إرسال رابط الاستعادة إلى بريدك الإلكتروني");
-    }
-}
-</script>
 // الاتصال بقاعدة بيانات منصة اختيار
 const SUPABASE_URL = "https://sgjbfycgelvhatwahxhq.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_2VKHFXedPqNQXuhombNpSA_hOf1FNU2";
@@ -468,30 +445,16 @@ const supabaseClient = window.supabase.createClient(
 // اكتشاف طلب استعادة كلمة المرور
 supabaseClient.auth.onAuthStateChange((event, session) => {
     if (event === "PASSWORD_RECOVERY") {
+        const panel = document.getElementById("reset-password-panel");
 
-        const showResetPanel = () => {
-            const panel = document.getElementById("reset-password-panel");
-
-            if (panel) {
-                panel.classList.remove("hidden");
-            }
-        };
-
-        if (document.readyState === "loading") {
-            document.addEventListener(
-                "DOMContentLoaded",
-                showResetPanel,
-                { once: true }
-            );
-        } else {
-     
-            showResetPanel();
+        if (panel) {
+            panel.classList.remove("hidden");
         }
     }
 });
 
 // اختبار الاتصال
-supabaseClient.rpc('get_public_approved_profiles')
+supabaseClient.rpc("get_public_approved_profiles")
     .then(({ data, error }) => {
         if (error) {
             console.error("خطأ الاتصال:", error.message);
@@ -502,7 +465,6 @@ supabaseClient.rpc('get_public_approved_profiles')
 
 // تسجيل دخول المدير الرئيسي
 async function loginAdmin() {
-
     const email = "mohmed.fader@gmail.com";
     const password = document.getElementById("adminPassword").value;
 
@@ -512,8 +474,8 @@ async function loginAdmin() {
     }
 
     const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
+        email: email,
+        password: password
     });
 
     if (error) {
@@ -536,10 +498,10 @@ async function loginAdmin() {
 
 // استعادة كلمة المرور
 async function forgotPassword() {
-    const email = prompt("من فضلك أدخل البريد الإلكتروني للمدير:");
+    const email = prompt("أدخل البريد الإلكتروني للمدير:");
 
     if (!email || !email.trim()) {
-        alert("يجب إدخال البريد الإلكتروني");
+        alert("يرجى إدخال البريد الإلكتروني");
         return;
     }
 
@@ -551,38 +513,12 @@ async function forgotPassword() {
     );
 
     if (error) {
-        alert("حدث خطأ: " + error.message);
-    } else {
-        alert("تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني");
-    }
-}
-
-    if (error) {
-        alert("تعذر إرسال رابط الاستعادة: " + error.message);
+        alert("خطأ: " + error.message);
     } else {
         alert("تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني");
     }
 }
-
 </script>
-
-<!-- 1. الإحصائيات السريعة -->
-
-                            <!-- زرا الإرسال المباشر عبر الواتساب -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <a id="link-send-bride-to-groom" href="#" target="_blank" 
-                                   class="bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs sm:text-sm py-4 px-5 rounded-2xl shadow text-center transition block">
-                                    إرسال بيانات العروس (وولي الأمر) إلى واتساب العريس
-                                </a>
-                                <a id="link-send-groom-to-bride" href="#" target="_blank" 
-                                   class="bg-gold-500 hover:bg-gold-600 text-white font-bold text-xs sm:text-sm py-4 px-5 rounded-2xl shadow text-center transition block">
-                                    إرسال بيانات العريس إلى واتساب العروس / ولي الأمر
-                                </a>
-                            </div>
-
-                            <div class="text-center">
-                                <button type="button" onclick="confirmPairMatched()" class="text-xs font-extrabold text-emerald-900 hover:underline">
-                                    تحديث حالة الطرفين في السجل إلى "تم التوفيق"
                                 </button>
                             </div>
                         </div>
