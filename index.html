@@ -482,7 +482,15 @@
                         alert("هذا الحساب ليس لديه صلاحية المدير الرئيسي");
                         return;
                     }
+const { data: allRequests, error: requestsError } =
+    await supabaseClient.rpc("admin_get_all_registration_requests");
 
+if (requestsError) {
+    alert("خطأ في قراءة السجل الكامل: " + requestsError.message);
+    return;
+}
+
+console.log("عدد طلبات السجل الكامل:", allRequests.length);
                     isAdminLogged = true;
                     document.getElementById("admin-auth-err").classList.add("hidden");
                     document.getElementById("admin-auth-box").classList.add("hidden");
