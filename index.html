@@ -1074,9 +1074,13 @@ var guestRecords = (result.data || []).map(function(item) {
         childrenCount: item.children_count || ""
     };
 });
-        });
+        
 
+      
         // الاحتفاظ بالحالات المعتمدة القديمة من السجل المحلي
+      guestRecords.forEach(function(item) {
+    item.city = item.city || item.governorate || "";
+});
         var localRecords = loadRecords().filter(function(item) {
             return item.status === "approved";
         });
