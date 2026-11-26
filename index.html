@@ -1211,11 +1211,17 @@ async function loadRegistrationRequests() {
     if (message) message.classList.add("hidden");
 
     try {
-  var result = await supabaseClient
-    .rpc("get_public_approved_guest_profiles");
-        var requests = result.data || [];
-        grid.innerHTML = "";
+var result = await supabaseClient
+    .from("registration_requests")
+    .select("*")
+    .order("created_at", { ascending: false });
 
+if (result.error) {
+    throw result.error;
+}
+
+var requests = result.data || [];
+grid.innerHTML = "";
         if (!requests.length) {
             grid.textContent = "لا توجد طلبات تسجيل جديدة حتى الآن.";
             return;
