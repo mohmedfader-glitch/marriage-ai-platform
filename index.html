@@ -1579,6 +1579,8 @@ grid.innerHTML = "";
 
         // عرض سجل الطلبات الكامل للإدارة
      
+        container.innerHTML = "";
+
 // عرض سجل الطلبات الكامل من Supabase للإدارة
 async function renderAdminList() {
     var container = document.getElementById("admin-records-grid");
@@ -1610,8 +1612,6 @@ async function renderAdminList() {
             var okG = fGender === "all" || r.gender === fGender;
             return okS && okG;
         });
-
-        container.innerHTML = "";
 
         if (!list.length) {
             container.textContent = "لا توجد طلبات مطابقة للفلتر.";
@@ -1698,7 +1698,15 @@ async function renderAdminList() {
             addField(details, "الالتزام", rec.religion);
             addField(details, "واتساب العضو", rec.phone);
             addField(details, "واتساب ولي الأمر", rec.guardian_phone);
-
+addField(details, "الطول", rec.height ? rec.height + " سم" : "");
+addField(details, "الوزن", rec.weight ? rec.weight + " كجم" : "");
+addField(details, "لون البشرة", rec.skin_tone);
+addField(details, "الوظيفة", rec.job);
+addField(details, "البلد", rec.country);
+addField(details, "المنطقة", rec.area);
+addField(details, "وظيفة الوالد", rec.father_job);
+addField(details, "وظيفة الوالدة", rec.mother_job);
+addField(details, "عدد الأولاد", rec.children_count);
             var specs = document.createElement("p");
             specs.className =
                 "text-xs text-gray-600 bg-white p-3 rounded-xl border border-cream-200";
