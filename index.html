@@ -1053,18 +1053,27 @@ async function renderPublicApprovedList() {
     .order("created_at", { ascending: false });
 
         if (result.error) throw result.error;
-
-        var guestRecords = (result.data || []).map(function(item) {
-            return {
-                code: item.profile_code,
-                gender: item.gender,
-                age: item.age,
-                city: item.city || item.governorate || "",
-                work: item.work || "",
-                maritalStatus: item.marital_status || "",
-                religion: item.religion || "",
-                specs: item.specs || ""
-            };
+var guestRecords = (result.data || []).map(function(item) {
+    return {
+        code: item.profile_code,
+        gender: item.gender,
+        age: item.age,
+        city: item.city || item.governorate || "",
+        work: item.work || "",
+        maritalStatus: item.marital_status || "",
+        religion: item.religion || "",
+        specs: item.specs || "",
+        height: item.height || "",
+        weight: item.weight || "",
+        skinTone: item.skin_tone || "",
+        job: item.job || "",
+        country: item.country || "",
+        area: item.area || "",
+        fatherJob: item.father_job || "",
+        motherJob: item.mother_job || "",
+        childrenCount: item.children_count || ""
+    };
+});
         });
 
         // الاحتفاظ بالحالات المعتمدة القديمة من السجل المحلي
