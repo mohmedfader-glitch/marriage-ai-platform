@@ -1,13 +1,25 @@
 {
   "name": "مَوَدَّة للتوافق والزواج الشرعي",
   "short_name": "مَوَدَّة",
-  "description": "منصة مودة للتوافق والزواج الشرعي",
+  "description": "منصة مودة للتوافق والزواج الشرعي بإشراف الإدارة",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
-  "theme_color": "#d63384",
+  "theme_color": "#c2185b",
   "lang": "ar",
-  "dir": "rtl"
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
