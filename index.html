@@ -1236,11 +1236,9 @@ async function loadRegistrationRequests() {
     if (message) message.classList.add("hidden");
 
     try {
-var result = await supabaseClient
-    .from("registration_requests")
-    .select("*")
-    .eq("status", "pending")
-    .order("created_at", { ascending: false });
+       var result = await supabaseClient.rpc(
+    "get_public_approved_guest_profiles"
+);
         if (result.error) {
     throw result.error;
 }
