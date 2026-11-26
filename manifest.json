@@ -1,1 +1,13 @@
-
+{
+  "name": "مَوَدَّة للتوافق والزواج الشرعي",
+  "short_name": "مَوَدَّة",
+  "description": "منصة مودة للتوافق والزواج الشرعي",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#d63384",
+  "lang": "ar",
+  "dir": "rtl"
+}
