@@ -1486,28 +1486,39 @@ if (error) throw error;
             }
         });
 
-        function resetVisitorForm() {
-            showVisitorForm();
-            document.getElementById("visitor-form").reset();
-            toggleGuardianField();
-            document.getElementById("visitor-form").classList.remove("hidden");
-            document.getElementById("visitor-results-box").classList.add("hidden");
+async function resetVisitorForm() {
+    try {
+        // التأكد من تسجيل الدخول أولاً
+        const { data, error } = await supabaseClient.auth.getSession();
+
+        if (error) throw error;
+
+        if (!data || !data.session) {
+            await showVisitorForm();
+            return;
         }
 
-        // عرض المرشحين المعتمدين من الجنس الآخر بعد تسجيل الزائر
-        function renderMatchedCandidatesForVisitor(userEntry, allRecords) {
-            var oppositeGender = userEntry.gender === "male" ? "female" : "male";
-            var candidates = allRecords.filter(function(item) {
-                return item.status === "approved" && item.gender === oppositeGender;
-            });
+        const form = document.getElementById("visitor-form");
+        const resultsBox = document.getElementById("visitor-results-box");
 
-            var grid = document.getElementById("matched-candidates-grid");
-            grid.innerHTML = "";
+        if (!form) return;
 
-            if (candidates.length === 0) {
-                grid.innerHTML = '<div class="col-span-full bg-white p-5 rounded-2xl border border-cream-200 text-center text-sm text-gray-600">سيتم ترشيح الحالات المناسبة لك من قبل إدارة المنصة فور مراجعة طلبك.</div>';
-                return;
-            }
+        form.reset();
+        toggleGuardianField();
+
+      // لا تفتح النموذج هنا؛ showVisitorForm هي المسؤولة عن إظهاره
+
+        if (resultsBox) {
+            resultsBox.classList.add("hidden");
+        }
+
+        await showVisitorForm();
+
+    } catch (error) {
+        console.error("Reset form error:", error);
+        alert("تعذر فتح الاستمارة. سجّل الدخول وحاول مرة أخرى.");
+    }
+}
 
             candidates.forEach(function(cand) {
                 var groomObj = userEntry.gender === "male" ? userEntry : cand;
