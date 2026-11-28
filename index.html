@@ -188,7 +188,7 @@
             </h2>
             <p class="text-sm text-gray-600 mb-5">
                 أنشئ حسابًا مجانيًا لمتابعة طلبك والرجوع إلى بياناتك بسهولة.
-                التسجيل اختياري ويمكنك استخدام المنصة بدونه.
+           إنشاء الحساب مجاني ومطلوب للتقديم، ويمكنك الرجوع إلى بياناتك ومتابعة طلبك بعد تسجيل الدخول.
             </p>
 
       <button
@@ -268,17 +268,24 @@
         dir="ltr">
 </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
-        <button type="button" onclick="visitorSignUp()"
-            class="bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3 px-4 rounded-xl">
-            إنشاء حساب مجاني
-        </button>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
 
-        <button type="button" onclick="visitorSignIn()"
-            class="bg-white border border-emerald-700 text-emerald-900 font-bold py-3 px-4 rounded-xl">
-            تسجيل الدخول
-        </button>
-    </div>
+    <button
+        type="button"
+        onclick="visitorSignUp()"
+        class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition">
+        إنشاء حساب مجاني
+    </button>
+
+    <button
+        type="button"
+        onclick="visitorSignIn()"
+        class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition">
+        تسجيل الدخول
+    </button>
+
+</div>
+
 
     <button type="button" onclick="visitorForgotPassword()"
         class="text-sm text-emerald-800 underline mt-4">
@@ -291,7 +298,7 @@
        aria-live="polite"></p>
 
     <div class="border-t border-emerald-200 mt-5 pt-4">
-        <a href="#form-anchor" onclick="showVisitorForm()"
+      
            class="inline-block text-sm font-bold text-gray-600 hover:text-emerald-900">
             المتابعة بدون إنشاء حساب ←
         </a>
