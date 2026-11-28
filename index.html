@@ -162,7 +162,7 @@
                 </p>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5">
-                    <a href="#form-anchor" class="w-full sm:w-auto bg-emerald-900 hover:bg-emerald-950 text-white font-bold px-8 py-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
+                    <a href="#form-anchor" onclick="showVisitorForm()" class="w-full sm:w-auto bg-emerald-900 hover:bg-emerald-950 text-white font-bold px-8 py-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
                         <span>ابدأ تسجيل استمارة التوافق</span>
                         <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                     </a>
@@ -263,7 +263,7 @@
        aria-live="polite"></p>
 
     <div class="border-t border-emerald-200 mt-5 pt-4">
-        <a href="#form-anchor"
+        <a href="#form-anchor" onclick="showVisitorForm()"
            class="inline-block text-sm font-bold text-gray-600 hover:text-emerald-900">
             المتابعة بدون إنشاء حساب ←
         </a>
@@ -285,6 +285,16 @@
             <p class="text-xs sm:text-sm text-gray-600 mt-1">أدخل بياناتك بدقة؛ فور الإرسال ستحصل على كودك السري وتظهر لك الحالات المتوافقة المعتمدة من الإدارة.</p>
         </div>
 
+        <div class="text-center mb-6">
+            <button type="button" id="open-visitor-form-btn" onclick="showVisitorForm()"
+                class="inline-flex items-center justify-center gap-2 bg-emerald-900 hover:bg-emerald-950 text-white font-extrabold text-base px-8 py-4 rounded-2xl shadow-lg transition">
+                <span>ابدأ التقديم الآن</span>
+                <span aria-hidden="true">←</span>
+            </button>
+            <p class="text-xs text-gray-500 mt-2">اضغط على الزر لفتح استمارة التقديم</p>
+        </div>
+
+        <div id="visitor-form-panel" class="hidden">
         <div class="bg-white rounded-3xl shadow-xl border border-cream-200 overflow-hidden">
 
             <div class="bg-emerald-900 px-6 py-4 text-white flex items-center justify-between">
@@ -368,7 +378,7 @@
 </div>
 
 <!-- الوظيفة -->
-<div>
+<div class="min-w-0">
     <label for="v-job" class="block text-sm font-bold text-gray-700 mb-1.5">
         الوظيفة <span class="text-red-600">*</span>
     </label>
@@ -377,17 +387,40 @@
         id="v-job"
         required
         placeholder="مثال: مهندس - طبيب - معلم - محاسب"
-        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
-</div>                    
-                    <div>
-                                <label for="v-height" class="block text-sm font-bold text-gray-700 mb-1.5">الطول (سم)</label>
-                                <input type="number" id="v-height" min="100" max="230" placeholder="مثال: 170" class="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none text-sm">
-                            </div>
-                            <div>
-                                <label for="v-weight" class="block text-sm font-bold text-gray-700 mb-1.5">الوزن (كجم)</label>
-                                <input type="number" id="v-weight" min="30" max="300" placeholder="مثال: 75" class="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none text-sm">
-                            </div>
-                            <div>
+        class="block w-full min-w-0 px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
+</div>
+
+<!-- الطول -->
+<div class="min-w-0">
+    <label for="v-height" class="block text-sm font-bold text-gray-700 mb-1.5">
+        الطول (سم)
+    </label>
+    <input
+        type="number"
+        id="v-height"
+        min="100"
+        max="230"
+        inputmode="numeric"
+        placeholder="مثال: 170"
+        class="block w-full min-w-0 px-4 py-3 rounded-xl border border-gray-300 bg-white focus:border-emerald-900 outline-none text-sm">
+</div>
+
+<!-- الوزن -->
+<div class="min-w-0">
+    <label for="v-weight" class="block text-sm font-bold text-gray-700 mb-1.5">
+        الوزن (كجم)
+    </label>
+    <input
+        type="number"
+        id="v-weight"
+        min="30"
+        max="300"
+        inputmode="numeric"
+        placeholder="مثال: 75"
+        class="block w-full min-w-0 px-4 py-3 rounded-xl border border-gray-300 bg-white focus:border-emerald-900 outline-none text-sm">
+</div>
+
+<div>
                                 <label for="v-skin-tone" class="block text-sm font-bold text-gray-700 mb-1.5">لون البشرة</label>
                                 <select id="v-skin-tone" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white outline-none text-sm">
                                     <option value="">اختر لون البشرة</option><option>أبيض</option><option>قمحي</option><option>خمري</option><option>أسمر</option><option>أسود</option>
@@ -492,7 +525,8 @@
                     </div>
                 </div>
             </div>
-        </section>
+                </div>
+</section>
 
         <!-- قسم الحالات المعتمدة المتاحة للتصفح العام -->
         <section class="py-12 sm:py-16 bg-white">
@@ -1122,6 +1156,18 @@
         // تهيئة خيارات الحالة الاجتماعية عند فتح الصفحة.
         setMaritalStatusOptions("v-status", document.getElementById("v-gender").value);
 
+        // فتح استمارة التقديم عند الضغط على الزر
+        function showVisitorForm() {
+            var panel = document.getElementById("visitor-form-panel");
+            var openButton = document.getElementById("open-visitor-form-btn");
+            if (!panel) return;
+            panel.classList.remove("hidden");
+            if (openButton) openButton.classList.add("hidden");
+            window.setTimeout(function() {
+                panel.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 50);
+        }
+
         // إرسال استمارة الزائر إلى جدول registration_requests في Supabase
         document.getElementById("visitor-form").addEventListener("submit", async function(e) {
             e.preventDefault();
@@ -1260,6 +1306,7 @@ if (error) throw error;
         });
 
         function resetVisitorForm() {
+            showVisitorForm();
             document.getElementById("visitor-form").reset();
             toggleGuardianField();
             document.getElementById("visitor-form").classList.remove("hidden");
