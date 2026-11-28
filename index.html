@@ -1520,7 +1520,23 @@ async function resetVisitorForm() {
     }
 }
 
-            candidates.forEach(function(cand) {
+          
+function renderMatchedCandidatesForVisitor(userEntry, candidates) {
+    var grid = document.getElementById("matched-candidates-grid");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    if (!Array.isArray(candidates) || candidates.length === 0) {
+        grid.innerHTML =
+            '<div class="col-span-full text-center py-6 text-gray-500 bg-white rounded-xl border border-cream-200">' +
+            'تم استلام طلبك بنجاح. ستظهر الترشيحات المعتمدة المناسبة عند توفرها.' +
+            '</div>';
+        return;
+    }
+
+    candidates.forEach(function(cand) {
+
                 var groomObj = userEntry.gender === "male" ? userEntry : cand;
                 var brideObj = userEntry.gender === "female" ? userEntry : cand;
                 var matchInfo = calculateMatchPercentage(groomObj, brideObj);
