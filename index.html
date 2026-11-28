@@ -231,36 +231,19 @@
             dir="ltr">
     </div>
 
-<div>
-    <label for="visitor-password" class="block text-sm font-bold text-emerald-950 mb-1">
-        كلمة المرور الجديدة
-    </label>
-    <input
-        id="visitor-password"
-        type="password"
-        autocomplete="new-password"
-        minlength="6"
-        required
-        placeholder="6 أحرف على الأقل"
-        class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
-        dir="ltr">
-</div>
-
-<div>
-    <label for="visitor-password-confirm" class="block text-sm font-bold text-emerald-950 mb-1">
-        تأكيد كلمة المرور
-    </label>
-    <input
-        id="visitor-password-confirm"
-        type="password"
-        autocomplete="new-password"
-        minlength="6"
-        required
-        placeholder="أعد كتابة كلمة المرور"
-        class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
-        dir="ltr">
-</div>
-
+    <div>
+        <label for="visitor-password" class="block text-sm font-bold text-emerald-950 mb-1">
+            كلمة المرور
+        </label>
+        <input
+            id="visitor-password"
+            type="password"
+            autocomplete="current-password"
+            minlength="6"
+            placeholder="6 أحرف على الأقل"
+            class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
+            dir="ltr">
+    </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
         <button type="button" onclick="visitorSignUp()"
@@ -639,235 +622,212 @@
                     }
                 });
 
-// إنشاء حساب مجاني للزائر
-async function visitorSignUp() {
-    const emailInput = document.getElementById("visitor-email");
-    const passwordInput = document.getElementById("visitor-password");
-    const confirmInput = document.getElementById("visitor-password-confirm");
-    const nameInput = document.getElementById("visitor-display-name");
-    const roleInput = document.getElementById("visitor-role");
-    const message = document.getElementById("visitor-account-message");
-    const signupButton = document.querySelector('button[onclick="visitorSignUp()"]');
+                // إنشاء حساب مجاني للزائر
+                async function visitorSignUp() {
+                    const email = document.getElementById("visitor-email").value.trim();
+                    const password = document.getElementById("visitor-password").value;
+                    const message = document.getElementById("visitor-account-message");
 
-    if (!emailInput || !passwordInput || !confirmInput || !nameInput || !roleInput || !message) {
-        alert("تعذر العثور على جميع حقول التسجيل. راجع الاستمارة.");
-        return;
-    }
+                    if (!email || !password) {
+                        message.textContent = "أدخل البريد الإلكتروني وكلمة المرور أولاً";
+                        message.style.color = "#dc2626";
+                        return;
+                    }
 
-    const email = emailInput.value.trim().toLowerCase();
-    const password = passwordInput.value;
-    const confirmPassword = confirmInput.value;
-    const name = nameInput.value.trim();
-    const role = roleInput.value;
+                    if (password.length < 6) {
+                        message.textContent = "كلمة المرور يجب ألا تقل عن 6 أحرف";
+                        message.style.color = "#dc2626";
+                        return;
+                    }
 
-    if (!name || !role || !email || !password || !confirmPassword) {
-        message.textContent = "أكمل جميع البيانات، بما فيها تأكيد كلمة المرور.";
-        message.style.color = "#dc2626";
-        return;
-    }
+                    let signUpResult;
+                    try {
+                        signUpResult = await supabaseClient.auth.signUp({
+                            email: email,
+                            password: password,
+                            options: {
+                                emailRedirectTo: window.location.origin + window.location.pathname
+                            }
+                        });
+                    } catch (networkError) {
+                        message.textContent = "تعذر الاتصال بخدمة الحسابات. تأكد من الإنترنت ثم حاول مرة أخرى.";
+                        message.style.color = "#dc2626";
+                        return;
+                    }
+                    const { data, error } = signUpResult;
 
-    if (!["bride", "groom"].includes(role)) {
-        message.textContent = "اختر نوع الحساب بشكل صحيح.";
-        message.style.color = "#dc2626";
-        return;
-    }
+                    if (error) {
+                        message.textContent = "تعذر إنشاء الحساب: " + error.message;
+                        message.style.color = "#dc2626";
+                        return;
+                    }
 
-    if (password.length < 6) {
-        message.textContent = "كلمة المرور يجب ألا تقل عن 6 أحرف.";
-        message.style.color = "#dc2626";
-        return;
-    }
+                    if (data.session) {
+                        message.textContent = "تم إنشاء حسابك وتسجيل دخولك بنجاح";
+                    } else {
+                        message.textContent = "تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيده، ثم سجّل الدخول.";
+                    }
 
-    if (password !== confirmPassword) {
-        message.textContent = "كلمتا المرور غير متطابقتين. أعد كتابتهما.";
-        message.style.color = "#dc2626";
-        confirmInput.focus();
-        return;
-    }
+                    message.style.color = "#047857";
+                }
 
-    if (typeof supabaseClient === "undefined" || !supabaseClient) {
-        message.textContent = "خدمة الحسابات غير متاحة حالياً. حدّث الصفحة وحاول مرة أخرى.";
-        message.style.color = "#dc2626";
-        return;
-    }
+                // تسجيل دخول الزائر عبر Supabase مع معالجة الأخطاء بوضوح
+                async function visitorSignIn() {
+                    const emailInput = document.getElementById("visitor-email");
+                    const passwordInput = document.getElementById("visitor-password");
+                    const message = document.getElementById("visitor-account-message");
+                    const loginButton = document.querySelector('button[onclick="visitorSignIn()"]');
 
-    const originalButtonText = signupButton ? signupButton.textContent : "";
+                    if (!emailInput || !passwordInput || !message) return;
 
-    if (signupButton) {
-        signupButton.disabled = true;
-        signupButton.textContent = "جارٍ إنشاء الحساب...";
-    }
+                    const email = emailInput.value.trim().toLowerCase();
+                    const password = passwordInput.value;
 
-    message.textContent = "جارٍ إنشاء الحساب...";
-    message.style.color = "#047857";
+                    if (!email || !password) {
+                        message.textContent = "أدخل البريد الإلكتروني وكلمة المرور أولاً";
+                        message.style.color = "#dc2626";
+                        return;
+                    }
 
-    try {
-        const { data, error } = await supabaseClient.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: {
-                    display_name: name,
-                    role: role
-                },
-                emailRedirectTo: window.location.origin + window.location.pathname
-            }
-        });
+                    if (!window.supabase || !supabaseClient) {
+                        message.textContent = "خدمة تسجيل الدخول غير متاحة حالياً. حدّث الصفحة وحاول مرة أخرى.";
+                        message.style.color = "#dc2626";
+                        return;
+                    }
 
-        if (error) throw error;
+                    const originalButtonText = loginButton ? loginButton.textContent : "";
+                    if (loginButton) {
+                        loginButton.disabled = true;
+                        loginButton.textContent = "جارٍ تسجيل الدخول...";
+                    }
+                    message.textContent = "";
 
-        if (data && data.session) {
-            message.textContent = "تم إنشاء حسابك وتسجيل دخولك بنجاح.";
-        } else {
-            message.textContent = "تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيده، ثم سجّل الدخول.";
-        }
+                    try {
+                        const { data, error } = await supabaseClient.auth.signInWithPassword({
+                            email,
+                            password
+                        });
 
-        message.style.color = "#047857";
+                        if (error) {
+                            const raw = (error.message || "").toLowerCase();
+                            let friendlyMessage = "تعذر تسجيل الدخول. راجع البيانات وحاول مرة أخرى.";
+                            if (raw.includes("invalid login credentials")) {
+                                friendlyMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+                            } else if (raw.includes("email not confirmed")) {
+                                friendlyMessage = "يجب تأكيد البريد الإلكتروني من الرسالة المرسلة إليك أولاً.";
+                            } else if (raw.includes("too many requests")) {
+                                friendlyMessage = "محاولات كثيرة خلال وقت قصير. انتظر قليلاً ثم حاول مجدداً.";
+                            }
+                            message.textContent = friendlyMessage;
+                            message.style.color = "#dc2626";
+                            return;
+                        }
 
-    } catch (error) {
-        console.error("Visitor sign-up error:", error);
-        message.textContent = "تعذر إنشاء الحساب: " + (error.message || "حدث خطأ غير معروف.");
-        message.style.color = "#dc2626";
+                        if (!data || !data.session) {
+                            message.textContent = "لم يكتمل تسجيل الدخول. حاول مرة أخرى.";
+                            message.style.color = "#dc2626";
+                            return;
+                        }
 
-    } finally {
-        if (signupButton) {
-            signupButton.disabled = false;
-            signupButton.textContent = originalButtonText || "إنشاء حساب مجاني";
-        }
-    }
-}
-
-
-// تسجيل دخول الزائر عبر Supabase
-async function visitorSignIn() {
-    const emailInput = document.getElementById("visitor-email");
-    const passwordInput = document.getElementById("visitor-password");
-    const message = document.getElementById("visitor-account-message");
-    const loginButton = document.querySelector('button[onclick="visitorSignIn()"]');
-
-    if (!emailInput || !passwordInput || !message) {
-        alert("تعذر العثور على حقول تسجيل الدخول.");
-        return;
-    }
-
-    const email = emailInput.value.trim().toLowerCase();
-    const password = passwordInput.value;
-
-    if (!email || !password) {
-        message.textContent = "أدخل البريد الإلكتروني وكلمة المرور أولاً.";
-        message.style.color = "#dc2626";
-        return;
-    }
-
-    if (typeof supabaseClient === "undefined" || !supabaseClient) {
-        message.textContent = "خدمة تسجيل الدخول غير متاحة حالياً. حدّث الصفحة وحاول مرة أخرى.";
-        message.style.color = "#dc2626";
-        return;
-    }
-
-    const originalButtonText = loginButton ? loginButton.textContent : "";
-
-    if (loginButton) {
-        loginButton.disabled = true;
-        loginButton.textContent = "جارٍ تسجيل الدخول...";
-    }
-
-    message.textContent = "جارٍ تسجيل الدخول...";
-    message.style.color = "#047857";
-
-    try {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-
-        if (error) {
-            const raw = (error.message || "").toLowerCase();
-            let friendlyMessage = "تعذر تسجيل الدخول. راجع البيانات وحاول مرة أخرى.";
-
-            if (raw.includes("invalid login credentials")) {
-                friendlyMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-            } else if (raw.includes("email not confirmed")) {
-                friendlyMessage = "يجب تأكيد البريد الإلكتروني من الرسالة المرسلة إليك أولاً.";
-            } else if (raw.includes("too many requests")) {
-                friendlyMessage = "محاولات كثيرة خلال وقت قصير. انتظر قليلاً ثم حاول مجدداً.";
-            }
-
-            message.textContent = friendlyMessage;
-            message.style.color = "#dc2626";
-            return;
-        }
-
-        if (!data || !data.session) {
-            message.textContent = "لم يكتمل تسجيل الدخول. حاول مرة أخرى.";
-            message.style.color = "#dc2626";
-            return;
-        }
-
-        message.textContent = "تم تسجيل الدخول بنجاح. يمكنك الآن متابعة طلبك.";
-        message.style.color = "#047857";
-
-    } catch (err) {
-        console.error("Visitor sign-in error:", err);
-        message.textContent = "حدث خطأ في الاتصال. تأكد من الإنترنت ثم حاول مرة أخرى.";
-        message.style.color = "#dc2626";
-
-    } finally {
-        if (loginButton) {
-            loginButton.disabled = false;
-            loginButton.textContent = originalButtonText || "تسجيل الدخول";
-        }
-    }
-}
+                        message.textContent = "تم تسجيل الدخول بنجاح. يمكنك الآن متابعة طلبك.";
+                        message.style.color = "#047857";
+                    } catch (err) {
+                        console.error("Visitor sign-in error:", err);
+                        message.textContent = "حدث خطأ في الاتصال. تأكد من الإنترنت ثم حاول مرة أخرى.";
+                        message.style.color = "#dc2626";
+                    } finally {
+                        if (loginButton) {
+                            loginButton.disabled = false;
+                            loginButton.textContent = originalButtonText || "تسجيل الدخول";
+                        }
+                    }
+                }
 
                 // استعادة كلمة مرور حساب الزائر
                 async function visitorForgotPassword() {
-                    const emailInput = document.getElementById("visitor-email");
+                    const email = document.getElementById("visitor-email").value.trim();
                     const message = document.getElementById("visitor-account-message");
 
-                    if (!emailInput || !message) {
-                        alert("تعذر العثور على حقول استعادة كلمة المرور.");
-                        return;
-                    }
-
-                    const email = emailInput.value.trim().toLowerCase();
-
                     if (!email) {
-                        message.textContent = "اكتب بريدك الإلكتروني أولاً.";
+                        message.textContent = "اكتب بريدك الإلكتروني أولاً";
                         message.style.color = "#dc2626";
                         return;
                     }
 
-                    if (typeof supabaseClient === "undefined" || !supabaseClient) {
-                        message.textContent = "خدمة الحسابات غير متاحة حالياً.";
-                        message.style.color = "#dc2626";
-                        return;
-                    }
-
-                    message.textContent = "جارٍ إرسال رابط الاستعادة...";
-                    message.style.color = "#047857";
-
+                    let resetResult;
                     try {
-                        const { error } = await supabaseClient.auth.resetPasswordForEmail(
+                        resetResult = await supabaseClient.auth.resetPasswordForEmail(
                             email,
                             {
                                 redirectTo: window.location.origin + window.location.pathname
                             }
                         );
+                    } catch (networkError) {
+                        message.textContent = "تعذر الاتصال بخدمة استعادة كلمة المرور. حاول مرة أخرى.";
+                        message.style.color = "#dc2626";
+                        return;
+                    }
+                    const { error } = resetResult;
 
-                        if (error) throw error;
-
-                        message.textContent = "تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني.";
-                        message.style.color = "#047857";
-
-                    } catch (error) {
-                        console.error("Password reset error:", error);
+                    if (error) {
                         message.textContent = "تعذر إرسال الرابط: " + error.message;
                         message.style.color = "#dc2626";
+                        return;
                     }
+
+                    message.textContent = "تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني";
+                    message.style.color = "#047857";
                 }
 
-                // استعادة كلمة مرور المدير
+                async function loginAdmin() {
+                    const email = "mohmed.fader@gmail.com";
+                    const password = document.getElementById("adminPassword").value;
+
+                    if (!password) {
+                        alert("من فضلك أدخل كلمة المرور");
+                        return;
+                    }
+
+                    const { error } = await supabaseClient.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+
+                    if (error) {
+                        const errorBox = document.getElementById("admin-auth-err");
+                        if (errorBox) {
+                            errorBox.textContent = "تعذر تسجيل الدخول: " + error.message;
+                            errorBox.classList.remove("hidden");
+                        } else {
+                            alert("تعذر تسجيل الدخول: " + error.message);
+                        }
+                        return;
+                    }
+
+                    const { data: isAdmin, error: adminError } =
+                        await supabaseClient.rpc("is_main_admin");
+
+                    if (adminError || isAdmin !== true) {
+                        await supabaseClient.auth.signOut();
+                        alert("هذا الحساب ليس لديه صلاحية المدير الرئيسي");
+                        return;
+                    }
+                    isAdminLogged = true;
+                    document.getElementById("admin-auth-err").classList.add("hidden");
+                    document.getElementById("admin-auth-box").classList.add("hidden");
+                    document.getElementById("admin-panel").classList.remove("hidden");
+                    refreshAdminUI();
+                    if ("Notification" in window && Notification.permission === "granted") {
+                        adminNotificationsEnabled = true;
+                        var notificationStatus = document.getElementById("admin-notification-status");
+                        var notificationButton = document.getElementById("enable-admin-notifications-btn");
+                        if (notificationStatus) notificationStatus.textContent = "الإشعارات مفعّلة للطلبات الجديدة";
+                        if (notificationButton) notificationButton.textContent = "🔔 الإشعارات مفعّلة";
+                        checkForNewAdminRequests(true).then(startAdminNotificationPolling);
+                    }
+                    alert("تم تسجيل دخول المدير بنجاح");
+                }
+
                 async function forgotPassword() {
                     const email = prompt("أدخل البريد الإلكتروني للمدير:");
 
@@ -876,26 +836,17 @@ async function visitorSignIn() {
                         return;
                     }
 
-                    if (typeof supabaseClient === "undefined" || !supabaseClient) {
-                        alert("خدمة الحسابات غير متاحة حالياً.");
-                        return;
-                    }
+                    const { error } = await supabaseClient.auth.resetPasswordForEmail(
+                        email.trim(),
+                        {
+                            redirectTo: "https://mohmedfader-glitch.github.io/marriage-ai-platform/"
+                        }
+                    );
 
-                    try {
-                        const { error } = await supabaseClient.auth.resetPasswordForEmail(
-                            email.trim(),
-                            {
-                                redirectTo: "https://mohmedfader-glitch.github.io/marriage-ai-platform/"
-                            }
-                        );
-
-                        if (error) throw error;
-
-                        alert("تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني.");
-
-                    } catch (error) {
-                        console.error("Admin password reset error:", error);
-                        alert("تعذر إرسال الرابط: " + error.message);
+                    if (error) {
+                        alert("خطأ: " + error.message);
+                    } else {
+                        alert("تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني");
                     }
                 }
             </script>
