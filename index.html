@@ -931,10 +931,14 @@ alert("عدد الطلبات في سجل Supabase الكامل: " + allRequests.
 
                 const { error } = await supabaseClient
 .from("registration_requests")
-.insert({
+  .insert({
     profile_code: generatedCode,
+
+    // ربط الطلب بحساب صاحبه إذا كان مسجل الدخول
+    user_id: (await supabaseClient.auth.getSession()).data.session?.user?.id || null,
+
     display_name: name,
-    gender: gender,
+                gender: gender,
     age: age,
     governorate: governorate,
     work: [educationWork, job].filter(Boolean).join(" - "),
