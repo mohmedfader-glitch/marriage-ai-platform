@@ -80,11 +80,10 @@
     <!-- ===================================================================== -->
     <div class="bg-emerald-950 text-cream-100 text-xs sm:text-sm py-2.5 px-4 border-b border-gold-500/40 sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-            <!-- معلومات النسخة التجريبية ورقم الإدارة -->
+            <!-- رقم التواصل مع إدارة المنصة -->
             <div class="flex items-center gap-2">
-                <span class="bg-gold-500 text-white font-extrabold px-2.5 py-0.5 rounded-full text-[11px]">نسخة تجريبية</span>
-                <span class="hidden sm:inline text-cream-200">إدارة المنصة:</span>
-                <a href="https://wa.me/201095383936" target="_blank" dir="ltr" class="font-bold text-gold-400 hover:underline">01095383936</a>
+                <span class="text-cream-200">إدارة المنصة:</span>
+                <a href="https://wa.me/201095383936" target="_blank" rel="noopener noreferrer" dir="ltr" class="font-bold text-gold-400 hover:underline">01095383936</a>
             </div>
 
             <!-- أزرار التبديل الفوري بين الواجهتين -->
@@ -234,7 +233,7 @@
         <input
             id="visitor-password"
             type="password"
-            autocomplete="new-password"
+            autocomplete="current-password"
             minlength="6"
             placeholder="6 أحرف على الأقل"
             class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
@@ -624,31 +623,76 @@
                     message.style.color = "#047857";
                 }
 
-                // تسجيل دخول الزائر
+                // تسجيل دخول الزائر عبر Supabase مع معالجة الأخطاء بوضوح
                 async function visitorSignIn() {
-                    const email = document.getElementById("visitor-email").value.trim();
-                    const password = document.getElementById("visitor-password").value;
+                    const emailInput = document.getElementById("visitor-email");
+                    const passwordInput = document.getElementById("visitor-password");
                     const message = document.getElementById("visitor-account-message");
+                    const loginButton = document.querySelector('button[onclick="visitorSignIn()"]');
+
+                    if (!emailInput || !passwordInput || !message) return;
+
+                    const email = emailInput.value.trim().toLowerCase();
+                    const password = passwordInput.value;
 
                     if (!email || !password) {
-                        message.textContent = "أدخل البريد الإلكتروني وكلمة المرور";
+                        message.textContent = "أدخل البريد الإلكتروني وكلمة المرور أولاً";
                         message.style.color = "#dc2626";
                         return;
                     }
 
-                    const { error } = await supabaseClient.auth.signInWithPassword({
-                        email: email,
-                        password: password
-                    });
-
-                    if (error) {
-                        message.textContent = "تعذر تسجيل الدخول: " + error.message;
+                    if (!window.supabase || !supabaseClient) {
+                        message.textContent = "خدمة تسجيل الدخول غير متاحة حالياً. حدّث الصفحة وحاول مرة أخرى.";
                         message.style.color = "#dc2626";
                         return;
                     }
 
-                    message.textContent = "تم تسجيل الدخول بنجاح";
-                    message.style.color = "#047857";
+                    const originalButtonText = loginButton ? loginButton.textContent : "";
+                    if (loginButton) {
+                        loginButton.disabled = true;
+                        loginButton.textContent = "جارٍ تسجيل الدخول...";
+                    }
+                    message.textContent = "";
+
+                    try {
+                        const { data, error } = await supabaseClient.auth.signInWithPassword({
+                            email,
+                            password
+                        });
+
+                        if (error) {
+                            const raw = (error.message || "").toLowerCase();
+                            let friendlyMessage = "تعذر تسجيل الدخول. راجع البيانات وحاول مرة أخرى.";
+                            if (raw.includes("invalid login credentials")) {
+                                friendlyMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+                            } else if (raw.includes("email not confirmed")) {
+                                friendlyMessage = "يجب تأكيد البريد الإلكتروني من الرسالة المرسلة إليك أولاً.";
+                            } else if (raw.includes("too many requests")) {
+                                friendlyMessage = "محاولات كثيرة خلال وقت قصير. انتظر قليلاً ثم حاول مجدداً.";
+                            }
+                            message.textContent = friendlyMessage;
+                            message.style.color = "#dc2626";
+                            return;
+                        }
+
+                        if (!data || !data.session) {
+                            message.textContent = "لم يكتمل تسجيل الدخول. حاول مرة أخرى.";
+                            message.style.color = "#dc2626";
+                            return;
+                        }
+
+                        message.textContent = "تم تسجيل الدخول بنجاح. يمكنك الآن متابعة طلبك.";
+                        message.style.color = "#047857";
+                    } catch (err) {
+                        console.error("Visitor sign-in error:", err);
+                        message.textContent = "حدث خطأ في الاتصال. تأكد من الإنترنت ثم حاول مرة أخرى.";
+                        message.style.color = "#dc2626";
+                    } finally {
+                        if (loginButton) {
+                            loginButton.disabled = false;
+                            loginButton.textContent = originalButtonText || "تسجيل الدخول";
+                        }
+                    }
                 }
 
                 // استعادة كلمة مرور حساب الزائر
