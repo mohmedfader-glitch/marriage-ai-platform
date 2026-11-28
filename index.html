@@ -161,14 +161,20 @@
                     منصة <strong class="text-emerald-900">قسمتنا</strong> تعمل بنظام الوساطة الشرعية الخاضعة لإشراف الإدارة الكامل؛ لا تُنشر أي أسماء أو أرقام هواتف أو صور للعامة، ويتم تبادل البيانات حصرياً عبر الإدارة بعد موافقة الطرفين.
                 </p>
 
-                <div class="flex flex-row flex-nowrap items-stretch justify-center gap-2 sm:gap-3.5 w-full max-w-3xl mx-auto">
-                    <a href="#form-anchor" onclick="showVisitorForm()" class="flex-1 min-w-0 bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-sm sm:text-base px-2 sm:px-6 py-4 rounded-2xl shadow-lg transition flex items-center justify-center text-center gap-1.5">
-                        <span>ابدأ تسجيل استمارة التوافق</span>
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-gold-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                <div class="flex flex-row flex-nowrap items-stretch justify-center gap-1.5 sm:gap-3 w-full max-w-5xl mx-auto">
+                    <a href="#form-anchor" onclick="showVisitorForm()" class="flex-1 min-w-0 bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-[11px] sm:text-base px-1.5 sm:px-5 py-3 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg transition flex items-center justify-center text-center gap-1">
+                        <span class="sm:hidden">استمارة التوافق</span>
+                        <span class="hidden sm:inline">ابدأ تسجيل استمارة التوافق</span>
+                        <svg class="w-3 h-3 sm:w-5 sm:h-5 flex-shrink-0 text-gold-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                     </a>
-                    <a href="https://wa.me/201095383936" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-0 bg-white hover:bg-gold-100 text-emerald-900 font-bold text-sm sm:text-base px-2 sm:px-6 py-4 rounded-2xl shadow border-2 border-gold-500 transition flex items-center justify-center text-center">
-                        <span>تواصل مباشر مع الخاطبة (01095383936)</span>
+                    <a href="https://wa.me/201095383936" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-0 bg-white hover:bg-gold-100 text-emerald-900 font-bold text-[11px] sm:text-base px-1.5 sm:px-5 py-3 sm:py-4 rounded-xl sm:rounded-2xl shadow border-2 border-gold-500 transition flex items-center justify-center text-center">
+                        <span class="sm:hidden">واتساب الخاطبة</span>
+                        <span class="hidden sm:inline">تواصل مباشر مع الخاطبة (01095383936)</span>
                     </a>
+                    <button type="button" id="open-visitor-account-btn" onclick="toggleVisitorAccount()" aria-expanded="false" aria-controls="visitor-account-panel" class="flex-1 min-w-0 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[11px] sm:text-base px-1.5 sm:px-5 py-3 sm:py-4 rounded-xl sm:rounded-2xl shadow transition flex items-center justify-center text-center">
+                        <span class="sm:hidden">حسابي</span>
+                        <span class="hidden sm:inline">إنشاء حساب أو تسجيل الدخول</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -184,17 +190,6 @@
                 أنشئ حسابًا مجانيًا لمتابعة طلبك والرجوع إلى بياناتك بسهولة.
                 التسجيل اختياري ويمكنك استخدام المنصة بدونه.
             </p>
-
-            <button
-                type="button"
-                id="open-visitor-account-btn"
-                onclick="toggleVisitorAccount()"
-                aria-expanded="false"
-                aria-controls="visitor-account-panel"
-                class="inline-flex items-center justify-center gap-2 bg-emerald-900 hover:bg-emerald-950 text-white font-extrabold px-8 py-3.5 rounded-2xl shadow-lg transition">
-                إنشاء حساب أو تسجيل الدخول
-                <span aria-hidden="true">←</span>
-            </button>
 
             <div id="visitor-account-panel" class="hidden mt-5 text-right">
 <div class="space-y-3 text-right">
@@ -1408,26 +1403,36 @@ var result = await supabaseClient.rpc(
     "get_public_approved_guest_profiles"
 );
         if (result.error) throw result.error;
+// استخراج القيم من نص المواصفات كحل احتياطي إذا لم تُرجع دالة العرض الأعمدة الإضافية.
+function getSpecValue(specs, label) {
+    if (!specs) return "";
+    var escaped = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    var pattern = new RegExp("(?:^|\\n|\\r)\\s*" + escaped + "\\s*[:：-]\\s*([^\\n\\r]+)", "i");
+    var match = String(specs).match(pattern);
+    return match ? match[1].trim() : "";
+}
+
 var guestRecords = (result.data || []).map(function(item) {
+    var specsText = item.specs || "";
     return {
         code: item.profile_code,
-      displayName: item.display_name || "",
+        displayName: item.display_name || "",
         gender: item.gender,
         age: item.age,
         city: item.city || item.governorate || "",
         work: item.work || "",
         maritalStatus: item.marital_status || "",
         religion: item.religion || "",
-        specs: item.specs || "",
-        height: item.height || "",
-        weight: item.weight || "",
-        skinTone: item.skin_tone || "",
-        job: item.job || "",
-        country: item.country || "",
-        area: item.area || "",
-        fatherJob: item.father_job || "",
-        motherJob: item.mother_job || "",
-        childrenCount: item.children_count || ""
+        specs: specsText,
+        height: item.height || getSpecValue(specsText, "الطول"),
+        weight: item.weight || getSpecValue(specsText, "الوزن"),
+        skinTone: item.skin_tone || getSpecValue(specsText, "لون البشرة"),
+        job: item.job || getSpecValue(specsText, "الوظيفة"),
+        country: item.country || getSpecValue(specsText, "البلد"),
+        area: item.area || getSpecValue(specsText, "المنطقة"),
+        fatherJob: item.father_job || getSpecValue(specsText, "وظيفة الوالد"),
+        motherJob: item.mother_job || getSpecValue(specsText, "وظيفة الوالدة"),
+        childrenCount: item.children_count || getSpecValue(specsText, "عدد الأولاد")
     };
 });
         
