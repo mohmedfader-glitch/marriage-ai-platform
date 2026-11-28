@@ -188,43 +188,105 @@
                 التسجيل اختياري ويمكنك استخدام المنصة بدونه.
             </p>
 
-            <div class="space-y-3 text-right">
-                <div>
-                    <label for="visitor-email" class="block text-sm font-bold text-emerald-950 mb-1">
-                        البريد الإلكتروني
-                    </label>
-                    <input
-                        id="visitor-email"
-                        type="email"
-                        autocomplete="email"
-                        placeholder="أدخل بريدك الإلكتروني"
-                        class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
-                        dir="ltr">
-                </div>
+           
+<div class="space-y-3 text-right">
 
-                <div>
-                    <label for="visitor-password" class="block text-sm font-bold text-emerald-950 mb-1">
-                        كلمة المرور
-                    </label>
-                    <input
-                        id="visitor-password"
-                        type="password"
-                        autocomplete="current-password"
-                        placeholder="6 أحرف على الأقل"
-                        class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
-                        dir="ltr">
-                </div>
-            </div>
+    <div>
+        <label for="visitor-display-name" class="block text-sm font-bold text-emerald-950 mb-1">
+            الاسم
+        </label>
+        <input
+            id="visitor-display-name"
+            type="text"
+            autocomplete="name"
+            placeholder="اكتب اسمك"
+            class="w-full p-3 rounded-xl border border-gray-300 bg-white">
+    </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
-                <button
-                    type="button"
-                    onclick="visitorSignUp()"
-                    class="bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3 px-4 rounded-xl">
-                    إنشاء حساب مجاني
-                </button>
+    <div>
+        <label for="visitor-role" class="block text-sm font-bold text-emerald-950 mb-1">
+            نوع الحساب
+        </label>
+        <select
+            id="visitor-role"
+            class="w-full p-3 rounded-xl border border-gray-300 bg-white">
+            <option value="groom">شاب / رجل</option>
+            <option value="bride">فتاة / سيدة</option>
+        </select>
+    </div>
+</div>
 
-                <button
+<div class="space-y-3 text-right">
+
+    <div>
+        <label for="visitor-display-name" class="block text-sm font-bold text-emerald-950 mb-1">
+            الاسم
+        </label>
+        <input
+            id="visitor-display-name"
+            type="text"
+              
+<div>
+    <label for="visitor-name" class="block text-sm font-bold text-emerald-950 mb-1">
+        الاسم بالكامل
+    </label>
+    <input
+        id="visitor-name"
+        type="text"
+        autocomplete="name"
+        placeholder="اكتب اسمك"
+        class="w-full p-3 rounded-xl border border-gray-300 bg-white">
+</div>
+
+<div>
+    <label for="visitor-role" class="block text-sm font-bold text-emerald-950 mb-1">
+        نوع الحساب
+    </label>
+    <select
+        id="visitor-role"
+        class="w-full p-3 rounded-xl border border-gray-300 bg-white">
+        <option value="groom">شاب / رجل</option>
+        <option value="bride">فتاة / سيدة</option>
+    </select>
+</div>
+
+<div>
+    <label for="visitor-email" class="block text-sm font-bold text-emerald-950 mb-1">
+        البريد الإلكتروني
+    </label>
+    <input
+        id="visitor-email"
+        type="email"
+        autocomplete="email"
+        placeholder="أدخل بريدك الإلكتروني"
+        class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
+        dir="ltr">
+</div>
+
+<div>
+    <label for="visitor-password" class="block text-sm font-bold text-emerald-950 mb-1">
+        كلمة المرور
+    </label>
+    <input
+        id="visitor-password"
+        type="password"
+        autocomplete="new-password"
+        minlength="6"
+        placeholder="6 أحرف على الأقل"
+        class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
+        dir="ltr">
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+    <button
+        type="button"
+        onclick="visitorSignUp()"
+        class="bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3 px-4 rounded-xl">
+        إنشاء حساب مجاني
+    </button>
+</div>
+
+            <button
                     type="button"
                     onclick="visitorSignIn()"
                     class="bg-white border border-emerald-700 text-emerald-900 font-bold py-3 px-4 rounded-xl">
