@@ -930,23 +930,33 @@ alert("عدد الطلبات في سجل Supabase الكامل: " + allRequests.
                 }
 
                 const { error } = await supabaseClient
-                    .from("registration_requests")
-                    .insert({
-                        profile_code: generatedCode,
-                        display_name: name,
-                        gender: gender,
-                        age: age,
-                        governorate: governorate,
-                        work: [educationWork, job].filter(Boolean).join(" - "),
-                        marital_status: maritalStatus,
-                        religion: religion,
-                        phone: phone,
-                        guardian_phone: guardianPhone || null,
-                        specs: fullSpecs
-                    });
+.from("registration_requests")
+.insert({
+    profile_code: generatedCode,
+    display_name: name,
+    gender: gender,
+    age: age,
+    governorate: governorate,
+    work: [educationWork, job].filter(Boolean).join(" - "),
+    marital_status: maritalStatus,
+    religion: religion,
+    phone: phone,
+    guardian_phone: guardianPhone || null,
+    specs: fullSpecs,
 
-                if (error) throw error;
+    // البيانات الإضافية في أعمدتها الصحيحة
+    height: document.getElementById("v-height")?.value.trim() || null,
+    weight: document.getElementById("v-weight")?.value.trim() || null,
+    skin_tone: document.getElementById("v-skin-tone")?.value.trim() || null,
+    job: job || null,
+    country: document.getElementById("v-country")?.value.trim() || null,
+    area: document.getElementById("v-area")?.value.trim() || null,
+    father_job: document.getElementById("v-father-job")?.value.trim() || null,
+    mother_job: document.getElementById("v-mother-job")?.value.trim() || null,
+    children_count: document.getElementById("v-children-count")?.value.trim() || null
+});
 
+if (error) throw error;
                 var newEntry = {
                     code: generatedCode,
                     name: name,
@@ -1064,6 +1074,7 @@ var result = await supabaseClient.rpc(
 var guestRecords = (result.data || []).map(function(item) {
     return {
         code: item.profile_code,
+      displayName: item.display_name || "",
         gender: item.gender,
         age: item.age,
         city: item.city || item.governorate || "",
