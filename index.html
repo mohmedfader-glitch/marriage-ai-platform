@@ -173,20 +173,30 @@
             </div>
         </section>
 
-<!-- قسم الحساب المجاني للزوار -->
+<!-- قسم الحساب المجاني للزوار: يظهر محتوى الحساب عند الضغط على الزر -->
 <section id="visitor-account" class="py-8 bg-white border-b border-emerald-100">
     <div class="max-w-2xl mx-auto px-4 sm:px-6">
         <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 sm:p-7 text-center">
-
             <h2 class="text-xl sm:text-2xl font-extrabold text-emerald-950 mb-2">
                 حسابك المجاني على قسمتنا
             </h2>
-
             <p class="text-sm text-gray-600 mb-5">
                 أنشئ حسابًا مجانيًا لمتابعة طلبك والرجوع إلى بياناتك بسهولة.
                 التسجيل اختياري ويمكنك استخدام المنصة بدونه.
             </p>
-     
+
+            <button
+                type="button"
+                id="open-visitor-account-btn"
+                onclick="toggleVisitorAccount()"
+                aria-expanded="false"
+                aria-controls="visitor-account-panel"
+                class="inline-flex items-center justify-center gap-2 bg-emerald-900 hover:bg-emerald-950 text-white font-extrabold px-8 py-3.5 rounded-2xl shadow-lg transition">
+                إنشاء حساب أو تسجيل الدخول
+                <span aria-hidden="true">←</span>
+            </button>
+
+            <div id="visitor-account-panel" class="hidden mt-5 text-right">
 <div class="space-y-3 text-right">
 
     <div>
@@ -270,8 +280,9 @@
     </div>
 
 </div>
-</div>
-</div>
+            </div>
+        </div>
+    </div>
 </section>
 <!-- نهاية قسم الحساب المجاني -->
 
@@ -1155,6 +1166,26 @@
 
         // تهيئة خيارات الحالة الاجتماعية عند فتح الصفحة.
         setMaritalStatusOptions("v-status", document.getElementById("v-gender").value);
+
+        // إظهار وإخفاء نموذج الحساب المجاني عند الضغط على الزر
+        function toggleVisitorAccount() {
+            var panel = document.getElementById("visitor-account-panel");
+            var button = document.getElementById("open-visitor-account-btn");
+            if (!panel || !button) return;
+
+            var isOpening = panel.classList.contains("hidden");
+            panel.classList.toggle("hidden");
+            button.setAttribute("aria-expanded", isOpening ? "true" : "false");
+            button.innerHTML = isOpening
+                ? 'إغلاق نموذج الحساب <span aria-hidden="true">↑</span>'
+                : 'إنشاء حساب أو تسجيل الدخول <span aria-hidden="true">←</span>';
+
+            if (isOpening) {
+                window.setTimeout(function() {
+                    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }, 50);
+            }
+        }
 
         // فتح استمارة التقديم عند الضغط على الزر
         function showVisitorForm() {
