@@ -187,13 +187,12 @@
                 أنشئ حسابًا مجانيًا لمتابعة طلبك والرجوع إلى بياناتك بسهولة.
                 التسجيل اختياري ويمكنك استخدام المنصة بدونه.
             </p>
-
-           
+     
 <div class="space-y-3 text-right">
 
     <div>
         <label for="visitor-display-name" class="block text-sm font-bold text-emerald-950 mb-1">
-            الاسم
+            الاسم بالكامل
         </label>
         <input
             id="visitor-display-name"
@@ -214,182 +213,162 @@
             <option value="bride">فتاة / سيدة</option>
         </select>
     </div>
-</div>
-
-<div class="space-y-3 text-right">
 
     <div>
-        <label for="visitor-display-name" class="block text-sm font-bold text-emerald-950 mb-1">
-            الاسم
+        <label for="visitor-email" class="block text-sm font-bold text-emerald-950 mb-1">
+            البريد الإلكتروني
         </label>
         <input
-            id="visitor-display-name"
-            type="text"
-              
-<div>
-    <label for="visitor-name" class="block text-sm font-bold text-emerald-950 mb-1">
-        الاسم بالكامل
-    </label>
-    <input
-        id="visitor-name"
-        type="text"
-        autocomplete="name"
-        placeholder="اكتب اسمك"
-        class="w-full p-3 rounded-xl border border-gray-300 bg-white">
-</div>
-
-<div>
-    <label for="visitor-role" class="block text-sm font-bold text-emerald-950 mb-1">
-        نوع الحساب
-    </label>
-    <select
-        id="visitor-role"
-        class="w-full p-3 rounded-xl border border-gray-300 bg-white">
-        <option value="groom">شاب / رجل</option>
-        <option value="bride">فتاة / سيدة</option>
-    </select>
-</div>
-
-<div>
-    <label for="visitor-email" class="block text-sm font-bold text-emerald-950 mb-1">
-        البريد الإلكتروني
-    </label>
-    <input
-        id="visitor-email"
-        type="email"
-        autocomplete="email"
-        placeholder="أدخل بريدك الإلكتروني"
-        class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
-        dir="ltr">
-</div>
-
-<div>
-    <label for="visitor-password" class="block text-sm font-bold text-emerald-950 mb-1">
-        كلمة المرور
-    </label>
-    <input
-        id="visitor-password"
-        type="password"
-        autocomplete="new-password"
-        minlength="6"
-        placeholder="6 أحرف على الأقل"
-        class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
-        dir="ltr">
-</div>
-
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
-    <button
-        type="button"
-        onclick="visitorSignUp()"
-        class="bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3 px-4 rounded-xl">
-        إنشاء حساب مجاني
-    </button>
-</div>
-
-            <button
-                    type="button"
-                    onclick="visitorSignIn()"
-                    class="bg-white border border-emerald-700 text-emerald-900 font-bold py-3 px-4 rounded-xl">
-                    تسجيل الدخول
-                </button>
-            </div>
-
-            <button
-                type="button"
-                onclick="visitorForgotPassword()"
-                class="text-sm text-emerald-800 underline mt-4">
-                نسيت كلمة المرور؟
-            </button>
-
-            <p id="visitor-account-message"
-               class="text-sm font-bold mt-4"
-               role="status"
-               aria-live="polite"></p>
-
-            <div class="border-t border-emerald-200 mt-5 pt-4">
-                <a href="#form-anchor"
-                   class="inline-block text-sm font-bold text-gray-600 hover:text-emerald-900">
-                    المتابعة بدون إنشاء حساب ←
-                </a>
-            </div>
-
-        </div>
+            id="visitor-email"
+            type="email"
+            autocomplete="email"
+            placeholder="أدخل بريدك الإلكتروني"
+            class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
+            dir="ltr">
     </div>
+
+    <div>
+        <label for="visitor-password" class="block text-sm font-bold text-emerald-950 mb-1">
+            كلمة المرور
+        </label>
+        <input
+            id="visitor-password"
+            type="password"
+            autocomplete="new-password"
+            minlength="6"
+            placeholder="6 أحرف على الأقل"
+            class="w-full p-3 rounded-xl border border-gray-300 bg-white text-left"
+            dir="ltr">
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+        <button type="button" onclick="visitorSignUp()"
+            class="bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-3 px-4 rounded-xl">
+            إنشاء حساب مجاني
+        </button>
+
+        <button type="button" onclick="visitorSignIn()"
+            class="bg-white border border-emerald-700 text-emerald-900 font-bold py-3 px-4 rounded-xl">
+            تسجيل الدخول
+        </button>
+    </div>
+
+    <button type="button" onclick="visitorForgotPassword()"
+        class="text-sm text-emerald-800 underline mt-4">
+        نسيت كلمة المرور؟
+    </button>
+
+    <p id="visitor-account-message"
+       class="text-sm font-bold mt-4"
+       role="status"
+       aria-live="polite"></p>
+
+    <div class="border-t border-emerald-200 mt-5 pt-4">
+        <a href="#form-anchor"
+           class="inline-block text-sm font-bold text-gray-600 hover:text-emerald-900">
+            المتابعة بدون إنشاء حساب ←
+        </a>
+    </div>
+
+</div>
+</div>
+</div>
 </section>
 <!-- نهاية قسم الحساب المجاني -->
 
-        <!-- قسم استمارة تسجيل بيانات الجدية والتوافق -->
-        <section id="form-anchor" class="py-12 sm:py-16 bg-cream-100 border-b border-cream-200">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6">
-                <div class="text-center mb-8">
-                    <span class="bg-emerald-900 text-gold-400 text-xs font-bold px-3 py-1 rounded-full">سرية تامة 100%</span>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-2">استمارة طلب التوافق والزواج الشرعي</h2>
-                    <p class="text-xs sm:text-sm text-gray-600 mt-1">أدخل بياناتك بدقة؛ فور الإرسال ستحصل على كودك السري وتظهر لك الحالات المتوافقة المعتمدة من الإدارة.</p>
-                </div>
+<!-- قسم استمارة تسجيل بيانات الجدية والتوافق -->
+<section id="form-anchor" class="py-12 sm:py-16 bg-cream-100 border-b border-cream-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
 
-                <div class="bg-white rounded-3xl shadow-xl border border-cream-200 overflow-hidden">
-                    <div class="bg-emerald-900 px-6 py-4 text-white flex items-center justify-between">
-                        <span class="font-bold text-sm sm:text-base">بيانات المتقدم (محفوظة لدى الإدارة فقط)</span>
-                        <span class="text-xs text-gold-400 font-bold">إدارة:01095383936</span>
+        <div class="text-center mb-8">
+            <span class="bg-emerald-900 text-gold-400 text-xs font-bold px-3 py-1 rounded-full">سرية تامة 100%</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-2">استمارة طلب التوافق والزواج الشرعي</h2>
+            <p class="text-xs sm:text-sm text-gray-600 mt-1">أدخل بياناتك بدقة؛ فور الإرسال ستحصل على كودك السري وتظهر لك الحالات المتوافقة المعتمدة من الإدارة.</p>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl border border-cream-200 overflow-hidden">
+
+            <div class="bg-emerald-900 px-6 py-4 text-white flex items-center justify-between">
+                <span class="font-bold text-sm sm:text-base">بيانات المتقدم (محفوظة لدى الإدارة فقط)</span>
+                <span class="text-xs text-gold-400 font-bold">إدارة:01095383936</span>
+            </div>
+
+            <form id="visitor-form" class="p-6 sm:p-8 space-y-5">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                    <!-- الاسم الكامل -->
+                    <div>
+                        <label for="v-name" class="block text-sm font-bold text-gray-700 mb-1.5">
+                            الاسم الكامل (يظهر للإدارة فقط) <span class="text-red-600">*</span>
+                        </label>
+                        <input type="text" id="v-name" required
+                            placeholder="مثال: عبد الله محمد / سارة محمود"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
                     </div>
 
-                    <form id="visitor-form" class="p-6 sm:p-8 space-y-5">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <!-- الاسم الكامل -->
-                            <div>
-                                <label for="v-name" class="block text-sm font-bold text-gray-700 mb-1.5">الاسم الكامل (يظهر للإدارة فقط) <span class="text-red-600">*</span></label>
-                                <input type="text" id="v-name" required placeholder="مثال: عبد الله محمد / سارة محمود" 
-                                       class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
-                            </div>
+                    <!-- النوع -->
+                    <div>
+                        <label for="v-gender" class="block text-sm font-bold text-gray-700 mb-1.5">
+                            النوع <span class="text-red-600">*</span>
+                        </label>
+                        <select id="v-gender" onchange="toggleGuardianField()" required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none bg-white text-sm font-semibold">
+                            <option value="male">شاب / رجل (أبحث عن زوجة)</option>
+                            <option value="female">فتاة / سيدة (أبحث عن زوج)</option>
+                        </select>
+                    </div>
 
-                            <!-- النوع -->
-                            <div>
-                                <label for="v-gender" class="block text-sm font-bold text-gray-700 mb-1.5">النوع <span class="text-red-600">*</span></label>
-                                <select id="v-gender" onchange="toggleGuardianField()" required 
-                                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none bg-white text-sm font-semibold">
-                                    <option value="male">شاب / رجل (أبحث عن زوجة)</option>
-                                    <option value="female">فتاة / سيدة (أبحث عن زوج)</option>
-                                </select>
-                            </div>
+                    <!-- السن -->
+                    <div>
+                        <label for="v-age" class="block text-sm font-bold text-gray-700 mb-1.5">
+                            السن (بالسنوات) <span class="text-red-600">*</span>
+                        </label>
+                        <input type="number" id="v-age" min="18" max="75" required
+                            placeholder="مثال: 28"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
+                    </div>
+<!-- المحافظة -->
+<div>
+    <label for="v-city" class="block text-sm font-bold text-gray-700 mb-1.5">
+        المحافظة <span class="text-red-600">*</span>
+    </label>
+    <select id="v-city" required
+        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none bg-white text-sm">
+        <option value="القاهرة">القاهرة</option>
+        <option value="الجيزة">الجيزة</option>
+        <option value="الإسكندرية">الإسكندرية</option>
+        <option value="الدقهلية">الدقهلية</option>
+        <option value="الشرقية">الشرقية</option>
+        <option value="المنوفية">المنوفية</option>
+        <option value="الغربية">الغربية</option>
+        <option value="أسيوط">أسيوط</option>
+        <option value="سوهاج">سوهاج</option>
+        <option value="المنيا">المنيا</option>
+        <option value="محافظة أخرى">محافظة أخرى</option>
+    </select>
+</div>
 
-                            <!-- السن -->
-                            <div>
-                                <label for="v-age" class="block text-sm font-bold text-gray-700 mb-1.5">السن (بالسنوات) <span class="text-red-600">*</span></label>
-                                <input type="number" id="v-age" min="18" max="75" required placeholder="مثال: 28" 
-                                       class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
-                            </div>
+<!-- المؤهل والعمل -->
+<div>
+    <label for="v-work" class="block text-sm font-bold text-gray-700 mb-1.5">
+        المؤهل الدراسي والعمل <span class="text-red-600">*</span>
+    </label>
+    <input type="text" id="v-work" required
+        placeholder="مثال: بكالوريوس هندسة - مهندس مدني"
+        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
+</div>
+   <!-- الحالة الاجتماعية -->
+<div>
+    <label for="v-status" class="block text-sm font-bold text-gray-700 mb-1.5">
+        الحالة الاجتماعية <span class="text-red-600">*</span>
+    </label>
+    <select id="v-status" required
+        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none bg-white text-sm">
+    </select>
+</div>
 
-                            <!-- المحافظة -->
-                            <div>
-                                <label for="v-city" class="block text-sm font-bold text-gray-700 mb-1.5">المحافظة <span class="text-red-600">*</span></label>
-                                <select id="v-city" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none bg-white text-sm">
-                                    <option value="القاهرة">القاهرة</option>
-                                    <option value="الجيزة">الجيزة</option>
-                                    <option value="الإسكندرية">الإسكندرية</option>
-                                    <option value="الدقهلية">الدقهلية</option>
-                                    <option value="الشرقية">الشرقية</option>
-                                    <option value="المنوفية">المنوفية</option>
-                                    <option value="الغربية">الغربية</option>
-                                    <option value="أسيوط">أسيوط</option>
-                                    <option value="سوهاج">سوهاج</option>
-                                    <option value="المنيا">المنيا</option>
-                                    <option value="محافظة أخرى">محافظة أخرى</option>
-                                </select>
-                            </div>
-
-                            <!-- المؤهل والعمل -->
-                            <div>
-                                <label for="v-work" class="block text-sm font-bold text-gray-700 mb-1.5">المؤهل الدراسي والعمل <span class="text-red-600">*</span></label>
-                                <input type="text" id="v-work" required placeholder="مثال: بكالوريوس هندسة - مهندس مدني" 
-                                       class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
-                            </div>
-
-                            <!-- الحالة الاجتماعية -->
-                            <div>
-                                <label for="v-status" class="block text-sm font-bold text-gray-700 mb-1.5">الحالة الاجتماعية <span class="text-red-600">*</span></label>
-                                <select id="v-status" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none bg-white text-sm"></select>
-        
-                            </div>
+<!-- الوظيفة -->
 <div>
     <label for="v-job" class="block text-sm font-bold text-gray-700 mb-1.5">
         الوظيفة <span class="text-red-600">*</span>
@@ -400,8 +379,8 @@
         required
         placeholder="مثال: مهندس - طبيب - معلم - محاسب"
         class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-emerald-900 outline-none text-sm">
-</div>
-                            <div>
+</div>                    
+                    <div>
                                 <label for="v-height" class="block text-sm font-bold text-gray-700 mb-1.5">الطول (سم)</label>
                                 <input type="number" id="v-height" min="100" max="230" placeholder="مثال: 170" class="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none text-sm">
                             </div>
@@ -733,14 +712,6 @@
                         alert("هذا الحساب ليس لديه صلاحية المدير الرئيسي");
                         return;
                     }
-const { data: allRequests, error: requestsError } =
-    await supabaseClient.rpc("admin_get_all_registration_requests");
-
-if (requestsError) {
-    alert("خطأ في قراءة السجل الكامل: " + requestsError.message);
-    return;
-}
-alert("عدد الطلبات في سجل Supabase الكامل: " + allRequests.length);
                     isAdminLogged = true;
                     document.getElementById("admin-auth-err").classList.add("hidden");
                     document.getElementById("admin-auth-box").classList.add("hidden");
@@ -1294,7 +1265,7 @@ if (error) throw error;
                             '<li><strong>المؤهل/العمل:</strong> ' + cand.work + '</li>' +
                             '<li><strong>الالتزام:</strong> ' + cand.religion + '</li>' +
                         '</ul>' +
-                        '<p class="text-xs text-gray-600 bg-cream-50 p-3 rounded-xl border border-cream-200">"' + cand.specs + '"</p>' +
+                        '<p class="text-xs text-gray-600 bg-cream-50 p-3 rounded-xl border border-cream-200">تُعرض التفاصيل الخاصة من خلال الإدارة بعد موافقة الطرفين</p>' +
                     '</div>' +
                     '<a href="' + waUrl + '" target="_blank" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl text-center shadow transition block">' +
                         'طلب ترشيح عبر الإدارة (' + cand.code + ')' +
@@ -1433,19 +1404,6 @@ var fields = [
 
             content.appendChild(list);
 
-if (item.specs) {
-    var publicSpecs = String(item.specs)
-        .split("بيانات إضافية:")[0]
-        .trim();
-
-    if (publicSpecs) {
-        var specs = document.createElement("p");
-        specs.className =
-            "text-xs text-gray-600 bg-white p-3 rounded-xl border border-cream-200";
-        specs.textContent = publicSpecs;
-        content.appendChild(specs);
-    }
-}
             var link = document.createElement("a");
             link.href = waHref;
             link.target = "_blank";
@@ -2315,72 +2273,18 @@ async function saveNewAdminPassword() {
 
 <script>
 if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
+    window.addEventListener("load", function () {
         navigator.serviceWorker.register("./service-worker.js")
-            .then(function() {
+            .then(function () {
                 console.log("تم تشغيل تطبيق قسمتنا بنجاح");
             })
-            .catch(function(error) {
-                console.error("خطأ في تشغيل التطبيق:", error);
-            });
-    });
-}
-    </script>
-
-<script>
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-        navigator.serviceWorker.register("./service-worker.js")
-            .then(function() {
-                console.log("تم تشغيل تطبيق قسمتنا بنجاح");
-            })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.error("خطأ في تشغيل التطبيق:", error);
             });
     });
 }
 </script>
 
-<script>
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-        navigator.serviceWorker.register("./service-worker.js")
-            .then(function() {
-                console.log("تم تشغيل تطبيق قسمتنا بنجاح");
-            })
-            .catch(function(error) {
-                console.error("خطأ في تشغيل التطبيق:", error);
-            });
-    });
-}
 
-</script>
-
-<script>
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-        navigator.serviceWorker.register("./service-worker.js")
-            .then(function() {
-                console.log("تم تشغيل تطبيق قسمتنا بنجاح");
-            })
-            .catch(function(error) {
-                console.error("خطأ في تشغيل التطبيق:", error);
-            });
-    });
-}
-</script>
-<script>
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-        navigator.serviceWorker.register("./service-worker.js")
-            .then(function() {
-                console.log("تم تشغيل تطبيق قسمتنا بنجاح");
-            })
-            .catch(function(error) {
-                console.error("خطأ في تشغيل التطبيق:", error);
-            });
-    });
-}
-</script>
 </body>
 </html>
