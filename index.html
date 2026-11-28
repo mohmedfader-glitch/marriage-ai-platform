@@ -640,13 +640,21 @@
                         return;
                     }
 
-                    const { data, error } = await supabaseClient.auth.signUp({
-                        email: email,
-                        password: password,
-                        options: {
-                            emailRedirectTo: window.location.origin + window.location.pathname
-                        }
-                    });
+                    let signUpResult;
+                    try {
+                        signUpResult = await supabaseClient.auth.signUp({
+                            email: email,
+                            password: password,
+                            options: {
+                                emailRedirectTo: window.location.origin + window.location.pathname
+                            }
+                        });
+                    } catch (networkError) {
+                        message.textContent = "تعذر الاتصال بخدمة الحسابات. تأكد من الإنترنت ثم حاول مرة أخرى.";
+                        message.style.color = "#dc2626";
+                        return;
+                    }
+                    const { data, error } = signUpResult;
 
                     if (error) {
                         message.textContent = "تعذر إنشاء الحساب: " + error.message;
@@ -746,12 +754,20 @@
                         return;
                     }
 
-                    const { error } = await supabaseClient.auth.resetPasswordForEmail(
-                        email,
-                        {
-                            redirectTo: window.location.origin + window.location.pathname
-                        }
-                    );
+                    let resetResult;
+                    try {
+                        resetResult = await supabaseClient.auth.resetPasswordForEmail(
+                            email,
+                            {
+                                redirectTo: window.location.origin + window.location.pathname
+                            }
+                        );
+                    } catch (networkError) {
+                        message.textContent = "تعذر الاتصال بخدمة استعادة كلمة المرور. حاول مرة أخرى.";
+                        message.style.color = "#dc2626";
+                        return;
+                    }
+                    const { error } = resetResult;
 
                     if (error) {
                         message.textContent = "تعذر إرسال الرابط: " + error.message;
@@ -801,6 +817,14 @@
                     document.getElementById("admin-auth-box").classList.add("hidden");
                     document.getElementById("admin-panel").classList.remove("hidden");
                     refreshAdminUI();
+                    if ("Notification" in window && Notification.permission === "granted") {
+                        adminNotificationsEnabled = true;
+                        var notificationStatus = document.getElementById("admin-notification-status");
+                        var notificationButton = document.getElementById("enable-admin-notifications-btn");
+                        if (notificationStatus) notificationStatus.textContent = "الإشعارات مفعّلة للطلبات الجديدة";
+                        if (notificationButton) notificationButton.textContent = "🔔 الإشعارات مفعّلة";
+                        checkForNewAdminRequests(true).then(startAdminNotificationPolling);
+                    }
                     alert("تم تسجيل دخول المدير بنجاح");
                 }
 
@@ -837,6 +861,10 @@
                         <h1 class="text-xl sm:text-2xl font-extrabold mt-0.5">لوحة التحكم والمطابقة وإرسال البيانات</h1>
                     </div>
                     <div class="flex flex-wrap items-center gap-2.5">
+                        <button type="button" id="enable-admin-notifications-btn" onclick="enableAdminNotifications()" class="bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl border border-gold-400/50">
+                            🔔 تفعيل إشعارات الطلبات
+                        </button>
+                        <span id="admin-notification-status" class="text-xs text-cream-100" role="status" aria-live="polite">الإشعارات غير مفعّلة</span>
                         <button type="button" onclick="toggleAddMemberModal(true)" class="bg-gold-500 hover:bg-gold-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow transition">
                             + إضافة عضو جديد يدوياً
                         </button>
@@ -988,6 +1016,11 @@
         var DB_STORAGE_KEY = "mawadda_platform_records_v2";
         var isAdminLogged = false;
         var currentPublicFilter = "all";
+
+        // إشعارات الطلبات الجديدة للإدارة (تعمل أثناء فتح الموقع وتسجيل دخول المدير).
+        var adminNotificationTimer = null;
+        var knownPendingRequestIds = null;
+        var adminNotificationsEnabled = false;
 
         // لا نعرض بيانات تجريبية أو ملفات شخصية غير حقيقية.
         var sampleRecords = [];
@@ -1215,8 +1248,8 @@
                 var phone = document.getElementById("v-phone").value.trim();
                 var guardianPhone = document.getElementById("v-guardian-phone").value.trim();
 
-                if (!Number.isInteger(age) || age < 18 || age > 100) {
-                    throw new Error("السن يجب أن يكون بين 18 و100 سنة.");
+                if (!Number.isInteger(age) || age < 18 || age > 75) {
+                    throw new Error("السن يجب أن يكون بين 18 و75 سنة.");
                 }
                 if (!phone) {
                     throw new Error("من فضلك أدخل رقم الواتساب الشخصي.");
@@ -1384,7 +1417,7 @@ if (error) throw error;
                         '</ul>' +
                         '<p class="text-xs text-gray-600 bg-cream-50 p-3 rounded-xl border border-cream-200">تُعرض التفاصيل الخاصة من خلال الإدارة بعد موافقة الطرفين</p>' +
                     '</div>' +
-                    '<a href="' + waUrl + '" target="_blank" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl text-center shadow transition block">' +
+                    '<a href="' + waUrl + '" target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-xl text-center shadow transition block">' +
                         'طلب ترشيح عبر الإدارة (' + cand.code + ')' +
                     '</a>';
                 grid.appendChild(card);
@@ -1563,6 +1596,7 @@ var fields = [
                 console.error("تعذر إنهاء جلسة الإدارة:", err);
             }
             isAdminLogged = false;
+            stopAdminNotificationPolling();
             var panel = document.getElementById("admin-panel");
             var authBox = document.getElementById("admin-auth-box");
             if (panel) panel.classList.add("hidden");
@@ -1576,6 +1610,127 @@ var fields = [
             renderAdminList();
             loadRegistrationRequests();
         }
+
+// طلب إذن إشعارات المتصفح من خلال ضغطة المدير المباشرة.
+async function enableAdminNotifications() {
+    var status = document.getElementById("admin-notification-status");
+    var button = document.getElementById("enable-admin-notifications-btn");
+
+    if (!isAdminLogged) {
+        if (status) status.textContent = "سجّل دخول الإدارة أولاً";
+        notifyUser("يجب تسجيل دخول الإدارة قبل تفعيل الإشعارات");
+        return;
+    }
+    if (!("Notification" in window)) {
+        if (status) status.textContent = "المتصفح لا يدعم الإشعارات";
+        notifyUser("هذا المتصفح لا يدعم إشعارات سطح المكتب");
+        return;
+    }
+
+    try {
+        var permission = Notification.permission;
+        if (permission !== "granted") permission = await Notification.requestPermission();
+        if (permission !== "granted") {
+            if (status) status.textContent = "لم يتم السماح بالإشعارات";
+            notifyUser("اسمح بإشعارات الموقع من إعدادات المتصفح ثم حاول مجدداً");
+            return;
+        }
+
+        adminNotificationsEnabled = true;
+        if (status) status.textContent = "الإشعارات مفعّلة للطلبات الجديدة";
+        if (button) button.textContent = "🔔 الإشعارات مفعّلة";
+        notifyUser("تم تفعيل إشعارات الطلبات الجديدة");
+
+        // إنشاء خط أساس حتى لا تصدر تنبيهات عن الطلبات القديمة عند أول تفعيل.
+        await checkForNewAdminRequests(true);
+        startAdminNotificationPolling();
+    } catch (err) {
+        console.error("Notification permission error:", err);
+        if (status) status.textContent = "تعذر تفعيل الإشعارات";
+        notifyUser("تعذر تفعيل الإشعارات. تحقق من إعدادات المتصفح");
+    }
+}
+
+async function showAdminBrowserNotification(title, body) {
+    if (!adminNotificationsEnabled || !isAdminLogged || Notification.permission !== "granted") return;
+    try {
+        var options = {
+            body: body,
+            icon: "./icon-192.png",
+            badge: "./icon-192.png",
+            tag: "qesmetna-new-registration",
+            renotify: true
+        };
+        if ("serviceWorker" in navigator) {
+            var registration = await navigator.serviceWorker.ready;
+            await registration.showNotification(title, options);
+        } else {
+            new Notification(title, options);
+        }
+    } catch (err) {
+        console.warn("تعذر عرض إشعار المتصفح:", err);
+    }
+}
+
+async function checkForNewAdminRequests(isInitial) {
+    if (!isAdminLogged || !adminNotificationsEnabled) return;
+    try {
+        var result = await supabaseClient
+            .from("registration_requests")
+            .select("id,profile_code")
+            .eq("status", "pending")
+            .order("created_at", { ascending: false });
+        if (result.error) throw result.error;
+
+        var rows = result.data || [];
+        var currentIds = new Set(rows.map(function(row) { return String(row.id); }));
+        if (knownPendingRequestIds === null || isInitial) {
+            knownPendingRequestIds = currentIds;
+            return;
+        }
+
+        var fresh = rows.filter(function(row) {
+            return !knownPendingRequestIds.has(String(row.id));
+        });
+        knownPendingRequestIds = currentIds;
+
+        if (fresh.length) {
+            var count = fresh.length;
+            await showAdminBrowserNotification(
+                "قسمتنا — طلب تسجيل جديد",
+                count === 1
+                    ? "وصل طلب تسجيل جديد. افتح لوحة الإدارة لمراجعته."
+                    : "وصل " + count + " طلبات تسجيل جديدة. افتح لوحة الإدارة لمراجعتها."
+            );
+            notifyUser(count === 1 ? "وصل طلب تسجيل جديد" : "وصلت " + count + " طلبات تسجيل جديدة");
+            // تحديث قائمة الطلبات تلقائياً بعد اكتشاف طلب جديد.
+            await loadRegistrationRequests();
+        }
+    } catch (err) {
+        console.warn("تعذر فحص الطلبات الجديدة للإشعارات:", err);
+    }
+}
+
+function startAdminNotificationPolling() {
+    stopAdminNotificationPolling();
+    if (!isAdminLogged || !adminNotificationsEnabled) return;
+    adminNotificationTimer = setInterval(function() {
+        checkForNewAdminRequests(false);
+    }, 30000);
+}
+
+function stopAdminNotificationPolling() {
+    if (adminNotificationTimer) {
+        clearInterval(adminNotificationTimer);
+        adminNotificationTimer = null;
+    }
+    knownPendingRequestIds = null;
+    adminNotificationsEnabled = false;
+    var status = document.getElementById("admin-notification-status");
+    var button = document.getElementById("enable-admin-notifications-btn");
+    if (status) status.textContent = "الإشعارات غير مفعّلة";
+    if (button) button.textContent = "🔔 تفعيل إشعارات الطلبات";
+}
 
 // تحميل طلبات الزوار من Supabase
 async function loadRegistrationRequests() {
@@ -1641,6 +1796,15 @@ grid.innerHTML = "";
                 ["المحافظة", req.governorate],
                 ["الحالة الاجتماعية", req.marital_status],
                 ["المؤهل والعمل", req.work],
+                ["الوظيفة", req.job],
+                ["الطول", req.height ? req.height + " سم" : ""],
+                ["الوزن", req.weight ? req.weight + " كجم" : ""],
+                ["لون البشرة", req.skin_tone],
+                ["البلد", req.country],
+                ["المنطقة / المركز / القرية", req.area],
+                ["وظيفة الوالد", req.father_job],
+                ["وظيفة الوالدة", req.mother_job],
+                ["عدد الأولاد", req.children_count],
                 ["الالتزام", req.religion],
                 ["رقم الهاتف", req.phone],
                 ["رقم ولي الأمر", req.guardian_phone],
@@ -1902,7 +2066,7 @@ grid.innerHTML = "";
 
             // زر 1: إرسال بيانات العروس (وولي الأمر) إلى واتساب العريس
             var msgToGroom = "السلام عليكم ورحمة الله وبركاته أستاذ *" + groom.name + "*،\n" +
-                "معك *إدارة منصة قسمتنا للتوافق والزواج الشرعي* (01020298357).\n" +
+                "معك *إدارة منصة قسمتنا للتوافق والزواج الشرعي* (" + ADMIN_WA_NUMBER + ").\n" +
                 "بناءً على طلبك (" + groom.code + ")، نرشح لك عروساً متوافقة معك بنسبة *" + matchData.score + "%*:\n\n" +
                 "📋 *بيانات المرشحة (" + bride.code + "):*\n" +
                 "- الاسم: " + bride.name + "\n" +
@@ -1919,7 +2083,7 @@ grid.innerHTML = "";
 
             // زر 2: إرسال بيانات العريس إلى واتساب العروس / ولي الأمر
             var msgToBride = "السلام عليكم ورحمة الله وبركاته،\n" +
-                "معك *إدارة منصة قسمتنا للتوافق والزواج الشرعي* (01020298357).\n" +
+                "معك *إدارة منصة قسمتنا للتوافق والزواج الشرعي* (" + ADMIN_WA_NUMBER + ").\n" +
                 "بخصوص طلبكم (" + bride.code + ")، نرشح لكم عريساً متوافقاً معكم بنسبة *" + matchData.score + "%*:\n\n" +
                 "📋 *بيانات المرشح (" + groom.code + "):*\n" +
                 "- الاسم الكامل: " + groom.name + "\n" +
